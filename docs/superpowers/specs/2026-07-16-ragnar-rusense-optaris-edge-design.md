@@ -80,13 +80,16 @@ UDP CSI ingest `:5005`) on the Pi. All four CSI sources stream to the Pi's `:500
    **Milestone:** satisfies "install Ragnar + RuSense + use the ESP32 nodes."
 
 ### Phase 2 — Intel AX210 / Killer as a CSI source (novel)
-1. Install **PicoScenes** (AX210-capable; has Raspberry Pi / arm64 support) + its patched
-   `iwlwifi` driver; bring `wlp1s0` up in CSI/monitor mode on a 2.4 GHz channel.
-2. Build **`intel_csi_bridge`** (small userspace adapter) that reads PicoScenes CSI frames and
-   emits ESP32-format UDP frames to `:5005` with a distinct node id.
-3. **Verify:** frames arrive on `:5005`; new node appears in `/api/v1/nodes`; presence/motion
+Uses **FeitCSI** (AX200/AX210 CSI tool + patched iwlwifi) — already mid-build on the Pi at
+`/home/pi/feitcsi-build`. See the [CSI ingestion design](2026-07-16-csi-ingestion-normalization-design.md)
+for the `feitcsi` reader.
+1. Finish building **FeitCSI** + its patched `iwlwifi` driver; bring `wlp1s0` up in CSI/monitor
+   mode.
+2. Add the **`feitcsi` reader** (in `csi_shim`) that decodes FeitCSI output and emits ADR-018
+   frames to `:5005` as node 210.
+3. **Verify:** frames arrive on `:5005`; node 210 appears in `/api/v1/nodes`; presence/motion
    tracks a person near the Pi. **Caveat:** independent node, not fused with ESP32.
-   **Effort:** highest of the three — PicoScenes driver install (DKMS) + a new adapter.
+   **Effort:** highest of the three — finish the FeitCSI/iwlwifi build + the new reader.
 
 ### Phase 3 — GL-MT3000 mt76-CSI router (novel, but pre-built)
 1. Inspect the existing router stack: `/etc/mt76-csi.conf`, `mt76-csi-daemon` output format and
