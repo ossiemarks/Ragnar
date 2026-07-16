@@ -115,13 +115,20 @@ nodes stay independent by default.
 crate remains the reference parser), deployed to the Pi with Ragnar. Per-source systemd units,
 one shared library.
 
-## Prerequisites / dependencies (blocking work, honest)
+## Toolchain bring-up (in scope for the implementation plan)
 
-- **mt76:** finish the router side — repoint `/etc/mt76-csi.conf` `udp.host` to the Pi (`.149`),
-  create the CSI monitor vif so `csi-capture` finds the device, and start `mt76-csi` (currently
-  the daemon is not running; `csi-capture` reports "No such device").
-- **Intel:** finish building FeitCSI + the patched iwlwifi driver before the `feitcsi` reader can
-  be validated against real frames.
+These are prerequisites for validating the `mt76` and `feitcsi` readers, and are **included in the
+plan** (not assumed pre-done):
+
+- **mt76 (router):** repoint `/etc/mt76-csi.conf` `udp.host` to the Pi (`.149`), create the CSI
+  monitor vif so `csi-capture` finds the device, and start/enable `mt76-csi` (currently the daemon
+  is not running; `csi-capture` reports "No such device").
+- **Intel (Pi):** finish building FeitCSI + the patched iwlwifi driver, load the driver, and bring
+  `wlp1s0` up in CSI/monitor mode, before the `feitcsi` reader is validated against real frames.
+
+**Tuning note:** mt76 at 80 MHz = 256 subcarriers ⇒ large int8 payloads at high rate. If LAN
+bandwidth or Pi CPU becomes a concern, down-select subcarriers or cap frame rate at the router.
+Treated as a tuning item, verified during the mt76 integration step.
 
 ## Out of scope
 - BFI second instance (planned as a parallel follow-up; not built this pass).
