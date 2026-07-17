@@ -36,6 +36,7 @@ struct, so it isn't decoded from `buf` -- it's supplied by the caller
 (defaults to the fixture's known capture channel).
 """
 import struct
+import time
 
 from . import maps, scaling
 from .sink import Adr018Sink
@@ -90,11 +91,18 @@ def run(source_path="/tmp/feit_sample.dat", div=DEFAULT_DIV, freq_mhz=FREQ_MHZ, 
     seq = 0
     with open(source_path, "rb") as f:
         while True:
+            pos = f.tell()
             head = f.read(_HDR.size)
             if len(head) < _HDR.size:
+                f.seek(pos)
+                time.sleep(0.05)
                 continue
             csi_data_size = struct.unpack_from("<I", head, 0)[0]
             body = f.read(csi_data_size)
+            if len(body) < csi_data_size:
+                f.seek(pos)
+                time.sleep(0.05)
+                continue
             dec = decode_feit_measurement(head + body, freq_mhz=freq_mhz)
             if dec is None:
                 continue
