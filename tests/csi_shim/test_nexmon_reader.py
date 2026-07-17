@@ -9,7 +9,7 @@ def _make_payload(rssi, iq16):
 
 
 def test_decode_extracts_rssi_and_iq():
-    iq16 = [320, -320, 16, -16, 0, 0, 8, 8]  # 4 subcarriers
+    iq16 = [320, -320, 16, -16, 0, 0, 8, 8, 12, -12, 4, -4, 1, -1, 2, 2]  # 8 subcarriers
     out = nexmon_reader.decode_nexmon_udp_payload(_make_payload(-37, iq16))
     assert out is not None
     rssi, iq = out

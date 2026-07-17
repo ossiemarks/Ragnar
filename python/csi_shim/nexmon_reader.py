@@ -21,7 +21,7 @@ def decode_nexmon_udp_payload(p):
     rssi = struct.unpack("b", p[2:3])[0]
     csi = p[18:]
     nsub = len(csi) // 4
-    if nsub < 2:
+    if nsub < 8:
         return None
     iq = list(struct.unpack("<%dh" % (nsub * 2), csi[: nsub * 4]))
     return rssi, iq
