@@ -1,0 +1,10 @@
+[Unit]
+Description=Ragnar CSI shim (mt76 -> ADR-018 :5005 node 176)
+After=network-online.target ragnar-sensing.service
+[Service]
+ExecStart=/usr/bin/python3 -m python.csi_shim mt76
+WorkingDirectory=/home/pi/Ragnar
+Restart=on-failure
+RestartSec=3
+[Install]
+WantedBy=multi-user.target
