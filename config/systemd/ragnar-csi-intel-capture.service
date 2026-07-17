@@ -1,0 +1,18 @@
+[Unit]
+Description=Ragnar CSI feitcsi capture loop (Intel AX210, feeds node 210)
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+# Short burst/gap cadence so node 210's last_seen stays under the
+# sensing-server's stale threshold (empirically ~5s; 6s/1s burst/gap was
+# observed flipping the node to "stale" between bursts).
+Environment=FEITCSI_BURST_SEC=2
+Environment=FEITCSI_GAP_SEC=0
+ExecStart=/home/pi/Ragnar/scripts/feitcsi_capture_loop.sh
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
