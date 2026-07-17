@@ -13,7 +13,15 @@ MT7915_VHT80 = frozenset(
     list(range(0, 6)) + [127, 128, 129] + list(range(251, 256))
 )
 
-# 802.11ax HE: DC + guards. Refined in Task 10 once FeitCSI width is observed.
+# feitcsi/AX210, 52-subcarrier width (observed capture: legacy-OFDM 20MHz,
+# `feitcsi -i measure -f 2462 -r NOHT -w 20`, see task-9-report.md). Verified
+# empirically against tests/csi_shim/fixtures/feit_sample.dat (3696 real
+# records, all 52 subcarriers, both RX chains): every one of the 52 reported
+# subcarrier positions carries nonzero signal in 100% of records, with no
+# near-zero/DC pattern anywhere in the array. FeitCSI's firmware/driver
+# already strips the DC and guard-band bins before delivering CSI to
+# userspace (RawHeaderData.numSubCarriers=52 is the used-tone count, not the
+# raw 64-bin FFT width), so there are no null subcarriers left to mask here.
 AX210_HE = frozenset()
 
 _BY_CHIP = {
