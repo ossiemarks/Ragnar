@@ -1,7 +1,7 @@
 # SD_CARD.md — optaris-edge Pi recovery + state handoff
 
 **Purpose:** shared state so recovery can continue on another machine (e.g. a Linux laptop).
-**Date opened:** 2026-07-20. **Status:** ext4 root REPAIRED & clean — card ejected, ready to reinsert in the Pi and boot.
+**Date opened:** 2026-07-20. **Status:** ✅ RECOVERY COMPLETE — Pi booted, on network, ext4 clean, dpkg fully consistent, sensing stack live.
 
 > No secrets in this file. Pi/router credentials live in Secrets Manager
 > (`optaris/pi/*`, `optaris/router/gl-mt3000-admin`, `optaris/wifi/gl-mt3000-62`).
@@ -21,9 +21,33 @@
 - Both remounted r/w clean (no "mounting fs with errors", no ro-remount), then `sync` +
   `udisksctl power-off` for safe removal.
 
-**Next (steps 5→): reinsert card in the Pi (on the UPS), boot, then finish the interrupted
-Ragnar `apt` install remotely (§3 fallback + §4).** No `badblocks` needed — corruption traced
-to brownout hard-resets, not a failing card.
+**2026-07-20 (later) — card back in the Pi, recovery finished remotely over Tailscale
+(`pi@100.108.147.73`, creds in Secrets Manager `optaris/pi5-edge/ssh`):**
+
+- Pi booted, `eth0` up (`192.168.8.149/.195/.196`), root `/dev/mmcblk0p2` mounts `rw`, **no new
+  ext4 errors** — the fsck held. Original "MAC never learned / zero frames" symptom gone.
+- **Real root cause of the crash loop: the Pi's USB power was never switched on** — it was
+  browning out under load (two hard power-cuts mid-`dpkg` during recovery; prev-boot journal
+  just ends with no shutdown = power yank, not panic/thermal). Once powered properly it held
+  `throttled=0x0` through long operations. *This is the same brownout that corrupted the card
+  originally.* **Keep the USB supply powered + on the UPS.**
+- The fsck deleted files across three dpkg layers; all repaired:
+  1. **Package payloads** (numpy −263 files, scipy, contourpy, mpmath, bottleneck, bs4,
+     soupsieve, python-tables-data): `apt-get download` + `dpkg -i` to restore, then
+     `dpkg --configure -a`.
+  2. **`.list` control files** (79 pkgs incl. systemd, python3-minimal, linux-firmware-raspi):
+     `apt-get install --reinstall`. systemd needed `--force-confold` (conffile prompt).
+  3. **`.md5sums` control files** (72 pkgs incl. old kernels not in the repo): regenerated
+     locally from on-disk files (script `/tmp/gen_md5sums.py`) — no re-download needed.
+- **Final: `dpkg --audit` CLEAN, 0 unconfigured, `dpkg --verify` passes.** Sensing stack
+  self-heals on boot: `sensing-server` + `ragnar-csi-fanout` active, UDP :5005/:5105, nodes API
+  detecting node 1. `ragnar-sensing`/`ragnar.service` still inactive (the "to be completed"
+  units — §4). No `badblocks` needed — corruption was brownout, not a failing card.
+
+**Open items (NOT SD-card related):** (a) MacBook on the LAN holds the beamsense data — to be
+wired in. (b) `sensing-server` logs `FieldModel calibration feed rejected: Dimension mismatch:
+baseline has 64 subcarriers, observation has 128/192` — subcarrier-count mismatch to
+investigate.
 
 ---
 
