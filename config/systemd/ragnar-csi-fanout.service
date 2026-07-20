@@ -1,0 +1,12 @@
+[Unit]
+Description=Ragnar CSI UDP fan-out (:5005 -> OptarisSense :5105 + Ragnar :5006)
+After=network-online.target
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/csi_udp_fanout.py
+Environment=FANOUT_LISTEN_PORT=5005
+Environment=FANOUT_TARGETS=5105,5006
+Restart=on-failure
+RestartSec=2
+User=root
+[Install]
+WantedBy=multi-user.target
