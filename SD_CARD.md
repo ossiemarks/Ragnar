@@ -1,10 +1,29 @@
 # SD_CARD.md — optaris-edge Pi recovery + state handoff
 
 **Purpose:** shared state so recovery can continue on another machine (e.g. a Linux laptop).
-**Date opened:** 2026-07-20. **Status:** Pi OFFLINE — recovering the SD card's ext4 root.
+**Date opened:** 2026-07-20. **Status:** ext4 root REPAIRED & clean — card ejected, ready to reinsert in the Pi and boot.
 
 > No secrets in this file. Pi/router credentials live in Secrets Manager
 > (`optaris/pi/*`, `optaris/router/gl-mt3000-admin`, `optaris/wifi/gl-mt3000-62`).
+
+---
+
+## 0. Repair log (what's been done)
+
+**2026-07-20 — Linux laptop, card as `/dev/sdb` (sdb1 vfat `system-boot`, sdb2 ext4 root):**
+
+- Unmounted both partitions (step 2). ✅
+- `e2fsck -f -y /dev/sdb2` (step 3): recovered journal; fixed multiply-claimed blocks
+  (inodes 1043095/1082264), 4 over-long extent trees, several directory-checksum failures,
+  and wrong free-inode/dir counts across groups 16/132/144. **Re-run returned exit 0 = clean.** ✅
+- `fsck.vfat -a -w /dev/sdb1` (step 4): removed the dirty bit. Boot-sector/backup byte diff at
+  offset 65 is harmless and left untouched. ✅
+- Both remounted r/w clean (no "mounting fs with errors", no ro-remount), then `sync` +
+  `udisksctl power-off` for safe removal.
+
+**Next (steps 5→): reinsert card in the Pi (on the UPS), boot, then finish the interrupted
+Ragnar `apt` install remotely (§3 fallback + §4).** No `badblocks` needed — corruption traced
+to brownout hard-resets, not a failing card.
 
 ---
 
