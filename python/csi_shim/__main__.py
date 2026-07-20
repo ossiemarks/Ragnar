@@ -1,4 +1,4 @@
-"""csi_shim CLI: python -m python.csi_shim <nexmon|mt76|feitcsi>"""
+"""csi_shim CLI: python -m python.csi_shim <nexmon|feitcsi>"""
 import argparse
 import sys
 import importlib
@@ -6,7 +6,7 @@ import importlib
 
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="csi_shim")
-    ap.add_argument("source", choices=["nexmon", "mt76", "feitcsi"])
+    ap.add_argument("source", choices=["nexmon", "feitcsi"])
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--port", type=int, default=5005)
     args = ap.parse_args(argv)
