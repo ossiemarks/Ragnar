@@ -38,3 +38,16 @@ def test_transform_path():
     assert rc.transform_path("web/ragnar.ico") == "web/optaris_defense.ico"
     assert rc.transform_path("config/systemd/ragnar-csi-fanout.service") == "config/systemd/optaris-defense-csi-fanout.service"
     assert rc.transform_path("scripts/install_sensing.sh") == "scripts/install_sensing.sh"
+
+
+def test_transform_path_compound_pascal_module():
+    assert rc.transform_path("pager/PagerRagnar.py") == "pager/PagerOptarisDefense.py"
+    assert rc.transform_path("Ragnar.py") == "optaris_defense.py"
+    assert rc.transform_path("headlessRagnar.py") == "headless_optaris_defense.py"
+    assert rc.transform_path("install_ragnar.sh") == "install_optaris_defense.sh"
+    assert rc.transform_path("config/systemd/ragnar-csi-fanout.service") == "config/systemd/optaris-defense-csi-fanout.service"
+
+
+def test_transform_content_imports_match_paths():
+    assert rc.transform_content("import PagerRagnar") == "import PagerOptarisDefense"
+    assert rc.transform_content("importlib.import_module('PagerRagnar')") == "importlib.import_module('PagerOptarisDefense')"

@@ -31,9 +31,17 @@ def transform_path(path):
     if "ragnar" not in name.lower():
         return path
     if name.endswith(".service"):
-        new = name.replace("ragnar-", "optaris-defense-").replace("ragnar.service", "optaris-defense.service").replace("ragnar", "optaris-defense")
+        new = (name.replace("ragnar-", "optaris-defense-")
+                   .replace("ragnar.service", "optaris-defense.service")
+                   .replace("ragnar", "optaris-defense"))
     else:
-        new = (name.replace("headlessRagnar", "headless_optaris_defense")
-                   .replace("Ragnar", "optaris_defense")
-                   .replace("ragnar", "optaris_defense"))
+        stem = name.split(".", 1)[0]
+        if stem == "Ragnar":                       # bare module -> snake (matches `import Ragnar`)
+            new = name.replace("Ragnar", "optaris_defense")
+        elif "headlessRagnar" in name:             # camelCase module -> snake
+            new = name.replace("headlessRagnar", "headless_optaris_defense")
+        elif "Ragnar" in name:                     # compound PascalCase (PagerRagnar) -> keep Pascal
+            new = name.replace("Ragnar", "OptarisDefense").replace("ragnar", "optaris_defense")
+        else:                                       # lowercase only
+            new = name.replace("ragnar", "optaris_defense")
     return os.path.join(d, new) if d else new
