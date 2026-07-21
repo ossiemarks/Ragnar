@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Network-aware storage management for Ragnar."""
+"""Network-aware storage management for OptarisDefense."""
 
 import os
 import re
@@ -139,7 +139,7 @@ class NetworkStorageManager:
          _default_vulnerabilities) = default_dirs
         default_db_path = os.path.join(default_db_dir, f"{self._slugify(self.default_ssid)}.db")
 
-        legacy_db = os.path.join(self.base_data_dir, 'ragnar.db')
+        legacy_db = os.path.join(self.base_data_dir, 'optaris_defense.db')
         if os.path.exists(legacy_db) and not os.path.exists(default_db_path):
             shutil.move(legacy_db, default_db_path)
 

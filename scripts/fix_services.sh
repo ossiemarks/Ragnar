@@ -1,5 +1,5 @@
 #!/bin/bash
-# Ragnar service correction - ensures Ragnar always starts on boot
+# OptarisDefense service correction - ensures OptarisDefense always starts on boot
 # Run this if pwnagotchi took over or services are misconfigured
 set -euo pipefail
 
@@ -20,9 +20,9 @@ iw dev mon0 del 2>/dev/null || true
 echo "[INFO] Disabling pwnagotchi (boot disabled)..."
 systemctl disable pwnagotchi 2>/dev/null || true
 
-# Enable ragnar - ALWAYS starts on boot
-echo "[INFO] Enabling ragnar (boot enabled)..."
-systemctl enable ragnar
+# Enable optaris_defense - ALWAYS starts on boot
+echo "[INFO] Enabling optaris_defense (boot enabled)..."
+systemctl enable optaris_defense
 
 # Reset pwnagotchi status file so dashboard shows correct state
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
@@ -34,19 +34,19 @@ if [[ -f "$STATUS_FILE" ]]; then
   "state": "installed",
   "message": "Pwnagotchi installed. Use switch button to start.",
   "phase": "complete",
-  "target_mode": "ragnar"
+  "target_mode": "optaris_defense"
 }
 STATUSEOF
 fi
 
-# Start ragnar now
-echo "[INFO] Starting ragnar..."
-systemctl start ragnar
+# Start optaris_defense now
+echo "[INFO] Starting optaris_defense..."
+systemctl start optaris_defense
 
 # Verify
 echo ""
 echo "[INFO] Service status:"
-echo "  ragnar:     $(systemctl is-enabled ragnar 2>/dev/null)  $(systemctl is-active ragnar 2>/dev/null)"
+echo "  optaris_defense:     $(systemctl is-enabled optaris_defense 2>/dev/null)  $(systemctl is-active optaris_defense 2>/dev/null)"
 echo "  pwnagotchi: $(systemctl is-enabled pwnagotchi 2>/dev/null)  $(systemctl is-active pwnagotchi 2>/dev/null)"
 echo ""
-echo "[INFO] Done. Ragnar is master. Reboot will always start Ragnar."
+echo "[INFO] Done. OptarisDefense is master. Reboot will always start OptarisDefense."

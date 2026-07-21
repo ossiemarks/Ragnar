@@ -1,17 +1,17 @@
 #!/bin/bash
-# Ragnar Pwnagotchi Migration Script
+# OptarisDefense Pwnagotchi Migration Script
 # Detects the old pwnagotchi fork (evilsocket/PierreGode/pwnagotchi) and
 # replaces it with the correct pwnagotchiworking fork (jayofelony noai branch).
-# Designed to run at boot via ragnar-pwn-migrate.service (oneshot).
+# Designed to run at boot via optaris-defense-pwn-migrate.service (oneshot).
 set -euo pipefail
 
 PWN_DIR="/opt/pwnagotchi"
 PWN_REPO="https://github.com/PierreGode/pwnagotchiworking.git"
 CONFIG_DIR="/etc/pwnagotchi"
 CONFIG_FILE="$CONFIG_DIR/config.toml"
-LOG_DIR="/var/log/ragnar"
+LOG_DIR="/var/log/optaris_defense"
 LOG_FILE="$LOG_DIR/pwnagotchi_migrate_$(date +%Y%m%d_%H%M%S).log"
-MARKER_FILE="/var/lib/ragnar/.pwn_migrated"
+MARKER_FILE="/var/lib/optaris_defense/.pwn_migrated"
 
 mkdir -p "$LOG_DIR" "$(dirname "$MARKER_FILE")"
 touch "$LOG_FILE"
@@ -121,7 +121,7 @@ try:
     # tomlkit parses dotted keys correctly into nested tables,
     # but we rewrite to use explicit TOML table headers for clarity
     with open('${CONFIG_FILE}', 'w') as f:
-        f.write('# Ragnar-managed Pwnagotchi user config (pwnagotchiworking / noai branch)\n')
+        f.write('# OptarisDefense-managed Pwnagotchi user config (pwnagotchiworking / noai branch)\n')
         f.write('# Migrated from old flat dot-notation format\n\n')
         f.write(tomlkit.dumps(old_doc))
     print('[MIGRATE] Config converted successfully.')

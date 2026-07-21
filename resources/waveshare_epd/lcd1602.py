@@ -1,7 +1,7 @@
 # lcd1602.py
 # Driver for the LCD1602 16x2 character LCD with PCF8574 I2C backpack.
 #
-# Exposes the same interface as other Ragnar display drivers so it integrates
+# Exposes the same interface as other OptarisDefense display drivers so it integrates
 # with the rest of the display system:
 #   width, height, init(), Clear(), write_line(row, text), sleep()
 #
@@ -67,7 +67,7 @@ class EPD:
     """LCD1602 16×2 character LCD driver (PCF8574 I2C backpack).
 
     Provides the same public interface as the Waveshare e-Paper drivers used
-    throughout Ragnar so it integrates transparently with the display system.
+    throughout OptarisDefense so it integrates transparently with the display system.
     """
 
     def __init__(self, i2c_address=0x27, i2c_bus=1):

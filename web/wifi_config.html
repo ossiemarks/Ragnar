@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ragnar Wi-Fi Configuration</title>
-    <link rel="icon" href="/web/images/ragnar.ico" type="image/x-icon">
+    <title>OptarisDefense Wi-Fi Configuration</title>
+    <link rel="icon" href="/web/images/optaris_defense.ico" type="image/x-icon">
     
     <!-- Tailwind CSS (local build) -->
     <link rel="stylesheet" href="/css/tailwind.css">
@@ -493,8 +493,8 @@
 <body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white min-h-screen p-5">
     <div class="container">
         <div class="header">
-            <img src="/web/images/ragnar.ico" alt="Ragnar" style="width: 64px; height: 64px; margin: 0 auto 16px; display: block; filter: drop-shadow(0 5px 15px rgba(14, 165, 233, 0.4));">
-            <h1>Ragnar Wi-Fi Manager</h1>
+            <img src="/web/images/optaris_defense.ico" alt="OptarisDefense" style="width: 64px; height: 64px; margin: 0 auto 16px; display: block; filter: drop-shadow(0 5px 15px rgba(14, 165, 233, 0.4));">
+            <h1>OptarisDefense Wi-Fi Manager</h1>
             <p>Configure your network connection</p>
         </div>
 
@@ -657,7 +657,7 @@
                 statusIcon.className = 'wifi-icon ap-mode';
                 statusIcon.textContent = '📡';
                 wifiStatus.textContent = 'Access Point Mode';
-                currentNetwork.textContent = 'Ragnar-Setup';
+                currentNetwork.textContent = 'OptarisDefense-Setup';
                 connectionMode.textContent = 'Access Point';
                 
                 // Show and update AP timer
@@ -850,7 +850,7 @@
                     hintSpan.textContent = 'Connect an Ethernet cable to enable LAN scanning.';
                     hintSpan.style.color = '#94a3b8';
                 } else if (scanEnabled) {
-                    hintSpan.textContent = 'Ragnar will use Ethernet for network scanning when available.';
+                    hintSpan.textContent = 'OptarisDefense will use Ethernet for network scanning when available.';
                     hintSpan.style.color = '#22c55e';
                 } else {
                     hintSpan.textContent = 'Enable to use Ethernet for network scanning instead of Wi-Fi.';

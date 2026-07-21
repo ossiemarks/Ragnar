@@ -1,5 +1,5 @@
 #!/bin/bash
-# Ragnar on-screen kiosk installer.
+# OptarisDefense on-screen kiosk installer.
 # Idempotent: safe to re-run; only installs what's missing.
 #
 # Auto-detects the environment:
@@ -13,12 +13,12 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
-LOG_DIR="/var/log/ragnar"
+LOG_DIR="/var/log/optaris_defense"
 LOG_FILE="$LOG_DIR/kiosk_install_$(date +%Y%m%d_%H%M%S).log"
-SERVICE_FILE="/etc/systemd/system/ragnar-kiosk.service"
-WRAPPER_DST="/usr/local/bin/ragnar-kiosk-run"
-WRAPPER_SRC="$REPO_ROOT/scripts/ragnar_kiosk_run.sh"
-AUTOSTART_REL=".config/autostart/ragnar-kiosk.desktop"
+SERVICE_FILE="/etc/systemd/system/optaris-defense-kiosk.service"
+WRAPPER_DST="/usr/local/bin/optaris-defense-kiosk-run"
+WRAPPER_SRC="$REPO_ROOT/scripts/optaris_defense_kiosk_run.sh"
+AUTOSTART_REL=".config/autostart/optaris-defense-kiosk.desktop"
 AUTOLOGIN_DROPIN_DIR="/etc/systemd/system/getty@tty1.service.d"
 AUTOLOGIN_DROPIN="$AUTOLOGIN_DROPIN_DIR/autologin.conf"
 
@@ -79,7 +79,7 @@ detect_session_user() {
 
 # Bare-mode user fallback (Pi OS Lite — no session yet, we make one).
 detect_kiosk_user_bare() {
-    for candidate in ragnar pi; do
+    for candidate in optaris_defense pi; do
         if id "$candidate" >/dev/null 2>&1; then
             echo "$candidate"
             return 0
@@ -198,11 +198,11 @@ echo "[kiosk-install] browser: $BROWSER_BIN"
 install -m 0755 "$WRAPPER_SRC" "$WRAPPER_DST"
 echo "[kiosk-install] wrapper installed -> $WRAPPER_DST"
 
-# Ensure /var/log/ragnar is writable by the kiosk user
-install -d -m 0775 /var/log/ragnar
+# Ensure /var/log/optaris_defense is writable by the kiosk user
+install -d -m 0775 /var/log/optaris_defense
 if id -u "$KIOSK_USER" >/dev/null 2>&1; then
-    chgrp "$KIOSK_USER" /var/log/ragnar 2>/dev/null || true
-    chmod g+w /var/log/ragnar 2>/dev/null || true
+    chgrp "$KIOSK_USER" /var/log/optaris_defense 2>/dev/null || true
+    chmod g+w /var/log/optaris_defense 2>/dev/null || true
 fi
 
 KIOSK_HOME="$(getent passwd "$KIOSK_USER" | cut -d: -f6)"
@@ -219,7 +219,7 @@ if [[ "$MODE" == "autostart" ]]; then
     # exclusive on a given image.
     if [[ -f "$SERVICE_FILE" ]]; then
         echo "[kiosk-install] removing legacy systemd unit (mode is now autostart)"
-        systemctl disable --now ragnar-kiosk.service 2>/dev/null || true
+        systemctl disable --now optaris-defense-kiosk.service 2>/dev/null || true
         rm -f "$SERVICE_FILE"
         systemctl daemon-reload || true
     fi
@@ -239,8 +239,8 @@ if [[ "$MODE" == "autostart" ]]; then
     cat > "$AUTOSTART_FILE" <<EOF
 [Desktop Entry]
 Type=Application
-Name=Ragnar Kiosk
-Comment=Ragnar on-screen UI
+Name=OptarisDefense Kiosk
+Comment=OptarisDefense on-screen UI
 Exec=$WRAPPER_DST
 X-GNOME-Autostart-enabled=true
 NoDisplay=true
@@ -271,8 +271,8 @@ echo "[kiosk-install] tty1 autologin configured for $KIOSK_USER"
 # Write the systemd unit
 cat > "$SERVICE_FILE" <<EOF
 [Unit]
-Description=Ragnar on-screen kiosk (Chromium fullscreen)
-After=network-online.target ragnar.service
+Description=OptarisDefense on-screen kiosk (Chromium fullscreen)
+After=network-online.target optaris-defense.service
 Wants=network-online.target
 # Cap the restart loop: if it fails 5 times in 2 minutes, stop and stay stopped
 # instead of hammering (a broken kiosk should surface, not spin 89 times).
@@ -288,8 +288,8 @@ StandardInput=tty
 StandardOutput=journal
 StandardError=journal
 Environment=HOME=$KIOSK_HOME
-Environment=RAGNAR_REPO=$REPO_ROOT
-Environment=RAGNAR_BROWSER=$BROWSER_BIN
+Environment=OPTARIS_DEFENSE_REPO=$REPO_ROOT
+Environment=OPTARIS_DEFENSE_BROWSER=$BROWSER_BIN
 ExecStartPre=+/bin/sh -c 'rm -f /tmp/.X0-lock; rm -rf /tmp/.X11-unix/X0'
 ExecStart=$WRAPPER_DST
 Restart=on-failure
@@ -329,4 +329,4 @@ fi
 install -d -o "$KIOSK_USER" -g "$KIOSK_USER" -m 0755 \
     "$KIOSK_HOME/.local" "$KIOSK_HOME/.local/share" "$KIOSK_HOME/.local/share/xorg"
 
-echo "[kiosk-install] done. Enable with: sudo systemctl enable --now ragnar-kiosk.service"
+echo "[kiosk-install] done. Enable with: sudo systemctl enable --now optaris-defense-kiosk.service"

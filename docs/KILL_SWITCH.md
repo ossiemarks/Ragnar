@@ -1,4 +1,4 @@
-# Ragnar Kill Switch - Educational Data Erasure
+# OptarisDefense Kill Switch - Educational Data Erasure
 
 ## ⚠️ WARNING: DESTRUCTIVE OPERATION ⚠️
 
@@ -8,10 +8,10 @@ This endpoint is designed for **educational purposes only** to ensure complete d
 
 The `/api/kill` endpoint performs complete data destruction:
 
-1. **Wipes all databases** - Deletes `ragnar.db`, CSV files, and JSON data
+1. **Wipes all databases** - Deletes `optaris_defense.db`, CSV files, and JSON data
 2. **Clears all logs** - Removes system and application logs
 3. **Deletes temporary files** - Cleans up cache and temp data
-4. **Erases the repository** - Completely removes the Ragnar installation
+4. **Erases the repository** - Completely removes the OptarisDefense installation
 5. **Optional shutdown** - Can power off the system after erasure
 
 ## Security Features
@@ -108,24 +108,24 @@ fetch('http://localhost:8000/api/kill', {
 ## What Gets Deleted
 
 ### Database Files
-- `data/ragnar.db` - Main SQLite database
+- `data/optaris_defense.db` - Main SQLite database
 - `data/netkb.csv` - Legacy CSV database
 - `data/` - Entire data directory
 
 ### Log Files
-- `/var/log/ragnar.log`
-- `/var/log/ragnar_wifi.log`
+- `/var/log/optaris_defense.log`
+- `/var/log/optaris_defense_wifi.log`
 - `/var/log/ap.log`
-- `/var/log/ragnar_failsafe.log`
+- `/var/log/optaris_defense_failsafe.log`
 - `var/log/` - Application log directory
 
 ### Temporary Files
-- `/tmp/ragnar/` - Temporary configuration files
-- `/tmp/ragnar_wifi_state.json`
-- `/tmp/ragnar_wifi_manager.pid`
+- `/tmp/optaris_defense/` - Temporary configuration files
+- `/tmp/optaris_defense_wifi_state.json`
+- `/tmp/optaris_defense_wifi_manager.pid`
 
 ### Repository
-- **Entire Ragnar installation directory** (deleted 5 seconds after response)
+- **Entire OptarisDefense installation directory** (deleted 5 seconds after response)
 
 ## Timeline
 
@@ -142,7 +142,7 @@ fetch('http://localhost:8000/api/kill', {
 
 ### After Training/Demonstration
 ```bash
-# Quick cleanup after showing Ragnar to students
+# Quick cleanup after showing OptarisDefense to students
 curl -X POST http://localhost:8000/api/kill \
   -H "Content-Type: application/json" \
   -d '{"confirmation": "ERASE_ALL_DATA"}'
@@ -158,7 +158,7 @@ curl -X POST http://localhost:8000/api/kill \
 
 ### Remote Wipe
 ```bash
-# Trigger from remote location (if Ragnar is accessible)
+# Trigger from remote location (if OptarisDefense is accessible)
 curl -X POST http://192.168.1.100:8000/api/kill \
   -H "Content-Type: application/json" \
   -d '{"confirmation": "ERASE_ALL_DATA", "shutdown": true}'
@@ -169,7 +169,7 @@ curl -X POST http://192.168.1.100:8000/api/kill \
 1. **No Undo**: Once triggered, there is NO way to recover the data
 2. **Backup First**: If you need to preserve any data, back it up before using the kill switch
 3. **Test Confirmation**: Wrong confirmation token will be rejected (403 Forbidden)
-4. **Network Required**: Must have network access to Ragnar's web interface
+4. **Network Required**: Must have network access to OptarisDefense's web interface
 5. **Root Not Required**: Can be triggered without root privileges (repo deletion uses current user)
 
 ## Verification
@@ -179,14 +179,14 @@ After triggering, you can verify deletion:
 <img width="680" height="223" alt="image" src="https://github.com/user-attachments/assets/d724aee1-050d-4c2d-982b-40a67b64b2e2" />
 
 ```bash
-# Check if Ragnar directory exists
-ls -la /path/to/Ragnar  # Should not exist after ~10 seconds
+# Check if OptarisDefense directory exists
+ls -la /path/to/OptarisDefense  # Should not exist after ~10 seconds
 
 # Check logs
-ls -la /var/log/ragnar*  # Should be empty or not exist
+ls -la /var/log/optaris_defense*  # Should be empty or not exist
 
 # Check database
-ls -la /path/to/Ragnar/data/  # Should not exist
+ls -la /path/to/OptarisDefense/data/  # Should not exist
 ```
 
 ## Educational Use

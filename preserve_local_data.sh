@@ -7,7 +7,7 @@ DATA_DIR="data"
 
 # Files to preserve (runtime data that should stay local)
 PRESERVE_FILES=(
-    "$DATA_DIR/ragnar.db"
+    "$DATA_DIR/optaris_defense.db"
     "$DATA_DIR/livestatus.csv"
     "$DATA_DIR/netkb.csv"
     "$DATA_DIR/pwnagotchi_status.json"

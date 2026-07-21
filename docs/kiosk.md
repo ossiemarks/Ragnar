@@ -1,12 +1,12 @@
 # On-Screen Kiosk Mode
 
-Ragnar can drive a locally attached screen as a fullscreen dashboard: enable
-**kiosk mode**, connect a display to the Pi's HDMI, and the Ragnar web UI comes
+OptarisDefense can drive a locally attached screen as a fullscreen dashboard: enable
+**kiosk mode**, connect a display to the Pi's HDMI, and the OptarisDefense web UI comes
 up fullscreen in Chromium (`--kiosk`). It launches automatically on every boot.
 
 ## Enabling
 
-Turn on **On-screen Display** in the **Config** tab. Ragnar then:
+Turn on **On-screen Display** in the **Config** tab. OptarisDefense then:
 
 1. Runs `scripts/install_kiosk.sh`, which auto-detects your setup and installs
    only what's missing.
@@ -20,7 +20,7 @@ Disable the toggle to stop and remove it.
 | Image | Mode | How it runs |
 |-------|------|-------------|
 | **Pi OS Desktop** (a desktop session is already running) | `autostart` | An XDG autostart entry launches Chromium inside your existing labwc/Wayland (or X) session. |
-| **Pi OS Lite** / headless (no session) | `service` | A systemd unit (`ragnar-kiosk.service`) spawns its own Xorg on vt7 with openbox, then Chromium. |
+| **Pi OS Lite** / headless (no session) | `service` | A systemd unit (`optaris-defense-kiosk.service`) spawns its own Xorg on vt7 with openbox, then Chromium. |
 
 The default URL is `http://localhost:8000`; rotation and cursor-hiding are read
 live from the app config, so changing them only requires the kiosk to relaunch.
@@ -40,7 +40,7 @@ board at launch:
   after a power-cut is suppressed by sanitizing the profile's exit state on each
   launch; `--password-store=basic` avoids a keyring hang.
 
-The board model and RAM are logged at startup in `/var/log/ragnar/kiosk-wrapper.log`.
+The board model and RAM are logged at startup in `/var/log/optaris_defense/kiosk-wrapper.log`.
 
 ## Touchscreen & on-screen keyboard
 
@@ -60,8 +60,8 @@ On-screen keyboard by session type:
 - **X** (Pi OS Lite) → `matchbox-keyboard` (falls back to `onboard`).
 
 **Overrides** (set on the service/autostart entry):
-- `RAGNAR_KIOSK_TOUCH=on|off|auto` — force/disable touch events (default `auto`).
-- `RAGNAR_KIOSK_OSK=on|off|auto` — force/disable the on-screen keyboard
+- `OPTARIS_DEFENSE_KIOSK_TOUCH=on|off|auto` — force/disable touch events (default `auto`).
+- `OPTARIS_DEFENSE_KIOSK_OSK=on|off|auto` — force/disable the on-screen keyboard
   (default `auto`). Useful if a wireless-mouse dongle advertises a phantom
   keyboard interface and the keyboardless auto-detection misfires.
 
@@ -71,10 +71,10 @@ never block the install if unavailable.
 ## Troubleshooting
 
 **Logs (on the Pi):**
-- Wrapper log: `/var/log/ragnar/kiosk-wrapper.log` — board, RAM, the
+- Wrapper log: `/var/log/optaris_defense/kiosk-wrapper.log` — board, RAM, the
   `input: touchscreen=… keyboard=… osk=…` line, which OSK launched, target URL.
-- Xorg log (service mode): `/var/log/ragnar/kiosk-Xorg.log`.
-- Service state: `journalctl -u ragnar-kiosk`.
+- Xorg log (service mode): `/var/log/optaris_defense/kiosk-Xorg.log`.
+- Service state: `journalctl -u optaris-defense-kiosk`.
 
 **Crash loop** (`status=1/FAILURE`, restart counter climbing) in service mode is
 almost always X failing to start. The service now stops itself after 5 failures
@@ -87,5 +87,5 @@ sudo apt-get install xserver-xorg-legacy
 ```
 
 (Fresh installs pull this in automatically.) After fixing the root cause, clear
-the failure counter with `sudo systemctl reset-failed ragnar-kiosk` and start it
+the failure counter with `sudo systemctl reset-failed optaris-defense-kiosk` and start it
 again.

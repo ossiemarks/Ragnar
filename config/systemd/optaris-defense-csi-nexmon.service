@@ -1,10 +1,10 @@
 [Unit]
-Description=Ragnar CSI shim (nexmon -> ADR-018 :5005 node 200)
-After=network-online.target ragnar-sensing.service
+Description=OptarisDefense CSI shim (nexmon -> ADR-018 :5005 node 200)
+After=network-online.target optaris-defense-sensing.service
 [Service]
 ExecStartPre=/home/pi/nexmon_csi_start_setup.sh
 ExecStart=/usr/bin/python3 -m python.csi_shim nexmon
-WorkingDirectory=/home/pi/Ragnar
+WorkingDirectory=/home/pi/OptarisDefense
 Restart=on-failure
 RestartSec=3
 [Install]

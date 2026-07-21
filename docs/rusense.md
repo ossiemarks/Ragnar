@@ -1,6 +1,6 @@
 # 📡 RuSense — Camera-Free Surveillance
 
-RuSense is Ragnar's **no-camera surveillance** system. Instead of pointing a lens at
+RuSense is OptarisDefense's **no-camera surveillance** system. Instead of pointing a lens at
 a room, it listens to the ordinary 2.4 GHz WiFi already filling your space and reads
 the tiny distortions that a moving body imprints on those radio waves. From those
 distortions it can tell you whether a room is **occupied**, whether there is
@@ -17,7 +17,7 @@ bathrooms and bedrooms, server rooms, warehouses, and after-hours premises**.
 > through walls carries the same privacy responsibilities as any surveillance system —
 > use it lawfully and disclose it where required.
 
-← Back to the [Ragnar README](../README.md).
+← Back to the [OptarisDefense README](../README.md).
 
 ---
 
@@ -37,15 +37,15 @@ That continuous fingerprint of the room is what gets analysed — never any vide
 ### 2. The pieces
 
 ```
-  ESP32 CSI node(s)  ──UDP CSI frames──▶  sensing-server  ──HTTP/WS──▶  Ragnar web UI
+  ESP32 CSI node(s)  ──UDP CSI frames──▶  sensing-server  ──HTTP/WS──▶  OptarisDefense web UI
    (ESP32-S3 / C6)        :5005             (127.0.0.1:3000)            (RuSense tabs)
 ```
 
 | Component | What it is | Where it lives |
 |---|---|---|
 | **CSI sensor node** | An ESP32-S3 or ESP32-C6 running the RuSense CSI firmware. Listens to 2.4 GHz WiFi and streams CSI frames over UDP to the server. | Flashed from the browser — see [Flashing a node](#flashing-a-sensor-node) |
-| **sensing-server** | A prebuilt Rust engine (`bin/sensing-server`, crate `wifi-densepose-sensing-server`) that ingests CSI, runs inference, and exposes a REST + WebSocket API on `127.0.0.1:3000`. | Vendored in this repo; installed as `ragnar-sensing.service` |
-| **Ragnar web UI** | The dashboard tabs (Nodes, Live, Training, Models) that visualise presence/motion/people and let you record and train. `webapp_modern.py` proxies `/api/v1/*` and `/ws/sensing` to the sensing-server. | `web/rusense/` |
+| **sensing-server** | A prebuilt Rust engine (`bin/sensing-server`, crate `wifi-densepose-sensing-server`) that ingests CSI, runs inference, and exposes a REST + WebSocket API on `127.0.0.1:3000`. | Vendored in this repo; installed as `optaris-defense-sensing.service` |
+| **OptarisDefense web UI** | The dashboard tabs (Nodes, Live, Training, Models) that visualise presence/motion/people and let you record and train. `webapp_modern.py` proxies `/api/v1/*` and `/ws/sensing` to the sensing-server. | `web/rusense/` |
 
 One node gives you presence and motion for a room. **Multiple nodes** placed around a
 space let the engine fuse their views (multistatic fusion) for better people-counting
@@ -67,7 +67,7 @@ and coarse positioning.
 You don't need a toolchain. The firmware is flashed straight from your browser over
 USB using the **RuSense CSI Node Flasher** (Web Serial / esptool-js):
 
-### → **[Open the RuSense Flasher](https://pierregode.github.io/Ragnar/)**
+### → **[Open the RuSense Flasher](https://pierregode.github.io/OptarisDefense/)**
 
 1. Open the flasher page in **Chrome or Edge** (Web Serial isn't available in Firefox/Safari).
 2. Plug your ESP32 into a **data-capable** USB-C cable (charge-only cables won't work).
@@ -86,7 +86,7 @@ USB using the **RuSense CSI Node Flasher** (Web Serial / esptool-js):
    boards those are the tiny **B** and **R** buttons — or hold **B** while plugging in the cable.
 6. **Provision WiFi** — flashing **erases** the node's saved config, so a fresh node
    falls back to wrong defaults and never connects. In the flasher's **🛰️ Provision
-   WiFi** panel, enter your **2.4 GHz** SSID + password and your **Ragnar box's IP**
+   WiFi** panel, enter your **2.4 GHz** SSID + password and your **OptarisDefense box's IP**
    (the RuSense server), then **Write WiFi config**. This writes the `csi_cfg` NVS at
    `0x9000` (the same partition RuView's `provision.py` produces) without touching the
    firmware. Press **RST** — the node joins your WiFi and starts streaming.
@@ -106,16 +106,16 @@ The firmware bins served by the flasher are vendored bit-identically from upstre
 
 ---
 
-## Running the sensing backend on Ragnar
+## Running the sensing backend on OptarisDefense
 
-The sensing engine is bundled with Ragnar — no separate RuView checkout needed.
+The sensing engine is bundled with OptarisDefense — no separate RuView checkout needed.
 
 ```bash
-cd /home/ragnar/Ragnar
+cd /home/optaris-defense/OptarisDefense
 sudo ./scripts/install_sensing.sh
 ```
 
-This installs and starts `ragnar-sensing.service`:
+This installs and starts `optaris-defense-sensing.service`:
 
 - On **Raspberry Pi (arm64)** it installs the prebuilt binary at `bin/sensing-server`.
 - On **other architectures** (or with `--rebuild`) it installs Rust and compiles from
@@ -125,14 +125,14 @@ Default ports: HTTP `3000`, WebSocket `3100`, UDP CSI ingest `5005`. The service
 idempotent — safe to re-run.
 
 > By default the sensing API (`/api/v1/*`) is unauthenticated and bound to localhost,
-> reached only through Ragnar's web proxy. If you expose it directly, set
+> reached only through OptarisDefense's web proxy. If you expose it directly, set
 > `RUVIEW_API_TOKEN=<token>` to enforce bearer auth.
 
 ---
 
 ## Using it from the web UI
 
-Open Ragnar's dashboard at `http://<ragnar-ip>:8000` and use the RuSense tabs:
+Open OptarisDefense's dashboard at `http://<optaris-defense-ip>:8000` and use the RuSense tabs:
 
 1. **Dashboard** — the operator overview: a presence banner, key live stats
    (people, confidence, breathing, heart rate), a **RuSense + node health** card
@@ -236,16 +236,16 @@ threshold 1, 60 s cooldown).
 > a model retunes this within ~30 s — no setting to change. For best accuracy, keep a
 > trained model active (see [Training](#two-training-paths)).
 
-Alerts reuse Ragnar's existing **Pushover** account: set your **User Key** and **API
+Alerts reuse OptarisDefense's existing **Pushover** account: set your **User Key** and **API
 Token** once under the main dashboard's **Config → Pushover Notifications**, then enable
 the RuSense triggers in the Settings tab. Use **Send test notification** to confirm
 delivery. (Config keys: `rusense_notify_*` in `shared.py`.)
 
 > [!IMPORTANT]
-> The alert monitor runs inside the `ragnar` service process. After you change alert
+> The alert monitor runs inside the `optaris_defense` service process. After you change alert
 > settings **or pull new code**, restart it so the changes take effect:
 > ```bash
-> sudo systemctl restart ragnar
+> sudo systemctl restart optaris_defense
 > ```
 
 ### Sighting history
@@ -339,14 +339,14 @@ it was recorded in**.
 RuSense is powered by **[RuView](https://github.com/ruvnet/ruview)** — the WiFi-CSI
 DensePose sensing engine (crate `wifi-densepose-sensing-server`), created by
 **ruvnet**. All of the CSI ingestion, inference, pose estimation and training logic
-originates there. Ragnar vendors RuView's prebuilt sensing server and the ESP32
+originates there. OptarisDefense vendors RuView's prebuilt sensing server and the ESP32
 CSI-node firmware (from the [PierreGode/RuView](https://github.com/PierreGode/RuView)
 fork). Full credit and thanks to the RuView project.
 
 - Source project: **[github.com/ruvnet/ruview](https://github.com/ruvnet/ruview)** (ruvnet)
-- Fork Ragnar vendors bins from: [github.com/PierreGode/RuView](https://github.com/PierreGode/RuView)
-- This integration lives in Ragnar: see the [README](../README.md).
+- Fork OptarisDefense vendors bins from: [github.com/PierreGode/RuView](https://github.com/PierreGode/RuView)
+- This integration lives in OptarisDefense: see the [README](../README.md).
 
 ---
 
-← Back to the [Ragnar README](../README.md).
+← Back to the [OptarisDefense README](../README.md).

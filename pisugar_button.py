@@ -1,11 +1,11 @@
 # pisugar_button.py
 """
-PiSugar 3 button listener for Ragnar.
+PiSugar 3 button listener for OptarisDefense.
 
-Monitors the PiSugar button and triggers mode swaps between Ragnar and Pwnagotchi:
-  - Double tap:  Switch to Pwnagotchi (from Ragnar) or switch to Ragnar (from Pwnagotchi)
+Monitors the PiSugar button and triggers mode swaps between OptarisDefense and Pwnagotchi:
+  - Double tap:  Switch to Pwnagotchi (from optaris_defense) or switch to OptarisDefense (from Pwnagotchi)
   - Long press:  Same as double tap (alternative trigger for reliability)
-  - Single tap:  Toggle Ragnar manual mode on/off
+  - Single tap:  Toggle OptarisDefense manual mode on/off
 
 Requires pisugar-server running and the `pisugar` Python package.
 Connection is via TCP to localhost (default pisugar-server setup).
@@ -26,7 +26,7 @@ except Exception:
 
 
 class PiSugarButtonListener:
-    """Listens to PiSugar 3 button events and triggers Ragnar/Pwnagotchi swap."""
+    """Listens to PiSugar 3 button events and triggers OptarisDefense/Pwnagotchi swap."""
 
     MOCK_ENV = 'PISUGAR_MOCK'  # Set to "1" to simulate a PiSugar for UI testing
 
@@ -61,7 +61,7 @@ class PiSugarButtonListener:
             logger.info("pisugar package not installed - button listener disabled")
             return
 
-        # Retry connection with backoff (pisugar-server may start after Ragnar)
+        # Retry connection with backoff (pisugar-server may start after OptarisDefense)
         for attempt in range(5):
             if self._stop_event.is_set():
                 return
@@ -95,29 +95,29 @@ class PiSugarButtonListener:
             self._stop_event.wait(1)
 
     def _on_single_tap(self):
-        """Single tap: toggle Ragnar manual mode."""
+        """Single tap: toggle OptarisDefense manual mode."""
         try:
             current = self.shared_data.config.get('manual_mode', False)
             new_mode = not current
             self.shared_data.config['manual_mode'] = new_mode
 
-            ragnar = getattr(self.shared_data, 'ragnar_instance', None)
-            if ragnar:
+            optaris_defense = getattr(self.shared_data, 'optaris_defense_instance', None)
+            if optaris_defense:
                 if new_mode:
-                    ragnar.stop_orchestrator()
+                    optaris_defense.stop_orchestrator()
                     logger.info("PiSugar tap: manual mode ON (orchestrator stopped)")
                 else:
-                    ragnar.start_orchestrator()
+                    optaris_defense.start_orchestrator()
                     logger.info("PiSugar tap: manual mode OFF (orchestrator started)")
         except Exception as e:
             logger.error(f"PiSugar single tap handler error: {e}")
 
     def _on_double_tap(self):
-        """Double tap: swap between Ragnar and Pwnagotchi."""
+        """Double tap: swap between OptarisDefense and Pwnagotchi."""
         self._trigger_swap()
 
     def _on_long_tap(self):
-        """Long press: swap between Ragnar and Pwnagotchi (alternative trigger)."""
+        """Long press: swap between OptarisDefense and Pwnagotchi (alternative trigger)."""
         self._trigger_swap()
 
     def _trigger_swap(self):
@@ -130,8 +130,8 @@ class PiSugarButtonListener:
 
         try:
             # Determine current mode and swap to the other
-            current_mode = self.shared_data.config.get('pwnagotchi_mode', 'ragnar')
-            target = 'pwnagotchi' if current_mode != 'pwnagotchi' else 'ragnar'
+            current_mode = self.shared_data.config.get('pwnagotchi_mode', 'optaris_defense')
+            target = 'pwnagotchi' if current_mode != 'pwnagotchi' else 'optaris_defense'
 
             logger.info(f"PiSugar button: swapping to {target}")
 

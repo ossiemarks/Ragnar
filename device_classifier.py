@@ -308,8 +308,8 @@ DEVICE_ICONS = {
     "iot":          "M7.5 5.6L10 7 8.6 4.5 10 2 7.5 3.4 5 2l1.4 2.5L5 7zm12 9.8L17 14l1.4 2.5L17 19l2.5-1.4L22 19l-1.4-2.5L22 14zM22 2l-2.5 1.4L17 2l1.4 2.5L17 7l2.5-1.4L22 7l-1.4-2.5zm-7.63 5.29a1 1 0 00-1.41 0L1.29 18.96a1 1 0 000 1.41l2.34 2.34a1 1 0 001.41 0L16.71 11.04a1 1 0 000-1.41l-2.34-2.34z",
     # Vehicle / EV
     "vehicle":      "M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z",
-    # Ragnar
-    "ragnar":       "M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z",
+    # OptarisDefense
+    "optaris_defense":       "M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z",
     # Apple (generic — when specific product can't be determined)
     "apple":        "M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.81-1.31.05-2.31-1.32-3.15-2.55C4.22 16 2.97 12.11 4.71 9.5c.87-1.3 2.41-2.13 4.08-2.15 1.29-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83l.04.03zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z",
     # Unknown
@@ -341,7 +341,7 @@ DEVICE_TYPE_LABELS = {
     "media": "Media Device",
     "gaming": "Game Console",
     "vehicle": "Vehicle/EV Charger",
-    "ragnar": "Ragnar",
+    "optaris_defense": "OptarisDefense",
     "apple": "Apple",
     "unknown": "Unknown",
 }
@@ -371,7 +371,7 @@ DEVICE_TYPE_COLORS = {
     "media": "#ec4899",        # pink
     "gaming": "#a855f7",       # violet
     "vehicle": "#0d9488",     # dark teal
-    "ragnar": "#16a34a",       # green (Ragnar brand)
+    "optaris_defense": "#16a34a",       # green (OptarisDefense brand)
     "apple": "#a3a3a3",        # silver/gray (Apple brand)
     "unknown": "#64748b",      # slate
 }
@@ -748,8 +748,8 @@ def classify_device_ai(vendor, ports, hostname, mac, ai_service=None,
             "rt-ax": "router", "rt-ac": "router", "rt-n": "router",
             "gt-ax": "router", "gt-ac": "router",
             "zenwifi": "router", "asus router": "router",
-            # Ragnar devices
-            "ragnar": "ragnar",
+            # OptarisDefense devices
+            "optaris_defense": "optaris_defense",
         }
         for hint, dtype in _STRONG_HOSTNAME_HINTS.items():
             if hint in hostname_lower:
@@ -805,7 +805,7 @@ def _ask_ai_classify(ai_service, vendor, ports, hostname, mac):
     if not ai_service or not ai_service.ensure_ready():
         return None
 
-    valid_types = ", ".join(sorted(VALID_DEVICE_TYPES - {"ragnar", "unknown"}))
+    valid_types = ", ".join(sorted(VALID_DEVICE_TYPES - {"optaris_defense", "unknown"}))
 
     system = (
         "You are a network device classifier. Given device metadata, reply with ONLY "

@@ -1,7 +1,7 @@
 {
-    "name": "Ragnar Cyberviking",
-    "short_name": "Ragnar",
-    "description": "Ragnar Cyberviking",
+    "name": "OptarisDefense Cyberviking",
+    "short_name": "OptarisDefense",
+    "description": "OptarisDefense Cyberviking",
     "start_url": "/index.html",
     "display": "standalone",
     "background_color": "#333",

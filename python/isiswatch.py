@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""isiswatch.py — passive IS-IS security scanner (Ragnar).
+"""isiswatch.py — passive IS-IS security scanner (OptarisDefense).
 
 Companion to ospfwatch/eigrpwatch. Passive-first, detection-only: it listens for
 IS-IS PDUs and flags security-relevant posture and anomalies. It never transmits

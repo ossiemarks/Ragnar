@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Pushover Notification Service for Ragnar
+Pushover Notification Service for OptarisDefense
 Sends push notifications via the Pushover API for security events.
 """
 
@@ -85,8 +85,8 @@ class PushoverService:
         try:
             from env_manager import EnvManager
             em = EnvManager()
-            user_key = em.get_env_key("RAGNAR_PUSHOVER_USER_KEY")
-            api_token = em.get_env_key("RAGNAR_PUSHOVER_API_TOKEN")
+            user_key = em.get_env_key("OPTARIS_DEFENSE_PUSHOVER_USER_KEY")
+            api_token = em.get_env_key("OPTARIS_DEFENSE_PUSHOVER_API_TOKEN")
             return user_key, api_token
         except Exception as e:
             logger.debug(f"Pushover key lookup failed: {e}")
@@ -105,7 +105,7 @@ class PushoverService:
     # Core send
     # ------------------------------------------------------------------
 
-    def send(self, message, title="Ragnar", priority=0, sound="pushover"):
+    def send(self, message, title="OptarisDefense", priority=0, sound="pushover"):
         """Send a Pushover notification. Returns dict with success/message."""
         user_key, api_token = self._get_keys()
         if not user_key or not api_token:
@@ -174,7 +174,7 @@ class PushoverService:
         ip_list = ", ".join(sorted(truly_new)[:5])
         suffix = f" (+{count - 5} more)" if count > 5 else ""
         msg = f"⚔️ {count} new device(s) discovered on the network for the first time:\n{ip_list}{suffix}"
-        threading.Thread(target=self.send, args=(msg, "Ragnar — New Device"), daemon=True).start()
+        threading.Thread(target=self.send, args=(msg, "OptarisDefense — New Device"), daemon=True).start()
 
     def notify_device_lost(self, lost_ips):
         """Notify when devices go offline (and remember them for back-online detection)."""
@@ -193,7 +193,7 @@ class PushoverService:
         ip_list = ", ".join(sorted(lost_ips)[:5])
         suffix = f" (+{count - 5} more)" if count > 5 else ""
         msg = f"🛡️ {count} device(s) went offline:\n{ip_list}{suffix}"
-        threading.Thread(target=self.send, args=(msg, "Ragnar — Device Lost"), daemon=True).start()
+        threading.Thread(target=self.send, args=(msg, "OptarisDefense — Device Lost"), daemon=True).start()
 
     def notify_device_back_online(self, appeared_ips):
         """Notify when a previously known device that went offline comes back online."""
@@ -212,7 +212,7 @@ class PushoverService:
         ip_list = ", ".join(sorted(back_online)[:5])
         suffix = f" (+{count - 5} more)" if count > 5 else ""
         msg = f"📶 {count} device(s) back online:\n{ip_list}{suffix}"
-        threading.Thread(target=self.send, args=(msg, "Ragnar — Device Back Online"), daemon=True).start()
+        threading.Thread(target=self.send, args=(msg, "OptarisDefense — Device Back Online"), daemon=True).start()
 
     def notify_new_vulnerabilities(self, new_total):
         """Notify about newly discovered vulnerabilities (compares against last notified count)."""
@@ -230,7 +230,7 @@ class PushoverService:
             logger.debug(f"Pushover: suppressed vuln alert (delta={delta}) during startup grace")
             return
         msg = f"🔥 {delta} new vulnerability/vulnerabilities found! (total: {new_total})"
-        threading.Thread(target=self.send, args=(msg, "Ragnar — Vulnerability Alert", 1), daemon=True).start()
+        threading.Thread(target=self.send, args=(msg, "OptarisDefense — Vulnerability Alert", 1), daemon=True).start()
 
     def notify_new_credentials(self, new_count, total):
         """Notify when new credentials are captured."""
@@ -248,7 +248,7 @@ class PushoverService:
             logger.debug(f"Pushover: suppressed credential alert during startup grace")
             return
         msg = f"🗝️ {new_count} new credential(s) captured! (total: {total})"
-        threading.Thread(target=self.send, args=(msg, "Ragnar — Credentials"), daemon=True).start()
+        threading.Thread(target=self.send, args=(msg, "OptarisDefense — Credentials"), daemon=True).start()
 
     # ------------------------------------------------------------------
     # RuSense (WiFi-CSI camera-free surveillance) alerts
@@ -275,7 +275,7 @@ class PushoverService:
         flag = self._RUSENSE_FLAGS.get(kind)
         return bool(flag and self.shared_data.config.get(flag, False))
 
-    def notify_rusense(self, kind, message, title="Ragnar — RuSense", priority=0, sound="pushover"):
+    def notify_rusense(self, kind, message, title="OptarisDefense — RuSense", priority=0, sound="pushover"):
         """Send a RuSense sensing alert if `kind` is enabled and off cooldown.
 
         Returns True if a send was dispatched, False if gated/throttled. The
@@ -327,7 +327,7 @@ class PushoverService:
             self._net_integrity_last_sent = now
         threading.Thread(
             target=self.send,
-            args=(message, "Ragnar — Network integrity", priority, sound),
+            args=(message, "OptarisDefense — Network integrity", priority, sound),
             daemon=True,
         ).start()
         return True

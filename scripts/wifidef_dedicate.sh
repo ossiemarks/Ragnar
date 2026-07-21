@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------------
 # wifidef_dedicate.sh — claim a WiFi adapter as a DEDICATED passive monitor for
-# Ragnar WiFi Defense, once, at boot (meant for systemd ExecStart / a sensor box
+# OptarisDefense WiFi Defense, once, at boot (meant for systemd ExecStart / a sensor box
 # that owns the adapter). Switch-mode: the whole interface becomes type=monitor,
 # so there's no shared-radio vif, no runtime enable/disable dance, and none of
 # the EBUSY / "ragmon0 disappeared" failure modes.

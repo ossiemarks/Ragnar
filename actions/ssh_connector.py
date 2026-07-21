@@ -60,7 +60,7 @@ class SSHBruteforce:
             else:
                 logger.warning(f"Existing credentials for {ip} no longer valid, will re-bruteforce")
         
-        self.shared_data.ragnarorch_status = "SSHBruteforce"
+        self.shared_data.optaris_defenseorch_status = "SSHBruteforce"
         success, results = self.bruteforce_ssh(ip, port)
         if success and results:
             for mac_address, ip_addr, hostname, user, password, used_port in results:

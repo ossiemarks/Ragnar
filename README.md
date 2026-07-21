@@ -1,8 +1,8 @@
-## Ragnar     <img width="105" height="150" alt="image" src="https://github.com/user-attachments/assets/463d32c7-f6ca-447c-b62b-f18f2429b2b2" />
+## OptarisDefense     <img width="105" height="150" alt="image" src="https://github.com/user-attachments/assets/463d32c7-f6ca-447c-b62b-f18f2429b2b2" />
 
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/J3J2EARPK)
-![GitHub stars](https://img.shields.io/github/stars/PierreGode/Ragnar)
+![GitHub stars](https://img.shields.io/github/stars/PierreGode/OptarisDefense)
 ![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff)
 ![Status](https://img.shields.io/badge/Status-Development-blue.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -14,7 +14,7 @@
   </tr>
 </table>
 
-Ragnar is a fork of the awesome [Bjorn](https://github.com/infinition/Bjorn) project — a Tamagotchi-like autonomous network scanning, vulnerability assessment, and offensive security tool. It runs on a **Raspberry Pi** with a 2.13-inch e-Paper HAT, as a **headless server** on Debian-based systems (AMD64/ARM/ARM64) with Ethernet-first connectivity, or on the **WiFi Pineapple Pager** with full-color LCD display. On servers with 8GB+ RAM, Ragnar unlocks advanced capabilities including real-time traffic analysis and enhanced vulnerability scanning.
+OptarisDefense is a fork of the awesome [Bjorn](https://github.com/infinition/Bjorn) project — a Tamagotchi-like autonomous network scanning, vulnerability assessment, and offensive security tool. It runs on a **Raspberry Pi** with a 2.13-inch e-Paper HAT, as a **headless server** on Debian-based systems (AMD64/ARM/ARM64) with Ethernet-first connectivity, or on the **WiFi Pineapple Pager** with full-color LCD display. On servers with 8GB+ RAM, OptarisDefense unlocks advanced capabilities including real-time traffic analysis and enhanced vulnerability scanning.
 
 > [!IMPORTANT]
 > **For educational and authorized testing purposes only.**
@@ -24,8 +24,8 @@ Ragnar is a fork of the awesome [Bjorn](https://github.com/infinition/Bjorn) pro
 ## Quick Install
 
 ```bash
-wget https://raw.githubusercontent.com/PierreGode/Ragnar/main/install_ragnar.sh
-sudo chmod +x install_ragnar.sh && sudo ./install_ragnar.sh
+wget https://raw.githubusercontent.com/PierreGode/OptarisDefense/main/install_optaris_defense.sh
+sudo chmod +x install_optaris_defense.sh && sudo ./install_optaris_defense.sh
 # On Raspberry Pi: choose between e-Paper HAT, server/headless, or Pineapple Pager deployment.
 # On other hardware: choose between server install or Pineapple Pager deployment.
 # It may take a while as many packages and modules will be installed. Reboot when it finishes.
@@ -37,7 +37,7 @@ For detailed information see the [Install Guide](docs/INSTALL.md). See [Release 
 
 ## 🌐 Web Interface
 
-Access Ragnar's dashboard at `http://<ragnar-ip>:8000`
+Access OptarisDefense's dashboard at `http://<optaris-defense-ip>:8000`
 
 - Real-time network discovery and vulnerability scanning
 - Multi-source threat intelligence dashboard
@@ -45,12 +45,12 @@ Access Ragnar's dashboard at `http://<ragnar-ip>:8000`
 - System monitoring and configuration
 - Hardware profile auto-detection (Pi Zero 2W, Pi 4, Pi 5)
 
-**WiFi Configuration Portal** — When Ragnar can't connect to a known network, it creates a WiFi hotspot:
-1. Connect to WiFi network `Ragnar` (password: `ragnarconnect`)
+**WiFi Configuration Portal** — When OptarisDefense can't connect to a known network, it creates a WiFi hotspot:
+1. Connect to WiFi network `OptarisDefense` (password: `optaris_defenseconnect`)
 2. Navigate to `http://192.168.4.1:8000`
 3. Configure your WiFi credentials via the mobile-friendly interface
-4. Ragnar will automatically retry known WiFi after some time if the AP is unused
-5. Once configured, Ragnar exits AP mode and connects to your network
+4. OptarisDefense will automatically retry known WiFi after some time if the AP is unused
+5. Once configured, OptarisDefense exits AP mode and connects to your network
 
 The portal supports network scanning with signal strength, manual entry for hidden SSIDs, known network management, and one-tap reconnection.
 
@@ -69,7 +69,7 @@ web will be down during wardrive without ap or wifi connection.
 
 - **WiFi Defense (802.11 WIDS)** — A passive **wireless intrusion-detection** monitor in its own web-UI tab. Listens on a **monitor-mode** adapter for 802.11 management frames and flags **deauth/disassoc floods** (the classic Wi-Fi DoS), **beacon floods** (fake-AP storms), **rogue APs / evil twins** (a known SSID from an untrusted BSSID, against a trusted baseline), and **KARMA/MANA** rogue APs (one BSSID answering many SSIDs). **Receive-only** — it never transmits a frame or deauths back. Monitor mode is set up with plain `iw` (a separate `ragmon0` vif where the driver allows, keeping your link up; else a mode switch) — **no aircrack-ng dependency**; Scapy captures with optional channel-hopping. Shows a CLEAR/WARNING/UNDER-ATTACK banner, a card per detection with attacker/BSSID detail, and an AP inventory. Includes a passive **client-isolation observer**: from cleartext 802.11 headers alone it audits whether an AP or mesh actually enforces client isolation (guest/IoT WLANs) — flagging APs seen relaying client-to-client traffic (OPEN), silently filtering it (ISOLATING), plus mesh-wide **cross-node forwarding**. Needs a monitor-capable adapter (e.g. the Alfa AWUS036AXM). See [WiFi Defense Guide](docs/wifi-defense.md)
 
-- **Wardriving with GPS recovery** — Logs WiFi networks, BLE devices, and cell towers with GPS positions while driving. Exports to WiGLE CSV / KML. Most wardrivers log observations with GPS-at-scan-time and discard the rest; Ragnar logs a GPS breadcrumb track during the session and runs a post-pass that backfills missing positions for any observation seen within 5 minutes of a real GPS point. The interpolation is speed-aware — when endpoint speeds differ (slowing for a tunnel, accelerating out the far side), it uses constant-acceleration math instead of constant-velocity, shifting positions toward whichever endpoint the device actually spent more time near. See [Wardriving Guide](docs/wardriving.md)
+- **Wardriving with GPS recovery** — Logs WiFi networks, BLE devices, and cell towers with GPS positions while driving. Exports to WiGLE CSV / KML. Most wardrivers log observations with GPS-at-scan-time and discard the rest; OptarisDefense logs a GPS breadcrumb track during the session and runs a post-pass that backfills missing positions for any observation seen within 5 minutes of a real GPS point. The interpolation is speed-aware — when endpoint speeds differ (slowing for a tunnel, accelerating out the far side), it uses constant-acceleration math instead of constant-velocity, shifting positions toward whichever endpoint the device actually spent more time near. See [Wardriving Guide](docs/wardriving.md)
     
 - **Network Scanning** — Identifies live hosts and open ports
 - **Vulnerability Assessment** — Scans using Nmap and other tools
@@ -85,8 +85,8 @@ web will be down during wardrive without ap or wifi connection.
 - **MAX7219 LED Matrix Display** — Cascaded 8×8 LED panel arrays (4-panel 32×8 or 8-panel 64×8). Scrolls SSID, IP, targets, and status. SPI-connected: DIN→GPIO10, CS→GPIO8, CLK→GPIO11.
 - **WiFi Pineapple Pager** — Full-color LCD display with button controls, LED indicators, and auto-dim. See [Pager section](#-wifi-pineapple-pager)
 - **Hardware-Bound Authentication** — Optional login with full database encryption at rest. See [Security & Authentication](docs/SECURITY.md)
-- **PiSugar 3 Button** — Physical button to swap between Ragnar and Pwnagotchi modes
-- **Web Terminal** — Optional interactive shell (xterm.js ↔ PTY over Socket.IO) in the dashboard, so you can manage the Pi without SSH. Runs as the non-root `ragnar` user in the Ragnar folder (`sudo` available), **off by default**, and gated by login — enable it in Config → Web Terminal only on trusted networks.
+- **PiSugar 3 Button** — Physical button to swap between OptarisDefense and Pwnagotchi modes
+- **Web Terminal** — Optional interactive shell (xterm.js ↔ PTY over Socket.IO) in the dashboard, so you can manage the Pi without SSH. Runs as the non-root `optaris_defense` user in the OptarisDefense folder (`sudo` available), **off by default**, and gated by login — enable it in Config → Web Terminal only on trusted networks.
 - **Kill Switch** — Built-in endpoint (`/api/kill`) to wipe all databases, logs, and data. See [Kill Switch](docs/KILL_SWITCH.md)
 - **Comprehensive Logging** — All nmap commands and results logged to `data/logs/nmap.log`
 
@@ -103,13 +103,13 @@ web will be down during wardrive without ap or wifi connection.
 ### Raspberry Pi (Zero W / W2 / 4 / 5)
 
 - 64-bit Raspberry Pi OS (Debian Trixie, kernel 6.12+)
-- Username and hostname set to `ragnar`
+- Username and hostname set to `optaris_defense`
 - 2.13-inch e-Paper HAT connected to GPIO pins (for display mode)
-- For 32-bit systems, use Ragnar's predecessor [Bjorn](https://github.com/infinition/Bjorn)
+- For 32-bit systems, use OptarisDefense's predecessor [Bjorn](https://github.com/infinition/Bjorn)
 
 **Recommendation:** Edit `~/.config/labwc/autostart` and comment out `/usr/bin/lwrespawn /usr/bin/wf-panel-pi &` to free up resources, or run `sudo pkill wf-panel-pi` temporarily.
 
-#### Ragnar Gen 2 — reference build
+#### OptarisDefense Gen 2 — reference build
 
 The compact, self-contained reference node: a headless Pi Zero 2 W with an
 on-board status display, wired networking, and a Wi-Fi 6E monitor-mode radio.
@@ -155,15 +155,15 @@ For the full installation walkthrough see [Install Guide](docs/INSTALL.md).
 
 ## 🖥️ Server Mode: Advanced Features (8GB+ RAM)
 
-When deployed on systems with 8GB+ RAM, Ragnar automatically unlocks advanced security capabilities.
+When deployed on systems with 8GB+ RAM, OptarisDefense automatically unlocks advanced security capabilities.
 
 > **Fresh installs:** The main installer detects 8GB+ RAM and installs advanced tools automatically.
 >
 > **Existing installs:** Run the advanced tools installer separately:
 > ```bash
-> cd /home/ragnar/Ragnar
+> cd /home/optaris-defense/OptarisDefense
 > sudo ./scripts/install_advanced_tools.sh
-> sudo systemctl restart ragnar
+> sudo systemctl restart optaris_defense
 > ```
 
 ### Real-Time Traffic Analysis
@@ -191,7 +191,7 @@ When deployed on systems with 8GB+ RAM, Ragnar automatically unlocks advanced se
 - **Web app security**: OWASP ZAP (requires Java)
 - **Nmap scripts**: vulners.nse, vulscan database
 
-Ragnar auto-detects available tools and enables corresponding features in the web interface.
+OptarisDefense auto-detects available tools and enables corresponding features in the web interface.
 
 ---
 
@@ -204,21 +204,21 @@ bundled sensing engine reports **presence, motion, people-count**, and (with a t
 model) **coarse pose and resting vital signs**. No images are ever captured; it works in
 the dark and through walls.
 
-- **Flash a sensor node from your browser** — no toolchain needed: **[RuSense Flasher](https://pierregode.github.io/Ragnar/)** (ESP32-S3 DevKitC / Seeed XIAO ESP32S3 & Plus / AMOLED / C6, Chrome/Edge).
-- **Install the backend:** `sudo ./scripts/install_sensing.sh` (runs as `ragnar-sensing.service`).
-- **View it** under the RuSense tabs in the web dashboard at `http://<ragnar-ip>:8000`.
+- **Flash a sensor node from your browser** — no toolchain needed: **[RuSense Flasher](https://pierregode.github.io/OptarisDefense/)** (ESP32-S3 DevKitC / Seeed XIAO ESP32S3 & Plus / AMOLED / C6, Chrome/Edge).
+- **Install the backend:** `sudo ./scripts/install_sensing.sh` (runs as `optaris-defense-sensing.service`).
+- **View it** under the RuSense tabs in the web dashboard at `http://<optaris-defense-ip>:8000`.
 
 Powered by [RuView](https://github.com/ruvnet/ruview) (by ruvnet). Full details: **[RuSense Guide](docs/rusense.md)**.
 
 ---
 
-## 🐝 Ragnar + Pwnagotchi Side by Side
+## 🐝 OptarisDefense + Pwnagotchi Side by Side
 
-A bundled helper script plus dashboard controls make swapping between Ragnar and Pwnagotchi painless:
+A bundled helper script plus dashboard controls make swapping between OptarisDefense and Pwnagotchi painless:
 
 1. Run the installer:
    ```bash
-   cd /home/ragnar/Ragnar
+   cd /home/optaris-defense/OptarisDefense
    sudo ./scripts/install_pwnagotchi.sh
    ```
    The script clones [pwnagotchiworking](https://github.com/PierreGode/pwnagotchiworking) into `/opt/pwnagotchi`, installs dependencies, writes `/etc/pwnagotchi/config.toml`, and drops a disabled `pwnagotchi.service`. Re-running is fast — it skips already-installed packages.
@@ -229,7 +229,7 @@ A bundled helper script plus dashboard controls make swapping between Ragnar and
 - USB WiFi adapter (wlan1) with monitor mode support
 - Waveshare 2.13" e-Paper HAT V4 for the pwnagotchi face display
 
-**Pwnagotchi web UI:** `http://<same-ip>:8080` (credentials: `ragnar` / `ragnar`)
+**Pwnagotchi web UI:** `http://<same-ip>:8080` (credentials: `optaris_defense` / `optaris_defense`)
 
 **What the installer configures:**
 - Monitor mode scripts (`/usr/bin/monstart`, `/usr/bin/monstop`)
@@ -239,11 +239,11 @@ A bundled helper script plus dashboard controls make swapping between Ragnar and
 
 **Swapping via PiSugar 3 button:**
 
-| Button Action | While Ragnar is running | While Pwnagotchi is running |
+| Button Action | While OptarisDefense is running | While Pwnagotchi is running |
 |---------------|------------------------|---------------------------|
 | Single tap | Toggle manual mode | — |
-| Double tap | Switch to Pwnagotchi | Switch to Ragnar |
-| Long press | Switch to Pwnagotchi | Switch to Ragnar |
+| Double tap | Switch to Pwnagotchi | Switch to OptarisDefense |
+| Long press | Switch to Pwnagotchi | Switch to OptarisDefense |
 
 A 10-second cooldown prevents accidental double triggers. If PiSugar is not connected, the listener is silently disabled.
 
@@ -259,18 +259,18 @@ sudo nmcli con up "YOUR_WIFI_SSID"
 
 Or set a DHCP reservation on your router. This only affects wlan0 — the monitor interface (wlan1/mon0) is not changed.
 
-**Service recovery:** If Ragnar doesn't start after a reboot:
+**Service recovery:** If OptarisDefense doesn't start after a reboot:
 ```bash
-sudo /home/ragnar/Ragnar/scripts/fix_services.sh
+sudo /home/optaris-defense/OptarisDefense/scripts/fix_services.sh
 ```
 
 ---
 
 ## 🍍 WiFi Pineapple Pager
 
-> **Attribution:** The WiFi Pineapple Pager port of Ragnar is based on the original work of **brAinphreAk** — the developer who first ported Bjorn to the Pineapple Pager as [PagerBjorn / Loki](https://github.com/pineapple-pager-projects/pineapple_pager_loki). The pager adaptation layer (display system, hardware control wrapper, MIPS-compiled binaries and libraries) originated in that project. Full credit and thanks to brAinphreAk for making pager hardware support possible.
+> **Attribution:** The WiFi Pineapple Pager port of OptarisDefense is based on the original work of **brAinphreAk** — the developer who first ported Bjorn to the Pineapple Pager as [PagerBjorn / Loki](https://github.com/pineapple-pager-projects/pineapple_pager_loki). The pager adaptation layer (display system, hardware control wrapper, MIPS-compiled binaries and libraries) originated in that project. Full credit and thanks to brAinphreAk for making pager hardware support possible.
 
-Ragnar can be deployed to the WiFi Pineapple Pager as a native payload with full-color LCD display, button controls, and LED status indicators.
+OptarisDefense can be deployed to the WiFi Pineapple Pager as a native payload with full-color LCD display, button controls, and LED status indicators.
 
 **Features on Pager:**
 - Full-color 480x222 LCD with Viking-themed status display
@@ -283,7 +283,7 @@ Ragnar can be deployed to the WiFi Pineapple Pager as a native payload with full
 
 Option A — From the main installer (select option 3):
 ```bash
-sudo ./install_ragnar.sh
+sudo ./install_optaris_defense.sh
 # Choose: 3. Install on WiFi Pineapple Pager
 ```
 
@@ -293,10 +293,10 @@ Option B — Direct deployment:
 ```
 
 **Usage:**
-1. Launch from Pager menu: **Reconnaissance > PagerRagnar**
+1. Launch from Pager menu: **Reconnaissance > PagerOptarisDefense**
 2. Press **GREEN** to confirm the splash screen
 3. Select network interface and toggle Web UI on/off
-4. Press **GREEN** on "Start Ragnar" to begin scanning
+4. Press **GREEN** on "Start OptarisDefense" to begin scanning
 5. Press **RED** while running to open the pause menu
 
 ---
@@ -309,25 +309,25 @@ See [Contributing Docs](docs/CONTRIBUTING.md) and [Code of Conduct](docs/CODE_OF
 
 ## 📫 Contact
 
-- **Report Issues**: Via [GitHub Issues](https://github.com/PierreGode/Ragnar/issues)
-- **Author**: PierreGode — [PierreGode/Ragnar](https://github.com/PierreGode/Ragnar)
+- **Report Issues**: Via [GitHub Issues](https://github.com/PierreGode/OptarisDefense/issues)
+- **Author**: PierreGode — [PierreGode/OptarisDefense](https://github.com/PierreGode/OptarisDefense)
 
 ---
 
 ## 🙏 Credits & Attribution
 
-Ragnar is built on the shoulders of great work by others:
+OptarisDefense is built on the shoulders of great work by others:
 
-| Project | Author | Role in Ragnar |
+| Project | Author | Role in OptarisDefense |
 |---|---|---|
-| [Bjorn](https://github.com/infinition/Bjorn) | infinition | Original project that Ragnar is forked from |
+| [Bjorn](https://github.com/infinition/Bjorn) | infinition | Original project that OptarisDefense is forked from |
 | [PagerBjorn / Loki](https://github.com/pineapple-pager-projects/pineapple_pager_loki) | [brAinphreAk](https://github.com/brainphreak) | WiFi Pineapple Pager adaptation layer — display system, hardware control wrapper (`pagerctl.py`), pager menu UI, and all MIPS-compiled binaries and libraries |
-| [RuView](https://github.com/ruvnet/ruview) | ruvnet | WiFi-CSI sensing engine and ESP32 CSI-node firmware behind [RuSense](docs/rusense.md) — camera-free presence, motion, people-count, pose and vital-sign sensing. Ragnar vendors bins from the [PierreGode/RuView](https://github.com/PierreGode/RuView) fork |
+| [RuView](https://github.com/ruvnet/ruview) | ruvnet | WiFi-CSI sensing engine and ESP32 CSI-node firmware behind [RuSense](docs/rusense.md) — camera-free presence, motion, people-count, pose and vital-sign sensing. OptarisDefense vendors bins from the [PierreGode/RuView](https://github.com/PierreGode/RuView) fork |
 | — | [Solarflere](https://www.instagram.com/solarflere) | Co-author of the [Authority Verification](docs/nettools.md) suite (Diagnostics, Switch & L2/L3, Interfaces) |
 
 ---
 
 ## 📜 License
 
-2025 - Ragnar is distributed under the MIT License. See the [LICENSE](LICENSE) file for details.
+2025 - OptarisDefense is distributed under the MIT License. See the [LICENSE](LICENSE) file for details.
 

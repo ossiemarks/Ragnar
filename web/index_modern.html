@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ragnar Cyberviking - Modern Dashboard</title>
-    <link rel="icon" href="/web/images/ragnar.ico" type="image/x-icon">
+    <title>OptarisDefense Cyberviking - Modern Dashboard</title>
+    <link rel="icon" href="/web/images/optaris_defense.ico" type="image/x-icon">
     
     <!-- Tailwind CSS (local build) -->
     <link rel="stylesheet" href="/css/tailwind.css">
@@ -274,9 +274,9 @@
 
         /* Toggle switch: show green when ON, regardless of Tailwind purge state */
         label.toggle-switch > input[type="checkbox"]:checked + div { background-color: #16a34a !important; }
-        /* AI map toggle – uses Ragnar color, not green */
+        /* AI map toggle – uses OptarisDefense color, not green */
         #map-ai-toggle-track { background: #475569; border-radius: 9999px; width: 36px; height: 20px; position: relative; cursor: pointer; transition: background 0.2s; }
-        #map-ai-toggle-track.active { background: var(--ragnar-600, #7c3aed); }
+        #map-ai-toggle-track.active { background: var(--optaris-defense-600, #7c3aed); }
         #map-ai-toggle-track.disabled { opacity: 0.35; cursor: not-allowed; }
         #map-ai-toggle-knob { position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: #fff; border-radius: 9999px; transition: transform 0.2s; }
         #map-ai-toggle-track.active #map-ai-toggle-knob { transform: translateX(16px); }
@@ -458,10 +458,10 @@
             <div class="flex items-center justify-between py-2">
                 <!-- Logo -->
                 <div class="flex items-center space-x-3">
-                    <a href="/web/index_modern.html" aria-label="Go to main dashboard" class="flex items-center space-x-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-Ragnar-400">
-                        <img src="/web/images/ragnar.ico" alt="Ragnar" class="h-12 w-9">
-                        <span class="text-2xl font-bold bg-gradient-to-r from-Ragnar-400 to-Ragnar-600 bg-clip-text text-transparent">
-                            Ragnar
+                    <a href="/web/index_modern.html" aria-label="Go to main dashboard" class="flex items-center space-x-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-OptarisDefense-400">
+                        <img src="/web/images/optaris_defense.ico" alt="OptarisDefense" class="h-12 w-9">
+                        <span class="text-2xl font-bold bg-gradient-to-r from-OptarisDefense-400 to-OptarisDefense-600 bg-clip-text text-transparent">
+                            OptarisDefense
                         </span>
                     </a>
                     <span id="connection-status" class="flex items-center space-x-2">
@@ -605,7 +605,7 @@
                         <div>
                             <p class="text-gray-400 text-sm">Targets</p>
                             <div class="flex items-baseline space-x-2">
-                                <p id="target-count" class="text-3xl font-bold text-Ragnar-400">0</p>
+                                <p id="target-count" class="text-3xl font-bold text-OptarisDefense-400">0</p>
                                 <span class="text-sm text-gray-400 whitespace-nowrap"></span>
                             </div>
                                 <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-gray-300">
@@ -627,8 +627,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="w-12 aspect-square bg-Ragnar-500 bg-opacity-20 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-Ragnar-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-12 aspect-square bg-OptarisDefense-500 bg-opacity-20 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-OptarisDefense-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
                             </svg>
                         </div>
@@ -739,7 +739,7 @@
                 <!-- Current Status -->
                 <div class="glass rounded-xl p-6">
                     <h2 class="text-xl font-bold mb-4 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-Ragnar-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-6 h-6 mr-2 text-OptarisDefense-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
                         Current Status
@@ -747,11 +747,11 @@
                     <div class="space-y-3">
                         <div class="flex items-center justify-between p-3 bg-slate-800 bg-opacity-50 rounded-lg">
                             <span class="text-gray-400">Status</span>
-                            <span id="Ragnar-status" class="text-Ragnar-400 font-semibold">IDLE</span>
+                            <span id="OptarisDefense-status" class="text-OptarisDefense-400 font-semibold">IDLE</span>
                         </div>
                         <div class="flex items-center justify-between p-3 bg-slate-800 bg-opacity-50 rounded-lg">
                             <span class="text-gray-400">Mode</span>
-                            <span id="Ragnar-mode" class="text-green-400 font-semibold">Auto</span>
+                            <span id="OptarisDefense-mode" class="text-green-400 font-semibold">Auto</span>
                         </div>
                         <div class="p-3 bg-slate-800 bg-opacity-50 rounded-lg">
                             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -765,8 +765,8 @@
                             </div>
                         </div>
                         <div class="p-3 bg-slate-800 bg-opacity-50 rounded-lg">
-                            <p class="text-gray-400 text-sm mb-2">Ragnar Says:</p>
-                            <p id="Ragnar-says" class="text-white font-mono text-sm">Hacking away...</p>
+                            <p class="text-gray-400 text-sm mb-2">OptarisDefense Says:</p>
+                            <p id="OptarisDefense-says" class="text-white font-mono text-sm">Hacking away...</p>
                         </div>
                     </div>
                 </div>
@@ -774,7 +774,7 @@
                 <!-- Connection Status -->
                 <div class="glass rounded-xl p-6">
                     <h2 class="text-xl font-bold mb-4 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-Ragnar-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-6 h-6 mr-2 text-OptarisDefense-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path>
                         </svg>
                         Connectivity
@@ -984,13 +984,13 @@
             <div class="glass rounded-xl p-6">
                 <h2 class="text-xl font-bold mb-4 stackable-row">
                     <span class="flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-Ragnar-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-6 h-6 mr-2 text-OptarisDefense-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
                         Console
                     </span>
                     <div class="flex space-x-2">
-                        <button onclick="loadConsoleLogs()" class="text-sm text-white bg-Ragnar-600 hover:bg-Ragnar-700 px-3 py-1 rounded transition-colors">
+                        <button onclick="loadConsoleLogs()" class="text-sm text-white bg-OptarisDefense-600 hover:bg-OptarisDefense-700 px-3 py-1 rounded transition-colors">
                             Refresh
                         </button>
                         <button onclick="clearConsole()" class="text-sm text-gray-400 hover:text-white transition-colors">
@@ -999,7 +999,7 @@
                     </div>
                 </h2>
                 <div id="console-output" class="bg-black bg-opacity-50 rounded-lg p-4 h-64 overflow-y-auto font-mono text-sm scrollbar-thin">
-                    <div class="text-green-400">Ragnar console loading...</div>
+                    <div class="text-green-400">OptarisDefense console loading...</div>
                 </div>
             </div>
         </div>
@@ -1008,7 +1008,7 @@
         <div id="network-tab" class="tab-content hidden">
             <!-- Sub-tab navigation -->
             <div class="flex flex-wrap items-center gap-1 mb-5 border-b border-slate-800 pb-2">
-                <button id="net-subtab-hosts" onclick="showNetworkSubtab('hosts')" class="net-subtab px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-Ragnar-600 text-white">Hosts</button>
+                <button id="net-subtab-hosts" onclick="showNetworkSubtab('hosts')" class="net-subtab px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-OptarisDefense-600 text-white">Hosts</button>
                 <button id="net-subtab-archive" onclick="showNetworkSubtab('archive')" class="net-subtab px-4 py-2 rounded-lg text-sm font-semibold transition-colors text-slate-400 hover:bg-slate-700 hover:text-white">AP Archive</button>
                 <button id="net-subtab-map" onclick="showNetworkSubtab('map')" class="net-subtab px-4 py-2 rounded-lg text-sm font-semibold transition-colors text-slate-400 hover:bg-slate-700 hover:text-white">Map</button>
                 <button id="net-subtab-diagnostics" onclick="showNetworkSubtab('diagnostics')" class="net-subtab px-4 py-2 rounded-lg text-sm font-semibold transition-colors text-slate-400 hover:bg-slate-700 hover:text-white">Diagnostics</button>
@@ -1030,7 +1030,7 @@
                             <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                             <span class="text-sm text-gray-300">Auto-scanning active</span>
                         </div>
-                        <button onclick="refreshCurrentTab()" class="refresh-btn bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        <button onclick="refreshCurrentTab()" class="refresh-btn bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors">
                             <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                             </svg>
@@ -1068,7 +1068,7 @@
                                    inputmode="decimal"
                                    autocomplete="off"
                                    placeholder="192.168.1.192"
-                                   class="w-full bg-slate-900/70 border border-slate-700 focus:border-Ragnar-500 rounded px-3 py-2 text-sm" />
+                                   class="w-full bg-slate-900/70 border border-slate-700 focus:border-OptarisDefense-500 rounded px-3 py-2 text-sm" />
                             <button id="custom-deep-scan-btn"
                                     class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap">
                                 Scan
@@ -1125,8 +1125,8 @@
                         <span class="text-amber-400 mt-0.5">⚠</span>
                         <div class="text-xs text-amber-300/90">
                             <p class="font-semibold mb-1">Continuous Threat Monitoring</p>
-                            <p>Ragnar will perform periodic WiFi airspace sweeps at the configured interval to detect rogue access points, evil twins, and deauthentication attacks. Each sweep takes ~5 seconds. This may cause <strong>brief network interruptions</strong> as the WiFi adapter momentarily switches channels during each scan cycle. Shorter intervals increase detection speed but cause more frequent disruptions.</p>
-                            <p class="mt-2 text-amber-400/80"><strong>Tip:</strong> Plug in a USB WiFi adapter that supports monitor mode (e.g. Alfa AWUS036ACH) for full cross-network deauth detection. Without one, Ragnar can only detect deauth attacks targeting its own connection.</p>
+                            <p>OptarisDefense will perform periodic WiFi airspace sweeps at the configured interval to detect rogue access points, evil twins, and deauthentication attacks. Each sweep takes ~5 seconds. This may cause <strong>brief network interruptions</strong> as the WiFi adapter momentarily switches channels during each scan cycle. Shorter intervals increase detection speed but cause more frequent disruptions.</p>
+                            <p class="mt-2 text-amber-400/80"><strong>Tip:</strong> Plug in a USB WiFi adapter that supports monitor mode (e.g. Alfa AWUS036ACH) for full cross-network deauth detection. Without one, OptarisDefense can only detect deauth attacks targeting its own connection.</p>
                         </div>
                     </div>
                 </div>
@@ -1176,9 +1176,9 @@
                 <div class="flex items-center justify-between mb-6">
                     <div>
                         <h2 class="text-2xl font-bold">AP Archive</h2>
-                        <p class="text-sm text-gray-400 mt-1">Every access point Ragnar has collected data on — click one to browse its files</p>
+                        <p class="text-sm text-gray-400 mt-1">Every access point OptarisDefense has collected data on — click one to browse its files</p>
                     </div>
-                    <button onclick="loadAllNetworksData()" class="refresh-btn bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                    <button onclick="loadAllNetworksData()" class="refresh-btn bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                         </svg>
@@ -1206,7 +1206,7 @@
                             All APs
                         </button>
                         <span class="text-gray-600">/</span>
-                        <h3 id="networks-file-panel-title" class="text-lg font-semibold text-Ragnar-400"></h3>
+                        <h3 id="networks-file-panel-title" class="text-lg font-semibold text-OptarisDefense-400"></h3>
                     </div>
                     <div id="networks-file-list-container"></div>
                 </div>
@@ -1235,7 +1235,7 @@
                             </div>
                         </div>
                         <!-- Refresh button -->
-                        <button onclick="refreshNetworkMap()" class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors text-sm whitespace-nowrap shrink-0">
+                        <button onclick="refreshNetworkMap()" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors text-sm whitespace-nowrap shrink-0">
                             Refresh
                         </button>
                     </div>
@@ -1250,12 +1250,12 @@
                         <span id="subnet-count" class="bg-green-900/50 text-green-300 text-xs px-1.5 rounded-full">0</span>
                     </button>
                     <div id="subnet-panel" class="hidden bg-slate-800/50 rounded-lg p-3 text-sm space-y-2">
-                        <p class="text-xs text-gray-500">Add extra subnets so Ragnar discovers devices behind other routers/APs.</p>
+                        <p class="text-xs text-gray-500">Add extra subnets so OptarisDefense discovers devices behind other routers/APs.</p>
                         <div id="subnet-primary" class="text-xs text-gray-500"></div>
                         <div id="subnet-list" class="space-y-1"></div>
                         <div class="flex gap-2">
-                            <input id="subnet-input" type="text" placeholder="e.g. 10.0.0.0/24" class="flex-1 px-3 py-1.5 rounded bg-slate-700 border border-slate-600 text-sm focus:border-Ragnar-500 focus:outline-none">
-                            <button onclick="addScanSubnet()" class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-3 py-1.5 rounded text-sm whitespace-nowrap">Add</button>
+                            <input id="subnet-input" type="text" placeholder="e.g. 10.0.0.0/24" class="flex-1 px-3 py-1.5 rounded bg-slate-700 border border-slate-600 text-sm focus:border-OptarisDefense-500 focus:outline-none">
+                            <button onclick="addScanSubnet()" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-3 py-1.5 rounded text-sm whitespace-nowrap">Add</button>
                         </div>
                         <p id="subnet-error" class="text-xs text-red-400 hidden"></p>
                         <!-- Scan log -->
@@ -1312,7 +1312,7 @@
                     <div class="mt-3 flex flex-wrap items-center gap-3">
                         <button onclick="netIntegrityRefresh(true)" class="bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-1.5 rounded text-xs whitespace-nowrap">Check now</button>
                         <label class="flex items-center gap-1.5 text-xs text-gray-400 cursor-pointer" title="Also rotate the passive Watch scanners (STP/DTP/FHRP/OSPF/EIGRP/IS-IS/BGP/SMB/Relay/…) through the background monitor">
-                            <input type="checkbox" id="netint-extended" class="accent-Ragnar-600" onchange="onNetIntegrityExtendedToggled(this)">
+                            <input type="checkbox" id="netint-extended" class="accent-OptarisDefense-600" onchange="onNetIntegrityExtendedToggled(this)">
                             Extended (full passive suite)
                         </label>
                         <label class="flex items-center gap-1.5 text-xs text-gray-400" title="How many capture-based scanners run per cycle (round-robin). Higher = fresher but heavier cycles.">
@@ -1335,7 +1335,7 @@
                         <p class="text-sm text-gray-400 mb-3">ICMP reachability &amp; round-trip time.</p>
                         <div class="flex flex-col sm:flex-row gap-2">
                             <input id="ping-target" type="text" inputmode="url" autocomplete="off" placeholder="IP or hostname" class="w-full flex-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm" onkeydown="if(event.key==='Enter')runPing()">
-                            <button onclick="runPing()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Ping</button>
+                            <button onclick="runPing()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Ping</button>
                         </div>
                         <pre id="ping-results" class="hidden mt-3 text-xs font-mono bg-slate-900/70 rounded p-3 overflow-x-auto whitespace-pre-wrap"></pre>
                     </div>
@@ -1345,7 +1345,7 @@
                         <p class="text-sm text-gray-400 mb-3">Path (hops) to a destination.</p>
                         <div class="flex flex-col sm:flex-row gap-2">
                             <input id="trace-target" type="text" inputmode="url" autocomplete="off" placeholder="IP or hostname" class="w-full flex-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm" onkeydown="if(event.key==='Enter')runTraceroute()">
-                            <button onclick="runTraceroute()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Trace</button>
+                            <button onclick="runTraceroute()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Trace</button>
                         </div>
                         <pre id="trace-results" class="hidden mt-3 text-xs font-mono bg-slate-900/70 rounded p-3 overflow-x-auto whitespace-pre-wrap"></pre>
                     </div>
@@ -1355,7 +1355,7 @@
                         <p class="text-sm text-gray-400 mb-3">Per-hop loss &amp; latency to an end point, sampled over N cycles (a snapshot, not continuous). Optionally bind the start point to one of this host&#39;s addresses.</p>
                         <div class="flex flex-col sm:flex-row gap-2">
                             <input id="mtr-target" type="text" inputmode="url" autocomplete="off" placeholder="End point — IP or hostname" class="w-full flex-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm" onkeydown="if(event.key==='Enter')runMtr()">
-                            <button onclick="runMtr()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Run</button>
+                            <button onclick="runMtr()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Run</button>
                             <button onclick="exportMtrCsv()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-2 rounded text-sm whitespace-nowrap">Export CSV</button>
                         </div>
                         <div class="flex flex-col sm:flex-row gap-2 mt-2">
@@ -1375,7 +1375,7 @@
                         <p class="text-sm text-gray-400 mb-3">Registration data for a domain or IP.</p>
                         <div class="flex flex-col sm:flex-row gap-2">
                             <input id="whois-target" type="text" inputmode="url" autocomplete="off" placeholder="domain or IP" class="w-full flex-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm" onkeydown="if(event.key==='Enter')runWhois()">
-                            <button onclick="runWhois()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Lookup</button>
+                            <button onclick="runWhois()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Lookup</button>
                         </div>
                         <pre id="whois-results" class="hidden mt-3 text-xs font-mono bg-slate-900/70 rounded p-3 overflow-x-auto whitespace-pre-wrap max-h-96"></pre>
                     </div>
@@ -1386,7 +1386,7 @@
                                 <h3 class="text-lg font-semibold mb-1">Internet Speed Test</h3>
                                 <p class="text-sm text-gray-400">Measures download, upload and latency (takes ~30s).</p>
                             </div>
-                            <button id="speedtest-btn" onclick="runSpeedtest()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Start Test</button>
+                            <button id="speedtest-btn" onclick="runSpeedtest()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Start Test</button>
                         </div>
                         <div id="speedtest-results" class="hidden mt-4"></div>
                     </div>
@@ -1397,7 +1397,7 @@
                         <p class="text-sm text-gray-400 mb-3">Resolves a name through every system resolver plus public 1.1.1.1 / 8.8.8.8 — per-resolver answers &amp; latency, DNSSEC, and whether they agree (split-DNS / hijack smell). Also checks DoH/DoT reachability.</p>
                         <div class="flex flex-col sm:flex-row gap-2">
                             <input id="dns-target" type="text" inputmode="url" autocomplete="off" placeholder="hostname (e.g. example.com)" class="w-full flex-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm" onkeydown="if(event.key==='Enter')runDns()">
-                            <button onclick="runDns()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Diagnose DNS</button>
+                            <button onclick="runDns()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Diagnose DNS</button>
                         </div>
                         <div id="dns-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
                     </div>
@@ -1410,7 +1410,7 @@
                             <select id="arp-check-iface" onfocus="_arpFillIfaces()" title="Interface to check — scopes to that segment's gateway + neighbours (for a multi-homed box); Auto uses the default route" class="w-full sm:w-auto bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm text-gray-300">
                                 <option value="">Auto (default route)</option>
                             </select>
-                            <button onclick="runArpCheck()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Check ARP</button>
+                            <button onclick="runArpCheck()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Check ARP</button>
                             <button onclick="netIntegrityTrustGateway()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Set the current gateway MAC as the trusted baseline — use after a legitimate router/gateway change">Trust current gateway</button>
                         </div>
                         <div id="arp-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1428,7 +1428,7 @@
                             <select id="macwatch-iface" title="Interface for the arp-scan sweep — pick your WiFi or LAN NIC to scan that subnet" class="w-full sm:w-auto bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm text-gray-300">
                                 <option value="">Auto (default route)</option>
                             </select>
-                            <button onclick="runMacWatch(true)" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan (arp-scan sweep)</button>
+                            <button onclick="runMacWatch(true)" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan (arp-scan sweep)</button>
                             <button onclick="runMacWatch(false)" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Read the kernel neighbour table only — no traffic generated">Quick (neighbour table)</button>
                             <button onclick="macWatchReset()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Clear the MAC-watch history (first/last-seen, per-IP history, change events)">Reset history</button>
                             <button onclick="exportMacWatchCsv()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Download the observed MACs as CSV">Export CSV</button>
@@ -1441,7 +1441,7 @@
                         <p class="text-sm text-gray-400 mb-3">Finds the path MTU and the hop that silently drops full-size packets (the "ping works but big transfers hang" fault).</p>
                         <div class="flex flex-col sm:flex-row gap-2">
                             <input id="pmtu-target" type="text" inputmode="url" autocomplete="off" placeholder="IP or hostname" class="w-full flex-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm" onkeydown="if(event.key==='Enter')runPmtu()">
-                            <button onclick="runPmtu()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Discover</button>
+                            <button onclick="runPmtu()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Discover</button>
                         </div>
                         <div id="pmtu-results" class="hidden mt-3 text-sm"></div>
                     </div>
@@ -1452,7 +1452,7 @@
                                 <h3 class="text-lg font-semibold mb-1">Captive Portal Check</h3>
                                 <p class="text-sm text-gray-400">Detects hotel/guest-WiFi HTTP hijacking using the OS connectivity-check endpoints.</p>
                             </div>
-                            <button onclick="runCaptivePortal()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Check</button>
+                            <button onclick="runCaptivePortal()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Check</button>
                         </div>
                         <div id="captive-results" class="hidden mt-3 text-sm"></div>
                     </div>
@@ -1467,7 +1467,7 @@
                                 <option value="down">Download</option>
                             </select>
                             <input id="iperf-dur" type="number" min="1" max="30" value="5" title="test duration (seconds)" class="w-full sm:w-24 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                            <button onclick="runIperf()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Run</button>
+                            <button onclick="runIperf()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Run</button>
                         </div>
                         <div id="iperf-results" class="hidden mt-3 text-sm"></div>
                         <div class="mt-3 border-t border-slate-700 pt-3 flex items-center justify-between gap-3">
@@ -1483,7 +1483,7 @@
                                 <h3 class="text-lg font-semibold mb-1">Live Flow Telemetry</h3>
                                 <p class="text-sm text-gray-400">Per-connection RTT and TCP retransmits from the kernel (<span class="font-mono">ss&nbsp;-ti</span>) — the light version of eBPF flow visibility. RTT far above min-RTT, or retransmits, is where loss/bufferbloat bites.</p>
                             </div>
-                            <button onclick="runFlows()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Snapshot</button>
+                            <button onclick="runFlows()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Snapshot</button>
                         </div>
                         <div id="flows-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
                     </div>
@@ -1494,7 +1494,7 @@
                         <div class="flex flex-col sm:flex-row sm:flex-wrap gap-2">
                             <input id="ptp-iface" type="text" autocomplete="off" placeholder="interface (e.g. eth0)" class="w-full sm:flex-1 sm:min-w-[11rem] bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm" onkeydown="if(event.key==='Enter')runPtp()">
                             <input id="ptp-secs" type="number" min="3" max="30" value="8" title="capture seconds" class="w-full sm:w-24 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                            <button onclick="runPtp()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Detect</button>
+                            <button onclick="runPtp()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Detect</button>
                         </div>
                         <div id="ptp-results" class="hidden mt-3 text-sm"></div>
                     </div>
@@ -1504,7 +1504,7 @@
                         <p class="text-xs text-amber-300/90 mb-2">The <strong>defence</strong> half of IPv6 first-hop security. Where <em>IPv6 First-Hop Watch</em> (Switch &amp; L2/L3) <strong>detects</strong> a rogue RA / DHCPv6 / ICMPv6-Redirect on the wire, RA Guard audits <strong>this host's own IPv6 settings</strong> so a rogue first-hop can't take effect even if it reaches you — and can <strong>harden</strong> them in one click. It never sends a packet; it reads <span class="font-mono">/proc/sys/net/ipv6/conf</span> and the routing table.</p>
                         <p class="text-sm text-gray-400 mb-3">Grades each interface on <span class="font-mono">accept_redirects</span> (accepting an <strong>ICMPv6 Redirect</strong> lets any on-link host reroute your traffic — a Layer-3 MITM), <span class="font-mono">accept_ra_rtr_pref</span> (honouring RA <strong>Router-Preference</strong> lets a rogue "pref high" RA jump ahead of the real router), and <span class="font-mono">accept_ra</span>, and shows which IPv6 <strong>gateway the host has actually accepted</strong>. <strong>Harden</strong> sets the two safe sysctls (<span class="font-mono">accept_redirects=0</span>, <span class="font-mono">accept_ra_rtr_pref=0</span>) live and persists them to <span class="font-mono">/etc/sysctl.d</span>; <span class="font-mono">accept_ra</span> is left untouched so SLAAC connectivity keeps working.</p>
                         <div class="flex flex-wrap items-center gap-2">
-                            <button onclick="runRaGuard()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Check posture</button>
+                            <button onclick="runRaGuard()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Check posture</button>
                             <button onclick="raGuardHarden()" class="w-full sm:w-auto bg-amber-700 hover:bg-amber-600 text-white px-4 py-2 rounded text-sm whitespace-nowrap" title="Applies + persists accept_redirects=0 and accept_ra_rtr_pref=0 (leaves accept_ra alone)">Harden host</button>
                         </div>
                         <div id="raguard-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1519,7 +1519,7 @@
                                 <option value="">Auto (wired first)</option>
                             </select>
                             <input id="ntp-secs" type="number" min="5" max="40" value="15" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                            <button onclick="runNtpWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan NTP</button>
+                            <button onclick="runNtpWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan NTP</button>
                             <button onclick="ntpTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Learn the current NTP time source(s) as the trusted baseline — use after a legitimate NTP change">Trust current</button>
                         </div>
                         <div id="ntp-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1534,7 +1534,7 @@
                                 <option value="">Auto (wired first)</option>
                             </select>
                             <input id="snmp-secs" type="number" min="4" max="40" value="12" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                            <button onclick="runSnmpWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan SNMP</button>
+                            <button onclick="runSnmpWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan SNMP</button>
                             <button onclick="snmpTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Learn the current SNMP agents / community strings as the baseline — use after a legitimate SNMP change">Trust current</button>
                         </div>
                         <div id="snmp-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1548,13 +1548,13 @@
                             <textarea id="cert-targets" rows="2" placeholder="router.local, 192.168.1.1:443, nas.local:5001  (one or more; default port 443)" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm font-mono text-gray-300"></textarea>
                             <div class="flex flex-wrap items-center gap-2">
                                 <label class="flex items-center gap-2 text-sm text-gray-300" title="Passively sniff TLS ClientHellos on the segment to discover servers to grade">
-                                    <input id="cert-discover" type="checkbox" class="accent-Ragnar-600"> Discover on
+                                    <input id="cert-discover" type="checkbox" class="accent-OptarisDefense-600"> Discover on
                                 </label>
                                 <select id="cert-iface" title="Interface for passive discovery" class="w-full sm:w-auto bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm text-gray-300">
                                     <option value="">Auto (wired first)</option>
                                 </select>
                                 <input id="cert-secs" type="number" min="4" max="30" value="8" title="discovery capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                                <button onclick="runCertWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Check Certs</button>
+                                <button onclick="runCertWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Check Certs</button>
                                 <button onclick="certTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Forget stored cert fingerprints and re-learn on the next scan">Trust current</button>
                             </div>
                         </div>
@@ -1571,7 +1571,7 @@
                             <h3 class="text-lg font-semibold">Switch Discovery (LLDP / CDPv1/v2 / EDP / FDP)</h3>
                             <p class="text-sm text-gray-400">Neighbouring switches via LLDP, Cisco CDPv1/v2, Extreme EDP, Foundry FDP and Nortel SONMP: name, port, VLAN, PoE and management IP.</p>
                         </div>
-                        <div class="flex gap-2 w-full sm:w-auto"><button onclick="loadLldp()" class="flex-1 bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Refresh</button><button onclick="exportLldpCsv()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-2 rounded text-sm whitespace-nowrap">Export CSV</button></div>
+                        <div class="flex gap-2 w-full sm:w-auto"><button onclick="loadLldp()" class="flex-1 bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Refresh</button><button onclick="exportLldpCsv()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-2 rounded text-sm whitespace-nowrap">Export CSV</button></div>
                     </div>
                     <div id="lldp-results" class="mt-3 overflow-x-auto text-sm text-gray-400">Loading…</div>
                 </div>
@@ -1582,7 +1582,7 @@
                     </div>
                     <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2">
                         <input id="arp-iface" type="text" autocomplete="off" placeholder="interface (e.g. eth0)" class="w-full sm:w-auto sm:flex-1 sm:min-w-[12rem] bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm" onkeydown="if(event.key==='Enter')runArpScan()">
-                        <button onclick="runArpScan()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan</button>
+                        <button onclick="runArpScan()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan</button>
                         <button onclick="exportArpCsv()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-2 rounded text-sm whitespace-nowrap">Export CSV</button>
                     </div>
                     <div id="arp-scan-results" class="hidden mt-3 overflow-x-auto"></div>
@@ -1596,7 +1596,7 @@
                         <select id="dhcp-iface" title="Interface for the DHCP scan — pick your WiFi or LAN NIC to scan that segment" class="w-full sm:w-auto bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm text-gray-300">
                             <option value="">Auto (wired first)</option>
                         </select>
-                        <button onclick="runDhcpGuardian()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan DHCP</button>
+                        <button onclick="runDhcpGuardian()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan DHCP</button>
                         <button onclick="dhcpTrustCurrent()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Set the current DHCP server(s) as the trusted baseline — use after a legitimate DHCP-server / router change">Trust current server</button>
                     </div>
                     <div id="dhcp-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1619,7 +1619,7 @@
                         </label>
                         <button onclick="dhcpSnoopSavePorts()" class="bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-2 rounded text-sm whitespace-nowrap">Save ports</button>
                         <input id="snoop-secs" type="number" min="4" max="60" value="20" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runDhcpSnoop()" class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Snoop now</button>
+                        <button onclick="runDhcpSnoop()" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Snoop now</button>
                     </div>
                     <details class="mb-2">
                         <summary class="text-xs text-gray-500 cursor-pointer hover:text-gray-300">Advanced: create / remove the inline bridge (rgsnoop0)</summary>
@@ -1645,7 +1645,7 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="ipv6-secs" type="number" min="4" max="40" value="12" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runIpv6Watch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan IPv6</button>
+                        <button onclick="runIpv6Watch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan IPv6</button>
                         <button onclick="ipv6TrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Learn the current RA router(s) / DHCPv6 server(s) as the trusted baseline — use after a legitimate IPv6 change">Trust current</button>
                     </div>
                     <div id="ipv6-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1660,7 +1660,7 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="ndp-secs" type="number" min="4" max="40" value="12" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runNdpWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan NDP</button>
+                        <button onclick="runNdpWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan NDP</button>
                         <button onclick="ndpTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Learn the current neighbour bindings + default router as the trusted baseline — use after a legitimate device/router change">Trust current</button>
                     </div>
                     <div id="ndp-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1675,7 +1675,7 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="icmp-secs" type="number" min="4" max="40" value="12" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runIcmpWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan ICMP</button>
+                        <button onclick="runIcmpWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan ICMP</button>
                         <button onclick="icmpTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Re-seed the trusted gateway from the host's current default gateway — use after a legitimate router change">Trust current</button>
                     </div>
                     <div id="icmp-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1690,7 +1690,7 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="igmp-secs" type="number" min="4" max="30" value="12" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runIgmpWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan multicast</button>
+                        <button onclick="runIgmpWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan multicast</button>
                         <button onclick="igmpTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Learn the current querier(s) and memberships as the trusted baseline — use after a legitimate multicast/router change">Trust current</button>
                     </div>
                     <div id="igmp-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1706,8 +1706,8 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="tls-secs" type="number" min="4" max="30" value="12" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <label class="flex items-center gap-2 text-sm text-gray-300" title="Skip QUIC (UDP/443) observation"><input id="tls-noquic" type="checkbox" class="accent-Ragnar-600"> No QUIC</label>
-                        <button onclick="runTlsWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Observe handshakes</button>
+                        <label class="flex items-center gap-2 text-sm text-gray-300" title="Skip QUIC (UDP/443) observation"><input id="tls-noquic" type="checkbox" class="accent-OptarisDefense-600"> No QUIC</label>
+                        <button onclick="runTlsWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Observe handshakes</button>
                     </div>
                     <div id="tls-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
                 </div>
@@ -1721,7 +1721,7 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="stp-secs" type="number" min="5" max="50" value="20" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runStpWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan STP</button>
+                        <button onclick="runStpWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan STP</button>
                         <button onclick="stpTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Learn the current root(s) and bridges as the trusted baseline — use after a legitimate topology change">Trust current</button>
                     </div>
                     <div id="stp-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1736,7 +1736,7 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="dtp-secs" type="number" min="5" max="65" value="30" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runDtpWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan DTP</button>
+                        <button onclick="runDtpWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan DTP</button>
                         <button onclick="dtpTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Learn the current DTP speakers as the trusted baseline — use after a legitimate switch change">Trust current</button>
                     </div>
                     <div id="dtp-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1751,7 +1751,7 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="cdp-secs" type="number" min="5" max="65" value="30" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runCdpWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan CDP</button>
+                        <button onclick="runCdpWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan CDP</button>
                         <button onclick="cdpTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Learn the current CDP speakers as the trusted baseline — use after a legitimate switch/phone change">Trust current</button>
                     </div>
                     <div id="cdp-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1766,7 +1766,7 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="vtp-secs" type="number" min="5" max="65" value="30" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runVtpWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan VTP</button>
+                        <button onclick="runVtpWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan VTP</button>
                         <button onclick="vtpTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Learn the current VTP domain / revision / server as the trusted baseline — use after a legitimate VLAN change">Trust current</button>
                     </div>
                     <div id="vtp-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1781,7 +1781,7 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="smb-secs" type="number" min="5" max="50" value="20" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runSmbWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan SMB</button>
+                        <button onclick="runSmbWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan SMB</button>
                         <button onclick="smbTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Learn the current mDNS responders + SMBv1 hosts as the trusted baseline">Trust current</button>
                     </div>
                     <div id="smb-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1796,7 +1796,7 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="relay-secs" type="number" min="5" max="50" value="20" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runRelayWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan relay/coercion</button>
+                        <button onclick="runRelayWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan relay/coercion</button>
                         <button onclick="relayTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Learn the current unsigned servers as the trusted baseline">Trust current</button>
                     </div>
                     <div id="relay-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1811,7 +1811,7 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="ldap-secs" type="number" min="5" max="60" value="15" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runLdapWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan LDAP</button>
+                        <button onclick="runLdapWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan LDAP</button>
                     </div>
                     <div id="ldap-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
                 </div>
@@ -1825,7 +1825,7 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="ospf-secs" type="number" min="5" max="40" value="15" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runOspfWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan OSPF</button>
+                        <button onclick="runOspfWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan OSPF</button>
                         <button onclick="ospfTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Learn the current routers/originators as the trusted baseline — use after a legitimate topology change">Trust current</button>
                     </div>
                     <div id="ospf-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1840,7 +1840,7 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="eigrp-secs" type="number" min="5" max="40" value="15" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runEigrpWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan EIGRP</button>
+                        <button onclick="runEigrpWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan EIGRP</button>
                         <button onclick="eigrpTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Learn the current routers/prefixes as the trusted baseline — use after a legitimate topology change">Trust current</button>
                     </div>
                     <div id="eigrp-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1855,7 +1855,7 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="isis-secs" type="number" min="5" max="50" value="20" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runIsisWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan IS-IS</button>
+                        <button onclick="runIsisWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan IS-IS</button>
                         <button onclick="isisTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Learn the current routers/prefixes as the trusted baseline — use after a legitimate topology change">Trust current</button>
                     </div>
                     <div id="isis-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1870,7 +1870,7 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="fhrp-secs" type="number" min="4" max="40" value="15" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runFhrpWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan FHRP</button>
+                        <button onclick="runFhrpWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan FHRP</button>
                         <button onclick="fhrpTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Learn the current groups/speakers/priorities as the trusted baseline — use after a legitimate router or priority change">Trust current</button>
                     </div>
                     <div id="fhrp-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1885,7 +1885,7 @@
                             <option value="">Auto (wired first)</option>
                         </select>
                         <input id="bgp-secs" type="number" min="5" max="40" value="15" title="capture seconds" class="w-20 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runBgpWatch()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan BGP</button>
+                        <button onclick="runBgpWatch()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan BGP</button>
                         <button onclick="bgpTrustBaseline()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Learn the current peers/origins as the trusted baseline — use after a legitimate routing change">Trust current</button>
                     </div>
                     <div id="bgp-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1902,11 +1902,11 @@
                                 <input id="bgpc-peer" type="text" autocomplete="off" placeholder="peer IP (e.g. 10.0.0.1)" class="w-full min-w-0 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
                                 <div class="flex gap-2">
                                     <input id="bgpc-peeras" type="number" min="1" placeholder="peer AS" title="the peer router's ASN" class="w-1/2 min-w-0 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                                    <input id="bgpc-localas" type="number" min="1" placeholder="our AS" title="the ASN Ragnar presents" class="w-1/2 min-w-0 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
+                                    <input id="bgpc-localas" type="number" min="1" placeholder="our AS" title="the ASN OptarisDefense presents" class="w-1/2 min-w-0 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
                                 </div>
                                 <input id="bgpc-rid" type="text" autocomplete="off" placeholder="our router-id (e.g. 10.0.0.9)" class="w-full min-w-0 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
                                 <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
-                                    <button onclick="bgpCollector('start')" class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-3 py-2 rounded text-sm">Start</button>
+                                    <button onclick="bgpCollector('start')" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-3 py-2 rounded text-sm">Start</button>
                                     <button onclick="bgpCollector('stop')" class="bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-2 rounded text-sm">Stop</button>
                                     <button onclick="bgpCollector('status')" class="bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-2 rounded text-sm">Status</button>
                                     <button onclick="bgpCollector('rib')" class="bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-2 rounded text-sm" title="Show the learned Adj-RIB-In">RIB</button>
@@ -1925,8 +1925,8 @@
                                 <input id="pa-target" type="text" autocomplete="off" placeholder="target running a reflector (IP/host)" class="w-full min-w-0 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
                                 <div class="flex flex-wrap gap-2 items-center">
                                     <input id="pa-count" type="number" min="5" max="100" value="20" title="probe count" class="w-20 shrink-0 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                                    <label class="text-xs text-gray-400 flex items-center gap-1"><input id="pa-synced" type="checkbox" class="accent-Ragnar-600"> clocks PTP/GPS-synced</label>
-                                    <button onclick="runPathAsymmetry()" class="w-full sm:w-auto sm:ml-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-3 py-2 rounded text-sm">Measure</button>
+                                    <label class="text-xs text-gray-400 flex items-center gap-1"><input id="pa-synced" type="checkbox" class="accent-OptarisDefense-600"> clocks PTP/GPS-synced</label>
+                                    <button onclick="runPathAsymmetry()" class="w-full sm:w-auto sm:ml-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-3 py-2 rounded text-sm">Measure</button>
                                 </div>
                             </div>
                             <div id="pa-results" class="hidden mt-2 overflow-x-auto text-sm"></div>
@@ -1941,7 +1941,7 @@
                     </div>
                     <p class="text-sm text-gray-400 mb-3 mt-1">Validates the IGMP, IPv6 first-hop, NTP, ICMP, SNMP, TLS-cert, OSPF and BGP detectors by running each classifier against crafted attack captures — no root, no live traffic. Installing <strong>Scapy</strong> adds an end-to-end leg that builds real packets, writes a pcap and parses it back through <span class="font-mono">tcpdump</span> (and Cert Watch grades a real local handshake), so the whole capture→parse→classify path is exercised. Recommended for a fully-validated security tool.</p>
                     <div class="flex flex-wrap items-center gap-2">
-                        <button onclick="runRoutingSelftest()" class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Run self-test</button>
+                        <button onclick="runRoutingSelftest()" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Run self-test</button>
                         <button id="scapy-install-btn" onclick="installNetTool('scapy', this, runRoutingSelftest)" class="hidden bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded text-sm whitespace-nowrap" title="Install the Scapy Python module for the end-to-end packet-crafting self-test">Install Scapy</button>
                     </div>
                     <div id="routing-selftest-results" class="hidden mt-3 overflow-x-auto text-sm"></div>
@@ -1962,7 +1962,7 @@
                             <option value="burst">Traffic burst (ACTIVITY LED)</option>
                         </select>
                         <input id="locate-count" type="number" min="1" max="30" value="6" title="blink count" class="w-full sm:w-24 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="locatePort()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Flash Port</button>
+                        <button onclick="locatePort()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Flash Port</button>
                     </div>
                     <div id="locate-results" class="hidden mt-3 text-sm"></div>
                 </div>
@@ -1974,7 +1974,7 @@
                     <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2">
                         <input id="l2-iface" type="text" autocomplete="off" placeholder="interface (e.g. eth0)" class="w-full sm:w-auto sm:flex-1 sm:min-w-[12rem] bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm" onkeydown="if(event.key==='Enter')runL2Health()">
                         <input id="l2-secs" type="number" min="3" max="30" value="12" title="capture seconds" class="w-full sm:w-24 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm">
-                        <button onclick="runL2Health()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan L2</button>
+                        <button onclick="runL2Health()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Scan L2</button>
                     </div>
                     <div id="l2-results" class="hidden mt-3 text-sm"></div>
                 </div>
@@ -1985,7 +1985,7 @@
                     </div>
                     <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2">
                         <input id="pcap-file" type="file" accept=".pcap,.pcapng,.cap,application/vnd.tcpdump.pcap" class="w-full sm:w-auto sm:flex-1 sm:min-w-[14rem] max-w-full text-sm text-gray-300 file:mr-3 file:py-2 file:px-3 file:rounded file:border-0 file:text-sm file:bg-slate-700 file:text-gray-200 hover:file:bg-slate-600">
-                        <button onclick="analyzePcap()" class="w-full sm:w-auto bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Analyze</button>
+                        <button onclick="analyzePcap()" class="w-full sm:w-auto bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Analyze</button>
                     </div>
                     <div id="pcap-results" class="hidden mt-3 text-sm"></div>
                 </div>
@@ -2001,7 +2001,7 @@
                         </div>
                         <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                             <select id="net-identity-iface" onchange="loadNetworkIdentity()" class="bg-slate-800 border border-slate-700 rounded px-2 py-2 text-sm text-gray-300"><option value="">auto (default route)</option></select>
-                            <button onclick="loadNetworkIdentity()" class="flex-1 bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Refresh</button><button onclick="exportIdentityCsv()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-2 rounded text-sm whitespace-nowrap">Export CSV</button>
+                            <button onclick="loadNetworkIdentity()" class="flex-1 bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Refresh</button><button onclick="exportIdentityCsv()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-2 rounded text-sm whitespace-nowrap">Export CSV</button>
                         </div>
                     </div>
                     <div id="net-identity-results" class="mt-3 overflow-x-auto text-sm text-gray-400">Loading…</div>
@@ -2012,7 +2012,7 @@
                             <h3 class="text-lg font-semibold">Interfaces</h3>
                             <p class="text-sm text-gray-400">Link speed &amp; duplex, auto-negotiation, static/DHCP, addressing and VLAN.</p>
                         </div>
-                        <div class="flex gap-2 w-full sm:w-auto"><button onclick="loadInterfaces()" class="flex-1 bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Refresh</button><button onclick="exportInterfacesCsv()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-2 rounded text-sm whitespace-nowrap">Export CSV</button></div>
+                        <div class="flex gap-2 w-full sm:w-auto"><button onclick="loadInterfaces()" class="flex-1 bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Refresh</button><button onclick="exportInterfacesCsv()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-2 rounded text-sm whitespace-nowrap">Export CSV</button></div>
                     </div>
                     <div id="interfaces-results" class="mt-3 overflow-x-auto text-sm text-gray-400">Loading…</div>
                 </div>
@@ -2022,7 +2022,7 @@
                             <h3 class="text-lg font-semibold">ISP / WAN Detection</h3>
                             <p class="text-sm text-gray-400">Public IP and ISP/ASN reached <em>through each interface</em> — identifies which physical link goes to which provider on multi-WAN setups. Makes an outbound lookup per interface.</p>
                         </div>
-                        <div class="flex gap-2 w-full sm:w-auto"><button onclick="detectIsp()" class="flex-1 bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Detect ISPs</button><button onclick="exportIspCsv()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-2 rounded text-sm whitespace-nowrap">Export CSV</button></div>
+                        <div class="flex gap-2 w-full sm:w-auto"><button onclick="detectIsp()" class="flex-1 bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm whitespace-nowrap">Detect ISPs</button><button onclick="exportIspCsv()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-2 rounded text-sm whitespace-nowrap">Export CSV</button></div>
                     </div>
                     <div id="isp-results" class="mt-3 overflow-x-auto text-sm text-gray-400">Click <span class="text-gray-300">Detect ISPs</span> to look up the ISP behind each interface.</div>
                 </div>
@@ -2046,7 +2046,7 @@
                         <div>
                             <label class="block text-xs text-gray-400 mb-1">Band</label>
                             <div id="wifi-band-group" class="flex rounded-lg overflow-hidden border border-slate-700">
-                                <button data-band="all"  class="wifi-band px-3 py-1.5 text-sm bg-Ragnar-600 text-white">All</button>
+                                <button data-band="all"  class="wifi-band px-3 py-1.5 text-sm bg-OptarisDefense-600 text-white">All</button>
                                 <button data-band="2.4" class="wifi-band px-3 py-1.5 text-sm text-slate-300 hover:bg-slate-700">2.4</button>
                                 <button data-band="5"   class="wifi-band px-3 py-1.5 text-sm text-slate-300 hover:bg-slate-700">5</button>
                                 <button data-band="6"   class="wifi-band px-3 py-1.5 text-sm text-slate-300 hover:bg-slate-700">6&nbsp;GHz</button>
@@ -2055,12 +2055,12 @@
                         <div>
                             <label class="block text-xs text-gray-400 mb-1">View</label>
                             <div class="flex rounded-lg overflow-hidden border border-slate-700">
-                                <button id="wifi-view-bar"  class="px-3 py-1.5 text-sm bg-Ragnar-600 text-white">📊 Bar</button>
+                                <button id="wifi-view-bar"  class="px-3 py-1.5 text-sm bg-OptarisDefense-600 text-white">📊 Bar</button>
                                 <button id="wifi-view-dome" class="px-3 py-1.5 text-sm text-slate-300 hover:bg-slate-700">◗ Dome</button>
                             </div>
                         </div>
-                        <button onclick="wifiScan()" id="wifi-scan-btn" class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm font-semibold">Scan</button>
-                        <label class="flex items-center gap-2 text-xs text-gray-400 cursor-pointer select-none"><input type="checkbox" id="wifi-auto" class="accent-Ragnar-600"> Auto-refresh (8s)</label>
+                        <button onclick="wifiScan()" id="wifi-scan-btn" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm font-semibold">Scan</button>
+                        <label class="flex items-center gap-2 text-xs text-gray-400 cursor-pointer select-none"><input type="checkbox" id="wifi-auto" class="accent-OptarisDefense-600"> Auto-refresh (8s)</label>
                         <span id="wifi-status" class="text-xs text-gray-500 ml-auto"></span>
                     </div>
                 </div>
@@ -2082,7 +2082,7 @@
                         <div class="flex flex-wrap items-center gap-2 mb-3">
                             <h4 class="font-semibold text-sm">Access Points <span id="wifi-ap-count" class="text-gray-500 font-normal"></span></h4>
                             <div class="flex rounded-lg overflow-hidden border border-slate-700 ml-1">
-                                <button id="wifi-view-aps" onclick="wifiSetApView('aps')" class="px-2.5 py-1 text-xs bg-Ragnar-600 text-white">APs</button>
+                                <button id="wifi-view-aps" onclick="wifiSetApView('aps')" class="px-2.5 py-1 text-xs bg-OptarisDefense-600 text-white">APs</button>
                                 <button id="wifi-view-nets" onclick="wifiSetApView('nets')" class="px-2.5 py-1 text-xs text-slate-300 hover:bg-slate-700">Networks</button>
                             </div>
                             <input id="wifi-ap-search" oninput="wifiRenderTable()" placeholder="filter SSID / vendor / BSSID" class="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs flex-1 min-w-[140px]">
@@ -2139,7 +2139,7 @@
                                     <label class="text-gray-400">RSSI₁ <input id="wifi-cal-r1" type="number" placeholder="-40" class="w-16 bg-slate-800 border border-slate-700 rounded px-1 py-0.5 ml-1"></label>
                                     <label class="text-gray-400">d₂ m <input id="wifi-cal-d2" type="number" step="0.1" placeholder="5" class="w-16 bg-slate-800 border border-slate-700 rounded px-1 py-0.5 ml-1"></label>
                                     <label class="text-gray-400">RSSI₂ <input id="wifi-cal-r2" type="number" placeholder="-62" class="w-16 bg-slate-800 border border-slate-700 rounded px-1 py-0.5 ml-1"></label>
-                                    <button onclick="wifiCalibrate()" class="bg-Ragnar-600 hover:bg-Ragnar-500 text-white px-2.5 py-1 rounded">Fit &amp; apply</button>
+                                    <button onclick="wifiCalibrate()" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-500 text-white px-2.5 py-1 rounded">Fit &amp; apply</button>
                                     <button onclick="wifiCalibrateReset()" class="bg-slate-700 hover:bg-slate-600 text-gray-200 px-2.5 py-1 rounded">Reset</button>
                                     <span id="wifi-cal-status" class="text-[11px] text-gray-500"></span>
                                 </div>
@@ -2163,7 +2163,7 @@
                                 <select id="wifi-hm-ap" class="wifi-hm-select min-w-[160px]"><option value="">Scan first…</option></select>
                             </div>
                             <label class="wifi-hm-chip self-end" title="Survey the whole mesh/ESS — record every node (BSSID) of the SSID at each point, and map serving-node coverage + hand-off zones.">
-                                <input type="checkbox" id="wifi-hm-mesh" onchange="wifiHmToggleMesh()" class="accent-Ragnar-500 w-3.5 h-3.5"> Mesh
+                                <input type="checkbox" id="wifi-hm-mesh" onchange="wifiHmToggleMesh()" class="accent-OptarisDefense-500 w-3.5 h-3.5"> Mesh
                             </label>
                             <div>
                                 <label class="block text-[11px] text-gray-400 mb-1">Metric</label>
@@ -2187,7 +2187,7 @@
                     <!-- Active survey (throughput/latency at each point) -->
                     <div class="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-slate-800">
                         <label class="wifi-hm-chip" title="Also measure throughput + latency at each click (a few seconds per point), Ekahau-style active survey. Off = fast RSSI-only.">
-                            <input type="checkbox" id="wifi-hm-active" class="accent-Ragnar-500 w-3.5 h-3.5"> Active test on click
+                            <input type="checkbox" id="wifi-hm-active" class="accent-OptarisDefense-500 w-3.5 h-3.5"> Active test on click
                         </label>
                         <input id="wifi-hm-iperf" placeholder="iperf3 server IP (LAN, optional)" class="wifi-hm-input w-64 min-w-[16rem]" title="A LAN iperf3 server IP/host measures true up+down. Leave blank to use a WAN download speed test instead.">
                         <label class="text-[11px] text-gray-400 flex items-center gap-1.5">for <input id="wifi-hm-tp-secs" type="number" value="5" min="2" max="30" class="wifi-hm-input w-14 text-center"> s</label>
@@ -2222,7 +2222,7 @@
                                 <option value="brick">Brick (10 dB)</option>
                             </select>
                             <label class="text-[11px] text-gray-400 flex items-center gap-1.5" title="Radius for newly-placed columns, in metres (a typical pillar is ~0.3 m). Existing columns can be resized by dragging their white edge handle.">⌀ <input id="wifi-hm-col-rad" type="number" value="0.3" min="0.05" max="3" step="0.05" class="wifi-hm-input w-14 text-center"> m</label>
-                            <label class="wifi-hm-chip"><input type="checkbox" id="wifi-hm-predict" checked onchange="wifiHmTogglePredict()" class="accent-Ragnar-500 w-3.5 h-3.5"> Predict coverage</label>
+                            <label class="wifi-hm-chip"><input type="checkbox" id="wifi-hm-predict" checked onchange="wifiHmTogglePredict()" class="accent-OptarisDefense-500 w-3.5 h-3.5"> Predict coverage</label>
                             <span class="wifi-hm-divider"></span>
                             <div class="wifi-hm-history-group">
                                 <span class="wifi-hm-history-label">Wall</span>
@@ -2314,9 +2314,9 @@
                         <input id="wifidef-flood-ssids" type="number" value="100" min="10" max="2000" onchange="wifidefSetThreshold()" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-sm w-20" title="Beacon-flood SSID threshold">
                     </div>
                     <button onclick="wifidefToggleMonitor()" id="wifidef-mon-btn" class="bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-2 rounded text-sm">Enable monitor</button>
-                    <button onclick="wifidefScan()" id="wifidef-scan-btn" class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded text-sm font-semibold">Scan</button>
+                    <button onclick="wifidefScan()" id="wifidef-scan-btn" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded text-sm font-semibold">Scan</button>
                     <button onclick="wifidefStopContinuous()" id="wifidef-stop-btn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm font-semibold hidden">■ Stop</button>
-                    <label class="flex items-center gap-2 text-xs text-gray-400 cursor-pointer select-none"><input type="checkbox" id="wifidef-auto" class="accent-Ragnar-600"> Continuous</label>
+                    <label class="flex items-center gap-2 text-xs text-gray-400 cursor-pointer select-none"><input type="checkbox" id="wifidef-auto" class="accent-OptarisDefense-600"> Continuous</label>
                     <button onclick="wifidefTrust()" class="bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-2 rounded text-sm whitespace-nowrap" title="Add the currently-visible APs to the trusted baseline (accumulates) for evil-twin detection. Run a few times / across bands to capture every BSSID of each SSID.">Trust current APs</button>
                     <button onclick="wifidefResetBaseline()" class="bg-slate-800 hover:bg-slate-700 text-gray-400 px-3 py-2 rounded text-sm whitespace-nowrap" title="Clear the trusted-AP baseline and start over">Reset baseline</button>
                     <span id="wifidef-status" class="text-xs text-gray-500 ml-auto"></span>
@@ -2353,7 +2353,7 @@
                     <div class="flex flex-wrap items-end gap-2">
                         <label class="text-[11px] text-gray-400">Channel <input id="wifidef-at-channel" type="text" value="" placeholder="e.g. 6" class="w-16 bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs" title="Fix a channel for meaningful airtime %; blank = hop (approximate)"></label>
                         <label class="text-[11px] text-gray-400">for <input id="wifidef-at-secs" type="number" value="10" min="3" max="60" class="w-14 bg-slate-800 border border-slate-700 rounded px-1 py-0.5 text-xs"> s</label>
-                        <button onclick="wifidefAirtime()" id="wifidef-at-btn" class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-3 py-1.5 rounded text-xs font-semibold">Analyze airtime</button>
+                        <button onclick="wifidefAirtime()" id="wifidef-at-btn" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-3 py-1.5 rounded text-xs font-semibold">Analyze airtime</button>
                         <span id="wifidef-at-status" class="text-[11px] text-gray-500"></span>
                     </div>
                 </div>
@@ -2379,7 +2379,7 @@
                     <div class="flex flex-wrap items-end gap-2">
                         <label class="text-[11px] text-gray-400">Channel <input id="wifidef-iso-channel" type="text" value="" placeholder="e.g. 6" class="w-16 bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs" title="Fix the channel of the AP/mesh you're auditing; blank = hop (much weaker evidence)"></label>
                         <label class="text-[11px] text-gray-400">for <input id="wifidef-iso-secs" type="number" value="30" min="5" max="120" class="w-14 bg-slate-800 border border-slate-700 rounded px-1 py-0.5 text-xs"> s</label>
-                        <button onclick="wifidefIsolation()" id="wifidef-iso-btn" class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-3 py-1.5 rounded text-xs font-semibold">Observe isolation</button>
+                        <button onclick="wifidefIsolation()" id="wifidef-iso-btn" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-3 py-1.5 rounded text-xs font-semibold">Observe isolation</button>
                         <span id="wifidef-iso-status" class="text-[11px] text-gray-500"></span>
                     </div>
                 </div>
@@ -2401,7 +2401,7 @@
             <div class="glass rounded-xl p-6">
                 <div class="stackable-row mb-6">
                     <h2 class="text-2xl font-bold">Network Connection</h2>
-                    <button onclick="refreshCurrentTab()" class="refresh-btn bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    <button onclick="refreshCurrentTab()" class="refresh-btn bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors">
                         <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                         </svg>
@@ -2411,7 +2411,7 @@
                 
                 <!-- Wi-Fi Management Section -->
                 <div class="mb-8">
-                    <h3 class="text-xl font-semibold mb-4 text-Ragnar-400">Wi-Fi Management</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-OptarisDefense-400">Wi-Fi Management</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         
                         <!-- Wi-Fi Status Card -->
@@ -2425,7 +2425,7 @@
                             </div>
                             <div id="wifi-connected-list" class="text-xs text-gray-300 space-y-2 bg-slate-900/60 border border-slate-700 rounded-lg p-3 mb-3 hidden"></div>
                             <button onclick="refreshWifiStatus()" 
-                                    class="w-full bg-Ragnar-600 hover:bg-Ragnar-700 text-white py-2 px-4 rounded transition-colors">
+                                    class="w-full bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white py-2 px-4 rounded transition-colors">
                                 <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                                 </svg>
@@ -2459,7 +2459,7 @@
                                 <span class="text-sm px-2 py-1 rounded bg-purple-700 text-purple-300">AP Control</span>
                             </div>
                             <div class="text-sm text-gray-400 mb-3">
-                                Start Ragnar's own access point for configuration
+                                Start OptarisDefense's own access point for configuration
                             </div>
                             <button onclick="startAPMode()" 
                                     class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded transition-colors">
@@ -2475,7 +2475,7 @@
                             <div class="flex items-start justify-between mb-3">
                                 <div>
                                     <h4 class="font-medium">Multi-Interface Scanner</h4>
-                                    <p class="text-xs text-gray-400 mt-1">Ragnar can monitor one internal radio and one external 5 GHz adapter.</p>
+                                    <p class="text-xs text-gray-400 mt-1">OptarisDefense can monitor one internal radio and one external 5 GHz adapter.</p>
                                 </div>
                                 <span id="wifi-multi-global-pill" class="text-xs px-2 py-1 rounded bg-gray-700 text-gray-300">Loading…</span>
                             </div>
@@ -2486,7 +2486,7 @@
                                 <div class="flex items-center justify-between gap-3">
                                     <div>
                                         <p class="text-xs uppercase tracking-[0.2em] text-gray-400">Scan Mode</p>
-                                        <p class="text-[11px] text-gray-500">Choose whether Ragnar chases every adapter or locks onto one.</p>
+                                        <p class="text-[11px] text-gray-500">Choose whether OptarisDefense chases every adapter or locks onto one.</p>
                                     </div>
                                     <div id="wifi-multi-mode-buttons" class="flex gap-2">
                                         <button type="button" data-mode="multi" class="text-xs font-semibold px-3 py-1 rounded-full border border-slate-600 bg-slate-800 text-gray-300 transition-all">Single Focus</button>
@@ -2495,7 +2495,7 @@
                                 </div>
                                 <div id="wifi-multi-focus-controls" class="mt-3 hidden">
                                     <label for="wifi-multi-focus-select" class="text-xs uppercase tracking-wide text-gray-400">Focused Adapter</label>
-                                    <select id="wifi-multi-focus-select" class="mt-2 w-full bg-slate-950/70 border border-slate-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-Ragnar-500">
+                                    <select id="wifi-multi-focus-select" class="mt-2 w-full bg-slate-950/70 border border-slate-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-OptarisDefense-500">
                                         <option value="">Loading adapters…</option>
                                     </select>
                                     <p class="text-[11px] text-gray-500 mt-2">Only this adapter drives discovery when All Adapters mode is active.</p>
@@ -2507,7 +2507,7 @@
                                 </div>
                             </div>
                             <div id="wifi-multi-limit-note" class="mt-4 text-[11px] text-gray-500">
-                                Ragnar automatically limits automation to two adapters to preserve stability.
+                                OptarisDefense automatically limits automation to two adapters to preserve stability.
                             </div>
                         </div>
                         
@@ -2518,13 +2518,13 @@
                 
                 <!-- Wi-Fi Connection Section -->
                 <div class="mb-8">
-                    <h3 class="text-xl font-semibold mb-4 text-Ragnar-400">Wi-Fi Connection</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-OptarisDefense-400">Wi-Fi Connection</h3>
                     
                     <!-- Wi-Fi Interface Selection -->
                     <div class="glass rounded-lg p-4 mb-4">
                         <label class="block text-sm font-medium mb-2">Wi-Fi Interface</label>
                         <select id="wifi-interface-select" 
-                                class="w-full bg-slate-800 border border-slate-600 rounded px-3 py-2 text-white focus:outline-none focus:border-Ragnar-500">
+                                class="w-full bg-slate-800 border border-slate-600 rounded px-3 py-2 text-white focus:outline-none focus:border-OptarisDefense-500">
                             <option value="">Loading interfaces...</option>
                         </select>
                         <div id="wifi-interface-switch" class="hidden mt-4">
@@ -2540,7 +2540,7 @@
                             <h4 class="font-medium">Available Networks</h4>
                             <button onclick="scanWifiNetworks()" 
                                     id="scan-wifi-btn"
-                                    class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded transition-colors text-sm">
+                                    class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded transition-colors text-sm">
                                 <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                 </svg>
@@ -2595,7 +2595,7 @@
                     <div class="mb-4">
                         <label class="flex items-center space-x-2">
                             <input type="checkbox" id="wifi-save-network" checked
-                                   class="form-checkbox h-4 w-4 text-Ragnar-600 bg-slate-700 border-slate-600 rounded">
+                                   class="form-checkbox h-4 w-4 text-OptarisDefense-600 bg-slate-700 border-slate-600 rounded">
                             <span class="text-sm">Save network for auto-connect</span>
                         </label>
                     </div>
@@ -2611,7 +2611,7 @@
                         </button>
                         <button onclick="connectToWifiNetwork()" 
                                 id="wifi-connect-submit-btn"
-                                class="flex-1 bg-Ragnar-600 hover:bg-Ragnar-700 text-white py-2 px-4 rounded transition-colors">
+                                class="flex-1 bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white py-2 px-4 rounded transition-colors">
                             Connect
                         </button>
                     </div>
@@ -2668,7 +2668,7 @@
                         </div>
                         <div>
                             <label for="vuln-ip-dropdown" class="text-xs uppercase tracking-wide text-gray-400">Vulnerability scan scope</label>
-                            <select id="vuln-ip-dropdown" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-Ragnar-400">
+                            <select id="vuln-ip-dropdown" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-OptarisDefense-400">
                                 <option value="all">All Targets</option>
                             </select>
                             <p class="text-xs text-gray-500 mt-2">Choose a specific host to rerun scanners on recently changed systems.</p>
@@ -2691,26 +2691,26 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div>
                                 <label class="text-xs uppercase tracking-wide text-gray-400">Target IP</label>
-                                <select id="manual-ip-dropdown" onchange="updateManualPorts()" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-Ragnar-400">
+                                <select id="manual-ip-dropdown" onchange="updateManualPorts()" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-OptarisDefense-400">
                                     <option value="">Select IP</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="text-xs uppercase tracking-wide text-gray-400">Port</label>
-                                <select id="manual-port-dropdown" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-Ragnar-400">
+                                <select id="manual-port-dropdown" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-OptarisDefense-400">
                                     <option value="">Select Port</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="text-xs uppercase tracking-wide text-gray-400">Action</label>
-                                <select id="manual-action-dropdown" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-Ragnar-400">
+                                <select id="manual-action-dropdown" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-OptarisDefense-400">
                                     <option value="">Select Action</option>
                                 </select>
                                 <p id="manual-action-helper" class="text-[11px] text-gray-500 mt-1">Select a port to view compatible attack modules.</p>
                             </div>
                         </div>
                         <button id="manual-attack-launch-btn" onclick="executeManualAttack()" class="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-lg font-semibold tracking-wide">Execute Attack</button>
-                        <p class="text-xs text-gray-500">Actions reuse Ragnar credentials & payloads. Check the attack log in Discovered → Attack Logs for execution details.</p>
+                        <p class="text-xs text-gray-500">Actions reuse OptarisDefense credentials & payloads. Check the attack log in Discovered → Attack Logs for execution details.</p>
                         <div id="manual-attack-status" class="hidden mt-4">
                             <div id="manual-attack-status-message" class="rounded-lg border border-slate-700 bg-slate-900/70 px-4 py-3 text-sm text-gray-200"></div>
                         </div>
@@ -2737,15 +2737,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="text-xs uppercase tracking-wide text-gray-400">Target IP</label>
-                        <input id="manual-lynis-ip" type="text" placeholder="192.168.0.42" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-Ragnar-400">
+                        <input id="manual-lynis-ip" type="text" placeholder="192.168.0.42" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-OptarisDefense-400">
                     </div>
                     <div>
                         <label class="text-xs uppercase tracking-wide text-gray-400">Username</label>
-                        <input id="manual-lynis-username" type="text" placeholder="root" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-Ragnar-400">
+                        <input id="manual-lynis-username" type="text" placeholder="root" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-OptarisDefense-400">
                     </div>
                     <div>
                         <label class="text-xs uppercase tracking-wide text-gray-400">Password</label>
-                        <input id="manual-lynis-password" type="password" autocomplete="off" placeholder="Required" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-Ragnar-400">
+                        <input id="manual-lynis-password" type="password" autocomplete="off" placeholder="Required" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-OptarisDefense-400">
                     </div>
                 </div>
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4">
@@ -2883,7 +2883,7 @@
             </div>
 
             <div class="mb-8">
-                <h3 class="text-xl font-semibold mb-4 text-Ragnar-400">Bluetooth Operations</h3>
+                <h3 class="text-xl font-semibold mb-4 text-OptarisDefense-400">Bluetooth Operations</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div class="glass rounded-lg p-4">
                         <div class="flex items-center justify-between mb-3">
@@ -2912,7 +2912,7 @@
                             <span id="bluetooth-scan-status" class="text-sm px-2 py-1 rounded bg-gray-700 text-gray-300">Ready</span>
                         </div>
                         <div class="text-sm text-gray-400 mb-3">
-                            Scan for nearby Bluetooth devices and optionally expose Ragnar as discoverable.
+                            Scan for nearby Bluetooth devices and optionally expose OptarisDefense as discoverable.
                         </div>
                         <button onclick="startBluetoothScan()" id="bluetooth-scan-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded transition-colors mb-2">
                             <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -3118,7 +3118,7 @@
         <div id="discovered-tab" class="tab-content hidden">
             <!-- Sub-tab navigation -->
             <div class="flex flex-wrap items-center gap-1 mb-5 border-b border-slate-800 pb-2">
-                <button id="disc-subtab-main" onclick="showDiscoveredSubtab('main')" class="disc-subtab px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-Ragnar-600 text-white">Discovered</button>
+                <button id="disc-subtab-main" onclick="showDiscoveredSubtab('main')" class="disc-subtab px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-OptarisDefense-600 text-white">Discovered</button>
                 <button id="disc-subtab-credentials" onclick="showDiscoveredSubtab('credentials')" class="disc-subtab px-4 py-2 rounded-lg text-sm font-semibold transition-colors text-slate-400 hover:bg-slate-700 hover:text-white">Credentials</button>
             </div>
 
@@ -3128,7 +3128,7 @@
                 <div class="glass rounded-xl p-6 h-full flex flex-col">
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="text-2xl font-bold">Discovered Credentials</h2>
-                        <button onclick="refreshCurrentTab()" class="refresh-btn bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        <button onclick="refreshCurrentTab()" class="refresh-btn bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors">
                             <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                             </svg>
@@ -3142,7 +3142,7 @@
                 <div class="glass rounded-xl p-6 h-full flex flex-col">
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="text-2xl font-bold">Stolen Data</h2>
-                        <button onclick="refreshCurrentTab()" class="refresh-btn bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        <button onclick="refreshCurrentTab()" class="refresh-btn bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors">
                             <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                             </svg>
@@ -3195,7 +3195,7 @@
                         <h2 class="text-2xl font-bold mb-2">🔍 Service Intelligence</h2>
                         <p class="text-sm text-gray-400">Interesting reconnaissance data from service scans (MQTT topics, banners, etc.)</p>
                     </div>
-                    <button onclick="refreshVulnerabilityIntel()" class="refresh-btn bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    <button onclick="refreshVulnerabilityIntel()" class="refresh-btn bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors">
                         <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                         </svg>
@@ -3254,7 +3254,7 @@
                         <button onclick="filterAttackLogs('timeout')" class="attack-filter-btn bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-2 rounded-lg transition-colors text-sm" data-filter="timeout">
                             ⏱ Timeout
                         </button>
-                        <button onclick="refreshAttackLogs()" class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-3 py-2 rounded-lg transition-colors text-sm">
+                        <button onclick="refreshAttackLogs()" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-3 py-2 rounded-lg transition-colors text-sm">
                             <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                             </svg>
@@ -3271,20 +3271,20 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 0 5 11a6 6 0 0 0 12 0z"></path>
                         </svg>
                         <input id="attack-ip-search" type="text" placeholder="Filter by IP address..." oninput="onAttackIPSearch(this.value)"
-                            class="w-full bg-slate-800 border border-slate-600 rounded-lg py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-Ragnar-500" style="padding-left:0.75rem;padding-right:2.5rem;">
+                            class="w-full bg-slate-800 border border-slate-600 rounded-lg py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-OptarisDefense-500" style="padding-left:0.75rem;padding-right:2.5rem;">
                     </div>
                     <!-- Network / SSID dropdown -->
                     <div class="flex items-center gap-2">
                         <label class="text-sm text-gray-400 whitespace-nowrap">Network:</label>
                         <select id="attack-network-filter" onchange="filterAttackByNetwork(this.value)"
-                            class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-Ragnar-500">
+                            class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-OptarisDefense-500">
                             <option value="all">All Networks</option>
                         </select>
                     </div>
                     <!-- Group by toggle -->
                     <div class="flex items-center gap-1 bg-slate-800 border border-slate-600 rounded-lg p-1">
                         <button onclick="setAttackGroupBy('ip')" id="attack-groupby-ip"
-                            class="attack-groupby-btn px-3 py-1 rounded text-sm transition-colors bg-Ragnar-600 text-white" data-groupby="ip">
+                            class="attack-groupby-btn px-3 py-1 rounded text-sm transition-colors bg-OptarisDefense-600 text-white" data-groupby="ip">
                             Group by IP
                         </button>
                         <button onclick="setAttackGroupBy('network')" id="attack-groupby-network"
@@ -3337,7 +3337,7 @@
                         <button onclick="exportCredentialsCSV()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
                             Export CSV
                         </button>
-                        <button onclick="loadCredentials(true)" class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
+                        <button onclick="loadCredentials(true)" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
                             Refresh
                         </button>
                     </div>
@@ -3352,10 +3352,10 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 0 5 11a6 6 0 0 0 12 0z"></path>
                         </svg>
                         <input id="cred-ip-search" type="text" placeholder="Filter by IP..." oninput="onCredSearch(this.value)"
-                            class="w-full bg-slate-800 border border-slate-600 rounded-lg py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-Ragnar-500" style="padding-left:0.75rem;padding-right:2.5rem;">
+                            class="w-full bg-slate-800 border border-slate-600 rounded-lg py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-OptarisDefense-500" style="padding-left:0.75rem;padding-right:2.5rem;">
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="filterCredsByService('all')" data-svc="all" class="cred-svc-btn bg-Ragnar-600 text-white px-3 py-2 rounded-lg text-sm transition-colors">All</button>
+                        <button onclick="filterCredsByService('all')" data-svc="all" class="cred-svc-btn bg-OptarisDefense-600 text-white px-3 py-2 rounded-lg text-sm transition-colors">All</button>
                         <button onclick="filterCredsByService('ssh')" data-svc="ssh" class="cred-svc-btn bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-lg text-sm transition-colors">SSH</button>
                         <button onclick="filterCredsByService('smb')" data-svc="smb" class="cred-svc-btn bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-lg text-sm transition-colors">SMB</button>
                         <button onclick="filterCredsByService('ftp')" data-svc="ftp" class="cred-svc-btn bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-lg text-sm transition-colors">FTP</button>
@@ -3397,7 +3397,7 @@
         <!-- Threat Intelligence Tab -->
         <div id="threat-intel-tab" class="tab-content hidden">
             <div class="flex flex-wrap items-center gap-1 mb-5 border-b border-slate-800 pb-2">
-                <button id="ti-subtab-vulns" onclick="showThreatIntelSubtab('vulns')" class="ti-subtab px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-Ragnar-600 text-white">Vulnerabilities by Host</button>
+                <button id="ti-subtab-vulns" onclick="showThreatIntelSubtab('vulns')" class="ti-subtab px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-OptarisDefense-600 text-white">Vulnerabilities by Host</button>
                 <button id="ti-subtab-compliance" onclick="showThreatIntelSubtab('compliance')" class="ti-subtab px-4 py-2 rounded-lg text-sm font-semibold transition-colors text-slate-400 hover:bg-slate-700 hover:text-white">Compliance</button>
             </div>
             <div id="ti-sub-vulns">
@@ -3408,7 +3408,7 @@
                 </div>
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                     <div class="flex items-center bg-slate-900/60 border border-slate-800 rounded-xl p-1 gap-1 shadow-inner">
-                        <button data-status="open" onclick="setThreatIntelFilter('open')" class="threat-intel-filter-btn px-3 py-2 rounded-lg text-sm font-semibold border border-Ragnar-500 bg-Ragnar-600 text-white shadow-md shadow-Ragnar-500/40" aria-pressed="true">
+                        <button data-status="open" onclick="setThreatIntelFilter('open')" class="threat-intel-filter-btn px-3 py-2 rounded-lg text-sm font-semibold border border-OptarisDefense-500 bg-OptarisDefense-600 text-white shadow-md shadow-OptarisDefense-500/40" aria-pressed="true">
                             Open
                         </button>
                         <button data-status="resolved" onclick="setThreatIntelFilter('resolved')" class="threat-intel-filter-btn px-3 py-2 rounded-lg text-sm font-semibold border border-slate-700 bg-slate-800 text-slate-300 hover:text-white hover:border-slate-500" aria-pressed="false">
@@ -3418,7 +3418,7 @@
                             All
                         </button>
                     </div>
-                    <button onclick="refreshThreatIntel()" class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    <button onclick="refreshThreatIntel()" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors">
                         <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                         </svg>
@@ -3629,11 +3629,11 @@
                     </div>
                     <div class="flex items-center gap-2 flex-wrap">
                         <div class="inline-flex rounded-lg overflow-hidden border border-slate-600">
-                            <button id="compliance-tab-cis" onclick="setComplianceFramework('cis')" class="px-4 py-1.5 text-sm bg-Ragnar-600 text-white">CIS</button>
+                            <button id="compliance-tab-cis" onclick="setComplianceFramework('cis')" class="px-4 py-1.5 text-sm bg-OptarisDefense-600 text-white">CIS</button>
                             <button id="compliance-tab-pci" onclick="setComplianceFramework('pci')" class="px-4 py-1.5 text-sm bg-slate-700 text-gray-300 hover:bg-slate-600">PCI DSS</button>
                         </div>
                         <button onclick="refreshComplianceData()" class="px-3 py-1.5 text-sm rounded-lg bg-slate-700 text-gray-200 hover:bg-slate-600">Refresh</button>
-                        <button onclick="exportComplianceReport()" class="px-3 py-1.5 text-sm rounded-lg bg-Ragnar-600 text-white hover:bg-Ragnar-500">Export HTML</button>
+                        <button onclick="exportComplianceReport()" class="px-3 py-1.5 text-sm rounded-lg bg-OptarisDefense-600 text-white hover:bg-OptarisDefense-500">Export HTML</button>
                     </div>
                 </div>
 
@@ -3666,7 +3666,7 @@
                             </svg>
                             Clear Files
                         </button>
-                        <button onclick="refreshFiles()" class="refresh-btn bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        <button onclick="refreshFiles()" class="refresh-btn bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors">
                             <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                             </svg>
@@ -3703,12 +3703,12 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 0 5 11a6 6 0 0 0 12 0z"></path>
                                     </svg>
                                     <input id="file-search" type="text" placeholder="Search files..." oninput="onFileSearch(this.value)"
-                                        class="w-full bg-slate-800 border border-slate-600 rounded-lg pl-9 pr-3 py-1.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-Ragnar-500">
+                                        class="w-full bg-slate-800 border border-slate-600 rounded-lg pl-9 pr-3 py-1.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-OptarisDefense-500">
                                 </div>
                                 <div class="flex items-center gap-1 bg-slate-800 border border-slate-600 rounded-lg p-1 text-xs">
                                     <span class="text-gray-400 px-1">Sort:</span>
                                     <button onclick="setFileSort('name')" id="file-sort-name" data-sort="name"
-                                        class="file-sort-btn px-2 py-1 rounded transition-colors bg-Ragnar-600 text-white">Name</button>
+                                        class="file-sort-btn px-2 py-1 rounded transition-colors bg-OptarisDefense-600 text-white">Name</button>
                                     <button onclick="setFileSort('date')" id="file-sort-date" data-sort="date"
                                         class="file-sort-btn px-2 py-1 rounded transition-colors text-gray-400 hover:text-white">Date</button>
                                     <button onclick="setFileSort('size')" id="file-sort-size" data-sort="size"
@@ -3760,7 +3760,7 @@
                         <!-- Dynamic content -->
                     </div>
                     <div class="flex space-x-3">
-                        <button id="modal-confirm" class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        <button id="modal-confirm" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors">
                             Confirm
                         </button>
                         <button onclick="closeFileModal()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors">
@@ -3778,7 +3778,7 @@
             <div class="glass rounded-xl p-6">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-2xl font-bold">System Monitoring</h2>
-                    <button onclick="refreshSystemStatus()" class="refresh-btn bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    <button onclick="refreshSystemStatus()" class="refresh-btn bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors">
                         <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                         </svg>
@@ -3891,7 +3891,7 @@
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="font-semibold">Top Processes</h3>
                             <div class="flex space-x-2">
-                                <button onclick="sortProcesses('cpu')" class="process-sort-btn text-xs px-2 py-1 rounded bg-Ragnar-600 text-white" data-sort="cpu">CPU</button>
+                                <button onclick="sortProcesses('cpu')" class="process-sort-btn text-xs px-2 py-1 rounded bg-OptarisDefense-600 text-white" data-sort="cpu">CPU</button>
                                 <button onclick="sortProcesses('memory')" class="process-sort-btn text-xs px-2 py-1 rounded bg-gray-600 text-white" data-sort="memory">Memory</button>
                             </div>
                         </div>
@@ -3931,7 +3931,7 @@
                             </svg>
                             Export Data
                         </button>
-                        <button onclick="refreshNetkbData()" class="refresh-btn bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        <button onclick="refreshNetkbData()" class="refresh-btn bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors">
                             <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                             </svg>
@@ -3943,7 +3943,7 @@
                 <!-- NetKB Filter Controls -->
                 <div class="mb-6">
                     <div class="flex flex-wrap gap-2 mb-4">
-                        <button onclick="filterNetkbData('all')" class="netkb-filter-btn px-3 py-1 rounded-full text-sm bg-Ragnar-600 text-white" data-filter="all">
+                        <button onclick="filterNetkbData('all')" class="netkb-filter-btn px-3 py-1 rounded-full text-sm bg-OptarisDefense-600 text-white" data-filter="all">
                             All Entries
                         </button>
                         <button onclick="filterNetkbData('vulnerabilities')" class="netkb-filter-btn px-3 py-1 rounded-full text-sm bg-gray-600 text-white" data-filter="vulnerabilities">
@@ -3963,7 +3963,7 @@
                     <!-- Search Bar -->
                     <div class="flex space-x-3">
                         <input type="text" id="netkb-search" placeholder="Search NetKB entries..." 
-                               class="flex-1 bg-slate-700 text-white rounded px-3 py-2 border border-slate-600 focus:border-Ragnar-400 focus:outline-none"
+                               class="flex-1 bg-slate-700 text-white rounded px-3 py-2 border border-slate-600 focus:border-OptarisDefense-400 focus:outline-none"
                                onkeyup="searchNetkbData(this.value)">
                         <button onclick="clearNetkbSearch()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors">
                             Clear
@@ -4066,7 +4066,7 @@
             <div class="glass rounded-xl p-6">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-2xl font-bold">Display</h2>
-                    <button onclick="refreshEpaperDisplay()" class="refresh-btn bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    <button onclick="refreshEpaperDisplay()" class="refresh-btn bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors">
                         <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                         </svg>
@@ -4077,7 +4077,7 @@
                 <!-- Live Status Display -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                     <div class="glass rounded-xl p-4">
-                        <h3 class="text-lg font-semibold mb-3 text-Ragnar-400">Current Status</h3>
+                        <h3 class="text-lg font-semibold mb-3 text-OptarisDefense-400">Current Status</h3>
                         <div class="space-y-2">
                             <div class="flex justify-between">
                                 <span class="text-gray-400">Primary Status:</span>
@@ -4095,7 +4095,7 @@
                     </div>
                     
                     <div class="glass rounded-xl p-4">
-                        <h3 class="text-lg font-semibold mb-3 text-Ragnar-400">Display Info</h3>
+                        <h3 class="text-lg font-semibold mb-3 text-OptarisDefense-400">Display Info</h3>
                         <div class="space-y-2">
                             <div class="flex justify-between">
                                 <span class="text-gray-400">Resolution:</span>
@@ -4116,10 +4116,10 @@
                 <!-- Display Image -->
                 <div class="glass rounded-xl p-6">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-Ragnar-400">Live Display</h3>
+                        <h3 class="text-lg font-semibold text-OptarisDefense-400">Live Display</h3>
                         <div class="flex items-center space-x-2">
                             <span class="text-sm text-gray-400">Size:</span>
-                            <button onclick="toggleEpaperSize()" class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                            <button onclick="toggleEpaperSize()" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-3 py-1 rounded text-sm transition-colors">
                                 Resize
                             </button>
                         </div>
@@ -4144,8 +4144,8 @@
                         </div>
                     </div>
                     <p class="text-center text-gray-400 text-sm mt-4">
-                        This shows the exact same content as your Ragnar device's physical display<br>
-                        <span class="text-Ragnar-400">💡 Click the display image or use the Resize button to cycle through different sizes</span>
+                        This shows the exact same content as your OptarisDefense device's physical display<br>
+                        <span class="text-OptarisDefense-400">💡 Click the display image or use the Resize button to cycle through different sizes</span>
                     </p>
                 </div>
             </div>
@@ -4167,7 +4167,7 @@
                             </svg>
                             Start Capture
                         </button>
-                        <button onclick="refreshTrafficData()" class="flex-1 sm:flex-none refresh-btn bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors text-sm sm:text-base">
+                        <button onclick="refreshTrafficData()" class="flex-1 sm:flex-none refresh-btn bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors text-sm sm:text-base">
                             <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                             </svg>
@@ -4557,7 +4557,7 @@
                         <h2 class="text-lg sm:text-2xl font-bold">Advanced Vulnerability Scanning</h2>
                         <span class="px-2 py-1 bg-cyan-600 bg-opacity-30 text-cyan-400 text-xs rounded-full whitespace-nowrap">Server Mode</span>
                     </div>
-                    <button onclick="refreshAdvVulnData()" class="w-full sm:w-auto refresh-btn bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors text-sm sm:text-base">
+                    <button onclick="refreshAdvVulnData()" class="w-full sm:w-auto refresh-btn bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors text-sm sm:text-base">
                         <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                         </svg>
@@ -4739,7 +4739,7 @@
                                 <input type="text" id="adv-vuln-target" placeholder="192.168.1.1 or https://example.com"
                                        oninput="checkTargetCredentials(this.value)"
                                        onchange="checkTargetCredentials(this.value)"
-                                       class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-Ragnar-500 pr-24 text-sm">
+                                       class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-OptarisDefense-500 pr-24 text-sm">
                                 <!-- Credential status badge -->
                                 <div id="target-cred-badge" class="absolute right-2 top-1/2 -translate-y-1/2 hidden">
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-600 text-white cursor-pointer"
@@ -4845,7 +4845,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-3">
                             <div>
                                 <label class="block text-xs sm:text-sm text-gray-400 mb-1">Scanner</label>
-                                <select id="adv-vuln-scanner" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-Ragnar-500 text-sm">
+                                <select id="adv-vuln-scanner" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-OptarisDefense-500 text-sm">
                                     <optgroup label="Traditional Scanners">
                                         <option value="nuclei">Nuclei (Templates)</option>
                                         <option value="nikto">Nikto (Web Server)</option>
@@ -4865,7 +4865,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs sm:text-sm text-gray-400 mb-1">Authentication Type</label>
-                                <select id="zap-auth-type" onchange="toggleScanAuthFields()" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-Ragnar-500 text-sm">
+                                <select id="zap-auth-type" onchange="toggleScanAuthFields()" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg focus:ring-2 focus:ring-OptarisDefense-500 text-sm">
                                     <option value="">None (Unauthenticated)</option>
                                     <option value="form">Form-based Login</option>
                                     <option value="http_basic">HTTP Basic Auth</option>
@@ -5233,7 +5233,7 @@
                 <!-- Device Name + GPS + Stats Row -->
                 <div class="flex flex-wrap gap-3 items-center mb-4 bg-slate-800/30 rounded-lg px-4 py-2">
                     <label class="text-xs text-gray-400">Device Name:</label>
-                    <input type="text" id="wd-device-name" placeholder="e.g. RagnarPi-01" maxlength="64"
+                    <input type="text" id="wd-device-name" placeholder="e.g. OptarisDefensePi-01" maxlength="64"
                         class="bg-slate-700 text-white text-xs rounded px-2 py-1 border border-slate-600 w-40"
                         onchange="saveWardrivingDeviceName(this.value)">
                     <span id="wd-speed-display" class="text-xs text-gray-400 ml-auto">
@@ -5408,7 +5408,7 @@
             <div class="glass rounded-xl p-6">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-2xl font-bold">Configuration</h2>
-                    <button onclick="refreshCurrentTab()" class="refresh-btn bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    <button onclick="refreshCurrentTab()" class="refresh-btn bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors">
                         <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                         </svg>
@@ -5418,13 +5418,13 @@
                 
                 <!-- System Management Section -->
                 <div class="mb-8">
-                    <h3 class="text-xl font-semibold mb-4 text-Ragnar-400">System Management</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-OptarisDefense-400">System Management</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         
                         <!-- Update Status Card -->
                         <div class="glass rounded-lg p-4">
                             <div class="flex items-center justify-between mb-3">
-                                <h4 class="font-medium">Ragnar Updates</h4>
+                                <h4 class="font-medium">OptarisDefense Updates</h4>
                                 <span id="update-status" class="text-sm px-2 py-1 rounded bg-gray-700 text-gray-300">Checking...</span>
                             </div>
                             <div id="update-info" class="text-sm text-gray-400 mb-3">
@@ -5455,7 +5455,7 @@
                                 <span id="service-status" class="text-sm px-2 py-1 rounded bg-green-700 text-green-300">Running</span>
                             </div>
                             <div class="text-sm text-gray-400 mb-3">
-                                Manage the Ragnar system service
+                                Manage the OptarisDefense system service
                             </div>
                             <button onclick="restartService()" 
                                     class="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 px-4 rounded transition-colors mb-2">
@@ -5535,7 +5535,7 @@
                                 </label>
                             </div>
                             <div class="text-sm text-gray-400 mb-2">
-                                Adds a <strong>Terminal</strong> tab with an interactive shell on this Pi (as the <span class="font-mono">ragnar</span> user, in the Ragnar folder) — so you can manage the device without SSH. Off by default.
+                                Adds a <strong>Terminal</strong> tab with an interactive shell on this Pi (as the <span class="font-mono">optaris_defense</span> user, in the OptarisDefense folder) — so you can manage the device without SSH. Off by default.
                             </div>
                             <div class="text-xs text-amber-300">
                                 ⚠ Security: this is a real shell reachable through the web UI (behind login). Anyone who can log in gets shell access — with <span class="font-mono">sudo</span> available. Only enable on trusted networks.
@@ -5564,7 +5564,7 @@
                                             <span id="sensing-status-badge" class="text-xs px-2 py-0.5 rounded bg-gray-700 text-gray-300">checking…</span>
                                         </div>
                                         <p class="text-xs text-gray-400 mt-1">
-                                            Ragnar bundles the WiFi-CSI sensing engine — install it to run sensing on this host, no separate project required.
+                                            OptarisDefense bundles the WiFi-CSI sensing engine — install it to run sensing on this host, no separate project required.
                                             <span id="sensing-arch-note" class="block text-xs text-gray-500 mt-1"></span>
                                         </p>
                                     </div>
@@ -5591,7 +5591,7 @@
                                 </label>
                             </div>
                             <div class="text-sm text-gray-400 mb-3">
-                                Show the Ragnar UI fullscreen on an HDMI/DSI display (e.g. Pi Flux). Auto-installs Chromium kiosk + minimal X on Pi OS Lite; idempotent.
+                                Show the OptarisDefense UI fullscreen on an HDMI/DSI display (e.g. Pi Flux). Auto-installs Chromium kiosk + minimal X on Pi OS Lite; idempotent.
                             </div>
                             <div id="kiosk-config" class="space-y-2 hidden">
                                 <div>
@@ -5634,7 +5634,7 @@
 
                 <!-- Network Scanning Section -->
                 <div id="network-scanning-config-section" class="mb-8">
-                    <h3 class="text-xl font-semibold mb-4 text-Ragnar-400">Network Scanning</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-OptarisDefense-400">Network Scanning</h3>
                     <div class="glass rounded-lg p-4">
                         <div class="flex items-center justify-between mb-3">
                             <h4 class="font-medium">Scan Intensity</h4>
@@ -5643,7 +5643,7 @@
                         <p class="text-xs text-gray-500 mb-3">
                             Controls nmap timing, port count and whether the default gateway is scanned.
                             Some routers (especially ISP combo boxes) get knocked offline by aggressive scans.
-                            If turning Ragnar on crashes your home WiFi, drop this to <em>Medium</em> or <em>Light</em>.
+                            If turning OptarisDefense on crashes your home WiFi, drop this to <em>Medium</em> or <em>Light</em>.
                         </p>
                         <select id="scan-intensity-select"
                                 onchange="onScanIntensityChanged(this)"
@@ -5658,7 +5658,7 @@
 
                 <!-- Wardriving Section -->
                 <div id="wardriving-config-section" class="mb-8">
-                    <h3 class="text-xl font-semibold mb-4 text-Ragnar-400">Wardriving</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-OptarisDefense-400">Wardriving</h3>
 
                     <!-- Always-visible Enable toggle: gates the rest of the section -->
                     <div class="glass rounded-lg p-4 mb-4">
@@ -5688,10 +5688,10 @@
                                 </label>
                             </div>
                             <div class="text-sm text-gray-400 mb-2">
-                                Automatically start wardriving when Ragnar boots. Orchestrator will be stopped.
+                                Automatically start wardriving when OptarisDefense boots. Orchestrator will be stopped.
                             </div>
                             <div class="text-xs text-gray-500">
-                                Ragnar will enter wardriving mode immediately on power-on — ideal for mobile/walk setups.
+                                OptarisDefense will enter wardriving mode immediately on power-on — ideal for mobile/walk setups.
                             </div>
                         </div>
 
@@ -5811,12 +5811,12 @@
                                 <svg id="security-chevron" class="w-5 h-5 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                 </svg>
-                                <h3 class="text-xl font-semibold text-Ragnar-400">Security</h3>
+                                <h3 class="text-xl font-semibold text-OptarisDefense-400">Security</h3>
                             </div>
                             <span id="security-badge" class="hidden text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full bg-green-900/40 text-green-400 border border-green-700">Enabled</span>
                         </button>
                         <div id="security-summary" class="px-4 pb-4">
-                            <p class="text-sm text-red-400">Set up authentication to protect your Ragnar instance. Once enabled, all access will require login. The database will be encrypted and bound to this hardware.</p>
+                            <p class="text-sm text-red-400">Set up authentication to protect your OptarisDefense instance. Once enabled, all access will require login. The database will be encrypted and bound to this hardware.</p>
                         </div>
                         <div id="security-config-content" class="hidden px-4 pb-4">
                         </div>
@@ -5827,8 +5827,8 @@
                 <div id="pwnagotchi-section" class="mb-8" style="display: none;">
                     <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                         <div>
-                            <h3 class="text-xl font-semibold text-Ragnar-400">Pwnagotchi Bridge</h3>
-                            <p class="text-sm text-gray-400 mt-1">Install Pwnagotchi alongside Ragnar and swap which service owns the display without reflashing the SD card.</p>
+                            <h3 class="text-xl font-semibold text-OptarisDefense-400">Pwnagotchi Bridge</h3>
+                            <p class="text-sm text-gray-400 mt-1">Install Pwnagotchi alongside OptarisDefense and swap which service owns the display without reflashing the SD card.</p>
                         </div>
                         <div class="flex items-center gap-3">
                             <span id="pwn-status-badge" class="text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full bg-slate-700 text-slate-200">Status Pending</span>
@@ -5847,11 +5847,11 @@
                                 <div class="grid grid-cols-1 gap-2 text-sm text-gray-300">
                                     <div class="flex justify-between">
                                         <span>Active Mode</span>
-                                        <span id="pwn-mode-value" class="font-semibold text-green-400">Ragnar</span>
+                                        <span id="pwn-mode-value" class="font-semibold text-green-400">OptarisDefense</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span>Target Mode</span>
-                                        <span id="pwn-target-value" class="font-semibold text-slate-200">Ragnar</span>
+                                        <span id="pwn-target-value" class="font-semibold text-slate-200">OptarisDefense</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span>Phase</span>
@@ -5878,7 +5878,7 @@
                         </div>
                         <div id="pwn-install-card" class="glass rounded-lg p-4">
                             <h4 class="font-medium text-lg mb-2">Install</h4>
-                            <p class="text-sm text-gray-400 mb-4">Run the bundled installer to fetch dependencies, clone Pwnagotchi, and stage services. This can take 20 - 40 minutes on a Raspberry Pi. Note that the Ragnar web might be unresponsive or slow during this process.</p>
+                            <p class="text-sm text-gray-400 mb-4">Run the bundled installer to fetch dependencies, clone Pwnagotchi, and stage services. This can take 20 - 40 minutes on a Raspberry Pi. Note that the OptarisDefense web might be unresponsive or slow during this process.</p>
                             <button id="pwn-install-btn" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition-colors">
                                 Install Pwnagotchi
                             </button>
@@ -5886,7 +5886,7 @@
                         </div>
                         <div id="pwn-swap-card" class="glass rounded-lg p-4">
                             <h4 class="font-medium text-lg mb-2">Swap Control</h4>
-                            <p class="text-sm text-gray-400 mb-4">Trigger a graceful hand-off between Ragnar and Pwnagotchi. Ragnar UI will stop responding once the switch begins, so plan to reboot back via SSH.</p>
+                            <p class="text-sm text-gray-400 mb-4">Trigger a graceful hand-off between OptarisDefense and Pwnagotchi. OptarisDefense UI will stop responding once the switch begins, so plan to reboot back via SSH.</p>
                             <div>
                                 <button id="pwn-swap-to-pwn-btn" class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white py-2 px-4 rounded-lg transition-colors w-full">
                                     Switch to Pwnagotchi
@@ -5905,7 +5905,7 @@
                                     <div id="pwn-swap-progress-bar" class="h-full bg-fuchsia-500 transition-all duration-500" style="width: 0%"></div>
                                 </div>
                             </div>
-                            <p id="pwn-swap-hint" class="text-xs text-gray-500 mt-3">Ragnar UI becomes unavailable once the service stops. Keep SSH access handy before swapping.</p>
+                            <p id="pwn-swap-hint" class="text-xs text-gray-500 mt-3">OptarisDefense UI becomes unavailable once the service stops. Keep SSH access handy before swapping.</p>
                         </div>
                     </div>
 
@@ -5982,7 +5982,7 @@
                                 <h5 class="text-sm font-semibold text-fuchsia-300 uppercase tracking-wide">Identity</h5>
                                 <div>
                                     <label class="block text-xs text-gray-400 mb-1">Device Name</label>
-                                    <input id="pwn-cfg-name" type="text" maxlength="32" pattern="[a-zA-Z0-9_-]+" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:border-fuchsia-500 focus:outline-none" placeholder="RagnarPwn">
+                                    <input id="pwn-cfg-name" type="text" maxlength="32" pattern="[a-zA-Z0-9_-]+" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:border-fuchsia-500 focus:outline-none" placeholder="OptarisDefensePwn">
                                 </div>
                                 <div>
                                     <label class="block text-xs text-gray-400 mb-1">Whitelist (SSIDs/BSSIDs)</label>
@@ -6103,11 +6103,11 @@
                                 <h5 class="text-sm font-semibold text-fuchsia-300 uppercase tracking-wide">Web UI</h5>
                                 <div>
                                     <label class="block text-xs text-gray-400 mb-1">Username</label>
-                                    <input id="pwn-cfg-web-user" type="text" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:border-fuchsia-500 focus:outline-none" placeholder="ragnar">
+                                    <input id="pwn-cfg-web-user" type="text" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:border-fuchsia-500 focus:outline-none" placeholder="optaris_defense">
                                 </div>
                                 <div>
                                     <label class="block text-xs text-gray-400 mb-1">Password</label>
-                                    <input id="pwn-cfg-web-pass" type="password" autocomplete="off" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:border-fuchsia-500 focus:outline-none" placeholder="ragnar">
+                                    <input id="pwn-cfg-web-pass" type="password" autocomplete="off" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:border-fuchsia-500 focus:outline-none" placeholder="optaris_defense">
                                 </div>
                                 <div>
                                     <label class="block text-xs text-gray-400 mb-1">Port</label>
@@ -6178,7 +6178,7 @@
                 
                 <!-- AI Configuration Section -->
                 <div class="mb-8">
-                    <h3 class="text-xl font-semibold mb-4 text-Ragnar-400">AI Integration</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-OptarisDefense-400">AI Integration</h3>
                     <div class="glass rounded-lg p-4">
                         <div class="flex flex-col gap-4 sm:flex-row sm:items-start mb-4">
                             <svg class="w-10 h-10 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -6232,7 +6232,7 @@
 
                 <!-- Pushover Notifications Section -->
                 <div class="mb-8">
-                    <h3 class="text-xl font-semibold mb-4 text-Ragnar-400">Pushover Notifications</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-OptarisDefense-400">Pushover Notifications</h3>
                     <div class="glass rounded-lg p-4">
                         <div class="flex flex-col gap-4 sm:flex-row sm:items-start mb-4">
                             <svg class="w-10 h-10 text-cyan-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -6241,7 +6241,7 @@
                             <div class="flex-1">
                                 <h4 class="font-medium text-lg mb-2">Push Notifications</h4>
                                 <p class="text-sm text-gray-400 mb-4">
-                                    Get real-time push notifications on your phone via <a href="https://pushover.net/" target="_blank" class="text-cyan-400 hover:text-cyan-300 underline">Pushover</a> when Ragnar discovers new devices, vulnerabilities, or credentials.
+                                    Get real-time push notifications on your phone via <a href="https://pushover.net/" target="_blank" class="text-cyan-400 hover:text-cyan-300 underline">Pushover</a> when OptarisDefense discovers new devices, vulnerabilities, or credentials.
                                 </p>
                                 <div class="space-y-3">
                                     <!-- Enable toggle -->
@@ -6337,17 +6337,17 @@
 
                 <!-- Hardware Profile Configuration Section -->
                 <div class="mb-8">
-                    <h3 class="text-xl font-semibold mb-4 text-Ragnar-400">Hardware Resource Configuration</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-OptarisDefense-400">Hardware Resource Configuration</h3>
                     
                     <!-- Auto-detect Card -->
-                    <div class="glass rounded-lg p-4 mb-4 border-2 border-Ragnar-600">
+                    <div class="glass rounded-lg p-4 mb-4 border-2 border-OptarisDefense-600">
                         <div class="flex items-center justify-between mb-3">
                             <div>
                                 <h4 class="font-medium text-lg">Hardware Detection</h4>
                                 <p class="text-sm text-gray-400 mt-1">Automatically detect hardware.</p>
                             </div>
                             <button onclick="detectAndApplyHardware()" 
-                                    class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white py-2 px-4 rounded transition-colors">
+                                    class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white py-2 px-4 rounded transition-colors">
                                 <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
                                 </svg>
@@ -6367,12 +6367,12 @@
                         <div class="flex flex-col sm:flex-row gap-4 items-end">
                             <div class="flex-1">
                                 <label for="hardware-profile-select" class="block text-sm font-medium text-gray-300 mb-2">Hardware Profile</label>
-                                <select id="hardware-profile-select" class="w-full bg-slate-700 border border-slate-600 text-white py-2 px-3 rounded-lg focus:ring-2 focus:ring-Ragnar-500 focus:border-transparent">
+                                <select id="hardware-profile-select" class="w-full bg-slate-700 border border-slate-600 text-white py-2 px-3 rounded-lg focus:ring-2 focus:ring-OptarisDefense-500 focus:border-transparent">
                                     <option value="">Loading hardware profiles...</option>
                                 </select>
                             </div>
                             <button id="apply-profile-btn" onclick="applySelectedProfile()" 
-                                    class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white py-2 px-6 rounded-lg transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed" 
+                                    class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white py-2 px-6 rounded-lg transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed" 
                                     disabled>
                                 Apply Profile
                             </button>
@@ -6423,12 +6423,12 @@
                 
                 <!-- Configuration Form -->
                 <div>
-                    <h3 class="text-xl font-semibold mb-4 text-Ragnar-400">Advanced Settings</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-OptarisDefense-400">Advanced Settings</h3>
                     <div class="glass rounded-lg p-4">
                         <p class="text-sm text-gray-400 mb-4">Fine-tune individual settings (changes will override hardware profile)</p>
                         <div id="attack-warning" class="hidden mb-4 p-4 rounded-lg border border-red-500 bg-red-900 bg-opacity-30 text-sm text-red-100">
                             <div class="font-semibold mb-1">⚠️ Automated Attacks Enabled</div>
-                            <p>When this setting is on, Ragnar will actively run offensive actions (bruteforce, credential reuse, file theft) against discovered hosts. Ensure you have proper authorization before continuing.</p>
+                            <p>When this setting is on, OptarisDefense will actively run offensive actions (bruteforce, credential reuse, file theft) against discovered hosts. Ensure you have proper authorization before continuing.</p>
                         </div>
                         <div id="config-form">
                             <p class="text-gray-400">Loading configuration...</p>
@@ -6444,7 +6444,7 @@
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
                     <div class="min-w-0">
                         <h2 class="text-xl font-bold">Terminal</h2>
-                        <p class="text-sm text-gray-400">Interactive shell on this Pi as the <span class="font-mono">ragnar</span> user, in <span class="font-mono">/home/ragnar/Ragnar</span>. Use <span class="font-mono">sudo</span> for privileged commands.</p>
+                        <p class="text-sm text-gray-400">Interactive shell on this Pi as the <span class="font-mono">optaris_defense</span> user, in <span class="font-mono">/home/optaris-defense/OptarisDefense</span>. Use <span class="font-mono">sudo</span> for privileged commands.</p>
                     </div>
                     <button onclick="initTerminal()" class="bg-slate-700 hover:bg-slate-600 text-gray-200 px-3 py-1.5 rounded text-sm whitespace-nowrap">Reconnect</button>
                 </div>
@@ -6477,9 +6477,9 @@
             </div>
             <p id="rusense-offline-hint" class="hidden text-sm text-amber-300 mb-3">
                 Sensing backend not reachable. Ensure the sensing-server is running on this host (port 3000)
-                so Ragnar can proxy its CSI stream.
+                so OptarisDefense can proxy its CSI stream.
             </p>
-            <!-- Shadow DOM island: RuView's compiled Tailwind is fully isolated from Ragnar here. -->
+            <!-- Shadow DOM island: RuView's compiled Tailwind is fully isolated from optaris_defense here. -->
             <div id="rusense-host" class="block w-full"></div>
             <!-- Observatory sub-tab: full-page WebGL app (iframe). Hidden until its sub-tab is active;
                  src is set lazily by showRusenseSubtab() so WebGL + WS only run while viewed. -->
@@ -6535,13 +6535,13 @@
                 </button>
             </div>
             <p id="release-gate-modal-message" class="text-gray-200 mb-6">
-                A new Ragnar release is rolling out. Updating early may cause instability.
+                A new OptarisDefense release is rolling out. Updating early may cause instability.
             </p>
             <div class="flex flex-col sm:flex-row gap-3">
                 <button onclick="handleReleaseGateDecision(false)" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded transition-colors">
                     Later
                 </button>
-                <button onclick="handleReleaseGateDecision(true)" class="flex-1 bg-Ragnar-600 hover:bg-Ragnar-700 text-white py-2 px-4 rounded transition-colors">
+                <button onclick="handleReleaseGateDecision(true)" class="flex-1 bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white py-2 px-4 rounded transition-colors">
                     Update Anyway
                 </button>
             </div>
@@ -6612,7 +6612,7 @@
     </div>
 
     <!-- JavaScript -->
-    <script src="/web/scripts/ragnar_modern.js?v=20260716-arp-iface"></script>
+    <script src="/web/scripts/optaris_defense_modern.js?v=20260716-arp-iface"></script>
 
 </body>
 </html>

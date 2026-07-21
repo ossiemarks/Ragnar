@@ -38,7 +38,7 @@ logger = logging.getLogger(__name__)
 
 class EPD:
     def __init__(self):
-        self.is_initialized = False  # Track if the display has been initialized (Ragnar compatibility)
+        self.is_initialized = False  # Track if the display has been initialized (OptarisDefense compatibility)
         self.reset_pin = epdconfig.RST_PIN
         self.dc_pin = epdconfig.DC_PIN
         self.busy_pin = epdconfig.BUSY_PIN

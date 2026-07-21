@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# install_sensing.sh — Provision Ragnar's WiFi-CSI sensing backend.
+# install_sensing.sh — Provision OptarisDefense's WiFi-CSI sensing backend.
 #
-# Ragnar bundles the sensing-server engine so it runs standalone — no separate
+# OptarisDefense bundles the sensing-server engine so it runs standalone — no separate
 # RuView checkout required. Hybrid strategy:
 #   * arm64 (Raspberry Pi): install the prebuilt binary vendored at bin/sensing-server.
 #   * other arches OR `--rebuild`: install Rust and compile from the pinned RuView source.
-# Then it installs + starts a systemd service (ragnar-sensing.service) and steps
+# Then it installs + starts a systemd service (optaris-defense-sensing.service) and steps
 # aside any pre-existing external RuView unit so the ports don't clash.
 #
 # Safe to re-run (idempotent). All output is tee'd to the install log so the
@@ -14,13 +14,13 @@ set -euo pipefail
 
 # ── Paths & constants ────────────────────────────────────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-RAGNAR_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-VENDORED_BIN="$RAGNAR_DIR/bin/sensing-server"
-INSTALL_BIN="/usr/local/bin/ragnar-sensing-server"
-UNIT_NAME="ragnar-sensing.service"
+OPTARIS_DEFENSE_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+VENDORED_BIN="$OPTARIS_DEFENSE_DIR/bin/sensing-server"
+INSTALL_BIN="/usr/local/bin/optaris-defense-sensing-server"
+UNIT_NAME="optaris-defense-sensing.service"
 UNIT_PATH="/etc/systemd/system/$UNIT_NAME"
-UI_PATH="$RAGNAR_DIR/web/rusense"
-LOG_FILE="${SENSING_INSTALL_LOG:-$RAGNAR_DIR/data/sensing_install.log}"
+UI_PATH="$OPTARIS_DEFENSE_DIR/web/rusense"
+LOG_FILE="${SENSING_INSTALL_LOG:-$OPTARIS_DEFENSE_DIR/data/sensing_install.log}"
 
 # RuView source (only used for the build-from-source fallback). Pinned so a
 # rebuild is reproducible and can't drift under us.
@@ -34,7 +34,7 @@ WS_PORT="${SENSING_WS_PORT:-3100}"
 UDP_PORT="${SENSING_UDP_PORT:-5005}"
 TICK_MS="${SENSING_TICK_MS:-500}"
 SOURCE="${SENSING_SOURCE:-esp32}"
-RUN_USER="${SENSING_RUN_USER:-$(stat -c '%U' "$RAGNAR_DIR")}"
+RUN_USER="${SENSING_RUN_USER:-$(stat -c '%U' "$OPTARIS_DEFENSE_DIR")}"
 
 REBUILD=0
 [ "${1:-}" = "--rebuild" ] && REBUILD=1
@@ -47,8 +47,8 @@ fail() { echo "[install_sensing][ERROR] $*" >&2; exit 1; }
 as_root() { if [ "$(id -u)" -eq 0 ]; then "$@"; else sudo "$@"; fi; }
 as_user() { local u="$1"; shift; if [ "$(id -un)" = "$u" ]; then "$@"; else sudo -u "$u" -H "$@"; fi; }
 
-log "=== Ragnar sensing backend install $(date -u +%FT%TZ) ==="
-log "Ragnar dir : $RAGNAR_DIR"
+log "=== OptarisDefense sensing backend install $(date -u +%FT%TZ) ==="
+log "OptarisDefense dir : $OPTARIS_DEFENSE_DIR"
 log "Run user   : $RUN_USER"
 log "Arch       : $(uname -m)   rebuild=$REBUILD"
 
@@ -80,7 +80,7 @@ else
     log "Using cargo: $CARGO_BIN"
 
     # Fetch pinned source (shallow) into a build cache owned by RUN_USER.
-    SRC_DIR="/home/$RUN_USER/.cache/ragnar-sensing-src"
+    SRC_DIR="/home/$RUN_USER/.cache/optaris-defense-sensing-src"
     if [ ! -d "$SRC_DIR/.git" ]; then
         as_user "$RUN_USER" git clone --filter=blob:none "$RUVIEW_REPO" "$SRC_DIR"
     fi
@@ -109,13 +109,13 @@ log "Binary installed at $INSTALL_BIN"
 # Create them up front, owned by the run user. (The unit also recreates them on
 # every start via ExecStartPre, so a deleted/replaced repo dir self-heals.)
 as_root install -d -o "$RUN_USER" -g "$RUN_USER" \
-    "$RAGNAR_DIR/data/recordings" "$RAGNAR_DIR/data/models"
+    "$OPTARIS_DEFENSE_DIR/data/recordings" "$OPTARIS_DEFENSE_DIR/data/models"
 # `install -d` fixes the dirs but not files inside them: root-run updates and
 # backup-restores leave root-owned recordings/model files the server can then
 # no longer overwrite (recording/start fails with "internal_error").
 as_root chown -R "$RUN_USER:$RUN_USER" \
-    "$RAGNAR_DIR/data/recordings" "$RAGNAR_DIR/data/models"
-as_root chown -f "$RUN_USER:$RUN_USER" "$RAGNAR_DIR/data/adaptive_model.json" || true
+    "$OPTARIS_DEFENSE_DIR/data/recordings" "$OPTARIS_DEFENSE_DIR/data/models"
+as_root chown -f "$RUN_USER:$RUN_USER" "$OPTARIS_DEFENSE_DIR/data/adaptive_model.json" || true
 log "Ensured data dirs: data/recordings, data/models (owner $RUN_USER)"
 
 # ── 2. Step aside any external RuView unit (port conflict) ───────────────────
@@ -133,19 +133,19 @@ ALLOWED_HOSTS="${LAN_IP}:${HTTP_PORT},${LAN_IP},${HOSTNAME_SHORT}:${HTTP_PORT},$
 log "Writing $UNIT_PATH (allowed hosts: $ALLOWED_HOSTS)"
 as_root tee "$UNIT_PATH" >/dev/null <<UNIT
 [Unit]
-Description=Ragnar WiFi-CSI sensing backend (bundled sensing-server)
+Description=OptarisDefense WiFi-CSI sensing backend (bundled sensing-server)
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 Type=simple
 User=$RUN_USER
-WorkingDirectory=$RAGNAR_DIR
+WorkingDirectory=$OPTARIS_DEFENSE_DIR
 # Recreate the data dirs and re-assert their ownership on every (re)start
 # ('+' = run as root). Root-run updates/backup-restores leave root-owned
 # files the server (User=$RUN_USER) can't overwrite — recording/start then
 # fails with "internal_error" and the adaptive model can't be saved.
-ExecStartPre=+/bin/sh -c 'mkdir -p $RAGNAR_DIR/data/recordings $RAGNAR_DIR/data/models && chown -R $RUN_USER:$RUN_USER $RAGNAR_DIR/data/recordings $RAGNAR_DIR/data/models; chown -f $RUN_USER:$RUN_USER $RAGNAR_DIR/data/adaptive_model.json; true'
+ExecStartPre=+/bin/sh -c 'mkdir -p $OPTARIS_DEFENSE_DIR/data/recordings $OPTARIS_DEFENSE_DIR/data/models && chown -R $RUN_USER:$RUN_USER $OPTARIS_DEFENSE_DIR/data/recordings $OPTARIS_DEFENSE_DIR/data/models; chown -f $RUN_USER:$RUN_USER $OPTARIS_DEFENSE_DIR/data/adaptive_model.json; true'
 Environment=RUST_LOG=info
 Environment=SENSING_ALLOWED_HOSTS=$ALLOWED_HOSTS
 # Presence floor: smoothed-motion (sm) threshold above which a node reports

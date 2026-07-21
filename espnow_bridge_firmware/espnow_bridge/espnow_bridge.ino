@@ -1,5 +1,5 @@
 /*
- * espnow_bridge.ino  –  Ragnar ESP-Now ↔ USB-Serial bridge
+ * espnow_bridge.ino  –  OptarisDefense ESP-Now ↔ USB-Serial bridge
  *
  * Flash this sketch onto any ESP32 (WROOM, S3, C3, …) connected to the
  * Raspberry Pi via USB.  It initialises ESP-Now on channel 6 and relays
@@ -111,7 +111,7 @@ static void process_host_frame(uint8_t        cmd,
         // Host re-requesting identification — reply with another HELLO
         uint8_t my_mac[6];
         esp_wifi_get_mac(WIFI_IF_STA, my_mac);
-        static const uint8_t id[] = "RagnarBridge";
+        static const uint8_t id[] = "OptarisDefenseBridge";
         send_frame(CMD_HELLO, my_mac, id, sizeof(id) - 1);
     }
 }
@@ -154,8 +154,8 @@ void setup()
 {
     Serial.begin(SERIAL_BAUD);
 
-    // Print text identification line so Ragnar's boot-banner detector finds it
-    Serial.println("RagnarBridge ready");
+    // Print text identification line so OptarisDefense's boot-banner detector finds it
+    Serial.println("OptarisDefenseBridge ready");
     delay(50);
 
     WiFi.mode(WIFI_STA);
@@ -173,10 +173,10 @@ void setup()
     bc.encrypt = false;
     esp_now_add_peer(&bc);
 
-    // Send binary HELLO frame — Ragnar uses this to learn the bridge MAC
+    // Send binary HELLO frame — OptarisDefense uses this to learn the bridge MAC
     uint8_t my_mac[6];
     esp_wifi_get_mac(WIFI_IF_STA, my_mac);
-    static const uint8_t id[] = "RagnarBridge";
+    static const uint8_t id[] = "OptarisDefenseBridge";
     send_frame(CMD_HELLO, my_mac, id, sizeof(id) - 1);
 }
 

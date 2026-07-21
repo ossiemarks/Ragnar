@@ -1,4 +1,4 @@
-"""Shared Wi-Fi and Ethernet interface discovery helpers for Ragnar."""
+"""Shared Wi-Fi and Ethernet interface discovery helpers for OptarisDefense."""
 
 from __future__ import annotations
 

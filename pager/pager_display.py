@@ -1,5 +1,5 @@
 #pager_display.py
-# Pager LCD display for Ragnar - multi-screen dashboard mirroring the web UI.
+# Pager LCD display for OptarisDefense - multi-screen dashboard mirroring the web UI.
 # Renders on the WiFi Pineapple Pager's 222x480 portrait LCD via pagerctl.
 #
 # Screens (cycle with LEFT/RIGHT):
@@ -97,7 +97,7 @@ NETWORK_SETTINGS = [
 
 SYSTEM_SETTINGS = [
     # Pager-relevant system settings only.
-    # Web server is controlled by the startup menu (RAGNAR_WEB_UI env var), not this config.
+    # Web server is controlled by the startup menu (OPTARIS_DEFENSE_WEB_UI env var), not this config.
     {'key': 'ai_enabled',      'label': 'AI Features',        'type': 'bool'},
     {'key': 'pushover_enabled','label': 'Push Notifications', 'type': 'bool'},
     {'key': 'debug_mode',      'label': 'Debug Mode',         'type': 'bool'},
@@ -121,7 +121,7 @@ def discover_launchers():
     matches = sorted(glob.glob(pattern))
     for path in matches:
         basename = os.path.basename(path)
-        if basename == 'launch_ragnar.sh':
+        if basename == 'launch_optaris_defense.sh':
             continue
         title = None
         requires = None
@@ -147,12 +147,12 @@ def discover_launchers():
 
 
 class PagerDisplay:
-    """Multi-screen pager dashboard for Ragnar."""
+    """Multi-screen pager dashboard for OptarisDefense."""
 
     def __init__(self, shared_data):
         self.shared_data = shared_data
         self.config = self.shared_data.config
-        self.shared_data.ragnarstatustext2 = "Awakening..."
+        self.shared_data.optaris_defensestatustext2 = "Awakening..."
         self.commentaire_ia = Commentaireia()
         self.semaphore = threading.Semaphore(10)
 
@@ -496,7 +496,7 @@ class PagerDisplay:
     def draw_dashboard(self):
         """Dashboard layout for 480x222 landscape."""
         self.pager.clear(self.DARK_BG)
-        self._draw_screen_header("RAGNAR")
+        self._draw_screen_header("OPTARIS_DEFENSE")
 
         # Layout: left panel (stats + status), right panel (character + comment)
         left_w = 300
@@ -505,8 +505,8 @@ class PagerDisplay:
         y = 26
 
         # Status bar (full width)
-        status = self.shared_data.ragnarorch_status or "IDLE"
-        status2 = self.shared_data.ragnarstatustext2 or ""
+        status = self.shared_data.optaris_defenseorch_status or "IDLE"
+        status2 = self.shared_data.optaris_defensestatustext2 or ""
         status_color = self.GREEN if "IDLE" in status else self.CYAN
         if "Bruteforce" in status:
             status_color = self.RED
@@ -560,7 +560,7 @@ class PagerDisplay:
         comment_y = stats_bottom + 16
         comment_h = self.height - comment_y - 2
         if comment_h > 10:
-            comment = self.sanitize_text(self.shared_data.ragnarsays) or "..."
+            comment = self.sanitize_text(self.shared_data.optaris_defensesays) or "..."
             lines = self.shared_data.wrap_text(comment, max_chars=38)
             for i, line in enumerate(lines[:3]):
                 self.pager.draw_ttf(6, comment_y + i * 15, line, self.LIGHT_GRAY, self.font_arial, 12)
@@ -1054,7 +1054,7 @@ class PagerDisplay:
         for title, path in launchers:
             options.append((f"> {title}", blue_color, (42, path)))
 
-        options.append(("Exit Ragnar", red_color, 0))
+        options.append(("Exit OptarisDefense", red_color, 0))
 
         num_options = len(options)
         selected = 0
@@ -1228,8 +1228,8 @@ class PagerDisplay:
     def display_comment(self, status):
         comment = self.commentaire_ia.get_commentaire(status)
         if comment:
-            self.shared_data.ragnarsays = comment
-            self.shared_data.ragnarstatustext = self.shared_data.ragnarorch_status
+            self.shared_data.optaris_defensesays = comment
+            self.shared_data.optaris_defensestatustext = self.shared_data.optaris_defenseorch_status
 
     def is_wifi_connected(self):
         try:
@@ -1305,9 +1305,9 @@ class PagerDisplay:
                     time.sleep(0.1)
                     continue
                 self.check_dim_timeout()
-                self.display_comment(self.shared_data.ragnarorch_status)
-                self.shared_data.update_ragnarstatus()
-                self.update_leds(self.shared_data.ragnarorch_status)
+                self.display_comment(self.shared_data.optaris_defenseorch_status)
+                self.shared_data.update_optaris_defensestatus()
+                self.update_leds(self.shared_data.optaris_defenseorch_status)
                 self.render_frame()
                 time.sleep(0.1)
             except Exception as e:
@@ -1340,7 +1340,7 @@ def handle_exit_pager_display(signum, frame, display_instance=None, exit_process
 if __name__ == "__main__":
     display_instance = None
     try:
-        logger.info("Starting Ragnar pager display...")
+        logger.info("Starting OptarisDefense pager display...")
         display_instance = PagerDisplay(shared_data)
         signal.signal(signal.SIGINT, lambda s, f: handle_exit_pager_display(s, f, display_instance))
         signal.signal(signal.SIGTERM, lambda s, f: handle_exit_pager_display(s, f, display_instance))

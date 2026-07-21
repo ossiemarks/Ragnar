@@ -1,8 +1,8 @@
 # server_capabilities.py
 """
-Server Mode Detection and Advanced Feature Management for Ragnar
+Server Mode Detection and Advanced Feature Management for OptarisDefense
 
-This module detects when Ragnar is running on a capable server (AMD64/ARM64 with 8GB+ RAM)
+This module detects when OptarisDefense is running on a capable server (AMD64/ARM64 with 8GB+ RAM)
 and unlocks advanced features that would be impossible on a Pi Zero W2.
 
 Features unlocked in server mode:
@@ -236,7 +236,7 @@ class ServerCapabilities:
             # Traffic Analysis: needs tcpdump at minimum
             caps.traffic_analysis_enabled = caps.available_tools.get('tcpdump', False)
             
-            # Advanced Vuln: needs nmap (which Ragnar already uses)
+            # Advanced Vuln: needs nmap (which OptarisDefense already uses)
             caps.advanced_vuln_enabled = caps.available_tools.get('nmap', False)
             
             # Parallel scanning: enabled on multi-core systems

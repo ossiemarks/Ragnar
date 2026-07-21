@@ -1,5 +1,5 @@
 """
-Web Recon Engine for Ragnar Server Mode
+Web Recon Engine for OptarisDefense Server Mode
 
 Pre-flight reconnaissance phase that runs before the existing OWASP ZAP scan:
 - TLS_AUDIT          via sslyze (cert validity, weak ciphers, protocol versions)
@@ -47,7 +47,7 @@ DNS_RESOLVE_TIMEOUT = 5
 LIVENESS_TIMEOUT = 5
 DEFAULT_RUNNER_TIMEOUT = 300
 DEFAULT_ENGINE_TIMEOUT = 600
-DEFAULT_WORDLIST_PATH = "/opt/ragnar/wordlists/common.txt"
+DEFAULT_WORDLIST_PATH = "/opt/optaris_defense/wordlists/common.txt"
 RESULT_RETENTION_SECONDS = 3600
 
 INTERESTING_PATH_PATTERNS = [
@@ -572,7 +572,7 @@ def _registrable_domain(host: str) -> Optional[str]:
 
 def _query_crtsh(domain: str) -> List[str]:
     url = CRTSH_URL_TEMPLATE.format(domain=urllib.parse.quote(domain))
-    req = urllib.request.Request(url, headers={"User-Agent": "Ragnar-Recon/1.0"})
+    req = urllib.request.Request(url, headers={"User-Agent": "OptarisDefense-Recon/1.0"})
     with urllib.request.urlopen(req, timeout=CRTSH_TIMEOUT) as resp:
         body = resp.read()
     data = json.loads(body)

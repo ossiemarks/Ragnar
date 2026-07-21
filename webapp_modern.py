@@ -1,6 +1,6 @@
 #webapp_modern.py
 """
-Modern Flask-based web application for Ragnar
+Modern Flask-based web application for OptarisDefense
 Features:
 - Fast Flask backend with proper routing
 - RESTful API endpoints
@@ -72,15 +72,15 @@ app = Flask(__name__,
             static_folder='web',
             template_folder='web')
 app.config['SECRET_KEY'] = auth_mgr.get_or_create_secret_key()
-# Cookie name must be unique per device: two Ragnar instances reached through
+# Cookie name must be unique per device: two OptarisDefense instances reached through
 # the same hostname (e.g. SSH tunnels on localhost:3000/3001) share one cookie
 # jar, and with Flask's default name 'session' each login overwrites the other
 # instance's cookie, logging it out (issue #361). The hardware fingerprint is
 # stable across reboots, so sessions survive restarts.
 try:
-    app.config['SESSION_COOKIE_NAME'] = 'ragnar_session_' + auth_mgr.get_hardware_fingerprint()[:12]
+    app.config['SESSION_COOKIE_NAME'] = 'optaris_defense_session_' + auth_mgr.get_hardware_fingerprint()[:12]
 except Exception:  # pragma: no cover - fingerprinting must never block startup
-    app.config['SESSION_COOKIE_NAME'] = 'ragnar_session'
+    app.config['SESSION_COOKIE_NAME'] = 'optaris_defense_session'
 app.config['JSON_SORT_KEYS'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=24)
 
@@ -150,9 +150,9 @@ def check_authentication():
 # ============================================================================
 # RUSENSE PROXY
 # Relay the RuView WiFi-CSI sensing-server to the embedded RuSense tab so the
-# browser only ever talks to Ragnar's own origin. Upstream defaults to the
+# browser only ever talks to OptarisDefense's own origin. Upstream defaults to the
 # local sensing-server (HTTP + raw WebSocket on :3000); override via env.
-# Imports are guarded: a missing dep degrades the proxy, never crashes Ragnar.
+# Imports are guarded: a missing dep degrades the proxy, never crashes OptarisDefense.
 # ============================================================================
 try:
     import requests as _rusense_requests
@@ -1717,21 +1717,21 @@ def rusense_diagnostics():
             'wifi_link': run(['iw', 'dev', 'wlan0', 'link']),
         },
         'sensing_service': {
-            'status': run(['systemctl', 'status', 'ragnar-sensing.service', '--no-pager', '-l']),
-            'show': run(['systemctl', 'show', 'ragnar-sensing.service',
+            'status': run(['systemctl', 'status', 'optaris-defense-sensing.service', '--no-pager', '-l']),
+            'show': run(['systemctl', 'show', 'optaris-defense-sensing.service',
                          '-p', 'ActiveState', '-p', 'SubState', '-p', 'NRestarts',
                          '-p', 'ActiveEnterTimestamp', '-p', 'ExecMainPID', '-p', 'Environment']),
         },
-        'journal_sensing': run(['journalctl', '-u', 'ragnar-sensing.service',
+        'journal_sensing': run(['journalctl', '-u', 'optaris-defense-sensing.service',
                                 '-n', '400', '--no-pager']),
-        'journal_ragnar': run(['journalctl', '-u', 'ragnar.service',
+        'journal_optaris_defense': run(['journalctl', '-u', 'optaris-defense.service',
                                '-n', '80', '--no-pager']),
         'sockets_udp': run(['ss', '-uanp']),
         'udp_capture': udp,
         'packet_analysis': analyze_udp(udp.get('stdout', ''), secs),
         'binaries': {
-            'installed': '/usr/local/bin/ragnar-sensing-server',
-            'installed_md5': md5('/usr/local/bin/ragnar-sensing-server'),
+            'installed': '/usr/local/bin/optaris-defense-sensing-server',
+            'installed_md5': md5('/usr/local/bin/optaris-defense-sensing-server'),
             'vendored': repo_bin,
             'vendored_md5': md5(repo_bin),
         },
@@ -1743,7 +1743,7 @@ def rusense_diagnostics():
             'models_active': _rusense_get('/api/v1/models/active'),
             'sensing_latest': _rusense_get('/api/v1/sensing/latest'),
         },
-        'ragnar_state': {
+        'optaris_defense_state': {
             'geofence': geofence,
             'presence_pub': presence_pub,
         },
@@ -1758,7 +1758,7 @@ def rusense_sensitivity():
     """Get/set the model-free detection sensitivity: the presence floor and the
     debounce depth the sensing engine uses. These are the RUVIEW_PRESENCE_FLOOR /
     RUVIEW_DEBOUNCE_FRAMES env vars; POST writes them to a systemd drop-in
-    (ragnar-sensing.service.d/sensitivity.conf) so they survive a RuSense
+    (optaris-defense-sensing.service.d/sensitivity.conf) so they survive a RuSense
     reinstall and cleanly override the shipped defaults, then daemon-reloads and
     restarts the sensing service to apply live. Webapp runs as root."""
     import subprocess
@@ -1794,9 +1794,9 @@ def rusense_sensitivity():
 
     # systemd drop-in override — lives beside the unit, survives reinstall, and
     # (loaded after the main unit) wins for these Environment= keys.
-    dropin_dir = '/etc/systemd/system/ragnar-sensing.service.d'
+    dropin_dir = '/etc/systemd/system/optaris-defense-sensing.service.d'
     dropin = os.path.join(dropin_dir, 'sensitivity.conf')
-    body = ('# Written by Ragnar RuSense Settings -> Detection sensitivity.\n'
+    body = ('# Written by OptarisDefense RuSense Settings -> Detection sensitivity.\n'
             '# Overrides install_sensing.sh defaults; survives RuSense reinstall.\n'
             '[Service]\n'
             f'Environment=RUVIEW_PRESENCE_FLOOR={floor}\n'
@@ -1819,7 +1819,7 @@ def rusense_sensitivity():
         return jsonify({'error': f'could not write drop-in: {exc}', 'saved': True}), 500
 
     steps['daemon_reload'] = run(['systemctl', 'daemon-reload'])
-    steps['restart'] = run(['systemctl', 'restart', 'ragnar-sensing.service'])
+    steps['restart'] = run(['systemctl', 'restart', 'optaris-defense-sensing.service'])
     applied = steps['restart'].get('rc') == 0
     return jsonify({'ok': applied, 'floor': floor, 'debounce_frames': deb,
                     'applied': applied, 'steps': steps})
@@ -1892,13 +1892,13 @@ def rusense_vitals_history():
 
 
 # ── Sensing backend lifecycle (bundled sensing-server) ───────────────────────
-# Ragnar ships the sensing engine itself, so the config page can install/start
+# OptarisDefense ships the sensing engine itself, so the config page can install/start
 # it without any external RuView checkout. These routes drive the install and
 # uninstall scripts and report service state.
 SENSING_INSTALL_SCRIPT = os.path.join(shared_data.currentdir, 'scripts', 'install_sensing.sh')
 SENSING_UNINSTALL_SCRIPT = os.path.join(shared_data.currentdir, 'scripts', 'uninstall_sensing.sh')
 SENSING_INSTALL_LOG = os.path.join(shared_data.currentdir, 'data', 'sensing_install.log')
-SENSING_UNIT = 'ragnar-sensing.service'
+SENSING_UNIT = 'optaris-defense-sensing.service'
 _sensing_install_lock = threading.Lock()
 _sensing_installing = False
 
@@ -2033,15 +2033,15 @@ PWN_SERVICE_FILE = '/etc/systemd/system/pwnagotchi.service'
 PWN_CONFIG_FILE = '/etc/pwnagotchi/config.toml'
 PWN_LAUNCHER_PATH = '/usr/bin/pwnagotchi-launcher'
 # One-shot boot flags written by the Pwnagotchi web UI (MANU/AUTO buttons) or by
-# Ragnar. The launcher consumes them on read. The persistent file keeps every
-# Pwnagotchi launch in manual mode until the Ragnar toggle is turned off.
+# OptarisDefense. The launcher consumes them on read. The persistent file keeps every
+# Pwnagotchi launch in manual mode until the OptarisDefense toggle is turned off.
 PWN_MANUAL_ONESHOT_FLAG = '/root/.pwnagotchi-manual'
 PWN_AUTO_ONESHOT_FLAG = '/root/.pwnagotchi-auto'
-PWN_MANUAL_PERSIST_FILE = '/etc/pwnagotchi/.ragnar-manual-mode'
+PWN_MANUAL_PERSIST_FILE = '/etc/pwnagotchi/.optaris-defense-manual-mode'
 PWN_SWAP_DELAY_SECONDS = 1
 PWN_INSTALL_STALE_SECONDS = 600  # Treat installer as stale after 10 minutes
 PWN_SWITCH_STALE_SECONDS = 60  # Consider switch stuck after 60 seconds
-# Path to the Pwnagotchi clone that the Ragnar installer manages.
+# Path to the Pwnagotchi clone that the OptarisDefense installer manages.
 # Used by the /api/pwn/* endpoints for update detection and git pull.
 PWN_REPO_PATH = "/opt/pwnagotchi"
 # Max seconds to wait for any single git operation on /opt/pwnagotchi.
@@ -2523,14 +2523,14 @@ def _build_pwnagotchi_status(persist: bool = True) -> dict:
         'phase': 'idle',
         'installed': os.path.isdir('/opt/pwnagotchi') and os.path.exists(PWN_SERVICE_FILE),
         'installing': False,
-        'mode': shared_data.config.get('pwnagotchi_mode', 'ragnar'),
+        'mode': shared_data.config.get('pwnagotchi_mode', 'optaris_defense'),
         'manual_mode': bool(shared_data.config.get('pwnagotchi_manual_mode', False)),
         'last_switch': shared_data.config.get('pwnagotchi_last_switch', ''),
         'service_active': False,
         'service_enabled': False,
         'log_file': None,
         'config_file': None,
-        'target_mode': shared_data.config.get('pwnagotchi_mode', 'ragnar'),
+        'target_mode': shared_data.config.get('pwnagotchi_mode', 'optaris_defense'),
         'timestamp': datetime.utcnow().isoformat() + 'Z',
         'discoveries': {
             'handshake_count': 0,
@@ -2559,7 +2559,7 @@ def _build_pwnagotchi_status(persist: bool = True) -> dict:
         status['message'] = stale_message
         _write_pwn_status_file('error', stale_message, 'error', {
             'log_file': status.get('log_file'),
-            'target_mode': status.get('target_mode', 'ragnar')
+            'target_mode': status.get('target_mode', 'optaris_defense')
         })
 
     pwn_service_state = _systemctl_state_label('pwnagotchi')
@@ -2567,9 +2567,9 @@ def _build_pwnagotchi_status(persist: bool = True) -> dict:
     status['service_active'] = pwn_service_state == 'active'
     status['service_enabled'] = _systemctl_check(['systemctl', 'is-enabled', 'pwnagotchi'])
 
-    ragnar_service_state = _systemctl_state_label('ragnar')
-    status['ragnar_service_state'] = ragnar_service_state
-    ragnar_service_active = ragnar_service_state == 'active'
+    optaris_defense_service_state = _systemctl_state_label('optaris_defense')
+    status['optaris_defense_service_state'] = optaris_defense_service_state
+    optaris_defense_service_active = optaris_defense_service_state == 'active'
 
     service_file_exists = os.path.exists(PWN_SERVICE_FILE)
     status['service_file_exists'] = service_file_exists
@@ -2580,15 +2580,15 @@ def _build_pwnagotchi_status(persist: bool = True) -> dict:
         status['state'] = 'running'
         status['message'] = 'Pwnagotchi service is running'
         status['mode'] = 'pwnagotchi'
-    elif ragnar_service_active:
-        status['mode'] = 'ragnar'
+    elif optaris_defense_service_active:
+        status['mode'] = 'optaris_defense'
         if status['state'] not in {'switching', 'installing'}:
             status['state'] = 'running'
-            status['message'] = 'Ragnar service is running'
+            status['message'] = 'OptarisDefense service is running'
             status['phase'] = 'idle'
-            status['target_mode'] = 'ragnar'
+            status['target_mode'] = 'optaris_defense'
     else:
-        status['mode'] = status.get('mode', shared_data.config.get('pwnagotchi_mode', 'ragnar'))
+        status['mode'] = status.get('mode', shared_data.config.get('pwnagotchi_mode', 'optaris_defense'))
 
     state = status.get('state', state)
 
@@ -2602,9 +2602,9 @@ def _build_pwnagotchi_status(persist: bool = True) -> dict:
             stale_switch = age.total_seconds() >= PWN_SWITCH_STALE_SECONDS
 
     if stale_switch:
-        target_mode = (status.get('target_mode') or shared_data.config.get('pwnagotchi_mode', 'ragnar')).lower()
-        if target_mode not in {'pwnagotchi', 'ragnar'}:
-            target_mode = 'ragnar'
+        target_mode = (status.get('target_mode') or shared_data.config.get('pwnagotchi_mode', 'optaris_defense')).lower()
+        if target_mode not in {'pwnagotchi', 'optaris_defense'}:
+            target_mode = 'optaris_defense'
 
         if target_mode == 'pwnagotchi':
             if status['service_active']:
@@ -2616,26 +2616,26 @@ def _build_pwnagotchi_status(persist: bool = True) -> dict:
             else:
                 status['state'] = 'error'
                 status['phase'] = 'error'
-                status['mode'] = 'ragnar' if ragnar_service_active else 'ragnar'
-                status['target_mode'] = 'ragnar'
+                status['mode'] = 'optaris_defense' if optaris_defense_service_active else 'optaris_defense'
+                status['target_mode'] = 'optaris_defense'
                 status['message'] = (
                     f"Switch to Pwnagotchi failed: pwnagotchi.service is {pwn_service_state}. "
-                    f"Ragnar service is {ragnar_service_state}."
+                    f"OptarisDefense service is {optaris_defense_service_state}."
                 )
-        else:  # target_mode == 'ragnar'
-            if ragnar_service_active:
+        else:  # target_mode == 'optaris_defense'
+            if optaris_defense_service_active:
                 status['state'] = 'running'
                 status['phase'] = 'idle'
-                status['message'] = 'Ragnar service is running'
-                status['mode'] = 'ragnar'
-                status['target_mode'] = 'ragnar'
+                status['message'] = 'OptarisDefense service is running'
+                status['mode'] = 'optaris_defense'
+                status['target_mode'] = 'optaris_defense'
             else:
                 status['state'] = 'error'
                 status['phase'] = 'error'
-                status['mode'] = 'pwnagotchi' if status['service_active'] else 'ragnar'
+                status['mode'] = 'pwnagotchi' if status['service_active'] else 'optaris_defense'
                 status['target_mode'] = 'pwnagotchi'
                 status['message'] = (
-                    f"Switch to Ragnar failed: ragnar.service is {ragnar_service_state}. "
+                    f"Switch to OptarisDefense failed: optaris-defense.service is {optaris_defense_service_state}. "
                     f"Pwnagotchi service is {pwn_service_state}."
                 )
 
@@ -2761,7 +2761,7 @@ def _read_pwn_log_chunk(cursor: Optional[int] = None, tail_bytes: int = 4096, ma
 
 
 def _schedule_pwn_mode_switch(target_mode: str) -> None:
-    if target_mode not in {'pwnagotchi', 'ragnar'}:
+    if target_mode not in {'pwnagotchi', 'optaris_defense'}:
         logger.warning(f"Invalid Pwnagotchi target mode requested: {target_mode}")
         return
 
@@ -2810,11 +2810,11 @@ def _collect_service_status(service_name: str) -> str:
 # Marker identifying a launcher that already contains the manual-mode logic.
 # Kept identical to the comment written by scripts/install_pwnagotchi.sh so an
 # installer-written launcher is recognised and left untouched.
-_PWN_LAUNCHER_MARKER = '# ragnar-managed flag-aware launcher'
+_PWN_LAUNCHER_MARKER = '# optaris-defense-managed flag-aware launcher'
 
 
 def _resolve_pwnagotchi_binary() -> Optional[str]:
-    """Locate the real pwnagotchi entry point, never the Ragnar launcher shim."""
+    """Locate the real pwnagotchi entry point, never the OptarisDefense launcher shim."""
     candidates = [
         shutil.which('pwnagotchi'),
         '/usr/local/bin/pwnagotchi',
@@ -2830,7 +2830,7 @@ def _pwn_launcher_script(target: str) -> str:
     return (
         "#!/bin/bash\n"
         f"{_PWN_LAUNCHER_MARKER}\n"
-        "# One-shot flags (Pwnagotchi web UI / Ragnar) win and are consumed on\n"
+        "# One-shot flags (Pwnagotchi web UI / OptarisDefense) win and are consumed on\n"
         "# read; the persistent file keeps every launch in manual mode.\n"
         "MANUAL=0\n"
         f'if [[ -f "{PWN_MANUAL_ONESHOT_FLAG}" ]]; then\n'
@@ -2917,7 +2917,7 @@ def _ensure_pwn_launcher() -> None:
 
 
 def _set_pwn_manual_mode(enabled: bool) -> None:
-    """Persist the Ragnar manual-mode preference and mirror it to the
+    """Persist the OptarisDefense manual-mode preference and mirror it to the
     launcher-readable flag file under /etc/pwnagotchi."""
     enabled = bool(enabled)
     try:
@@ -2985,11 +2985,11 @@ def _stop_service(service_name: str) -> tuple[bool, str]:
     return True, 'stopped'
 
 
-KIOSK_SERVICE = 'ragnar-kiosk.service'
-KIOSK_SERVICE_FILE = '/etc/systemd/system/ragnar-kiosk.service'
+KIOSK_SERVICE = 'optaris-defense-kiosk.service'
+KIOSK_SERVICE_FILE = '/etc/systemd/system/optaris-defense-kiosk.service'
 KIOSK_INSTALL_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scripts', 'install_kiosk.sh')
 KIOSK_UNINSTALL_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scripts', 'uninstall_kiosk.sh')
-KIOSK_AUTOSTART_REL = '.config/autostart/ragnar-kiosk.desktop'
+KIOSK_AUTOSTART_REL = '.config/autostart/optaris-defense-kiosk.desktop'
 
 
 def _kiosk_autostart_paths() -> list[str]:
@@ -3024,7 +3024,7 @@ def _kiosk_running() -> bool:
     """Best-effort: is a kiosk chromium process running right now?"""
     try:
         proc = subprocess.run(
-            ['pgrep', '-f', 'ragnar-kiosk-chromium'],
+            ['pgrep', '-f', 'optaris-defense-kiosk-chromium'],
             capture_output=True, text=True, timeout=5, check=False
         )
         return proc.returncode == 0 and bool(proc.stdout.strip())
@@ -3062,8 +3062,8 @@ def _spawn_kiosk_in_session() -> bool:
             f"XDG_RUNTIME_DIR={runtime_dir}",
             f"WAYLAND_DISPLAY={wl}",
             "DISPLAY=:0",
-            f"RAGNAR_REPO={os.path.dirname(os.path.abspath(__file__))}",
-            '/usr/local/bin/ragnar-kiosk-run',
+            f"OPTARIS_DEFENSE_REPO={os.path.dirname(os.path.abspath(__file__))}",
+            '/usr/local/bin/optaris-defense-kiosk-run',
         ]
         try:
             subprocess.Popen(
@@ -3110,7 +3110,7 @@ def _dispatch_kiosk_change(prev_enabled: bool, new_enabled: bool, settings_chang
                     _spawn_kiosk_in_session()
         elif prev_enabled and not new_enabled:
             # Kill any running kiosk chromium first (autostart mode)
-            subprocess.run(['sudo', 'pkill', '-f', 'ragnar-kiosk-chromium'],
+            subprocess.run(['sudo', 'pkill', '-f', 'optaris-defense-kiosk-chromium'],
                            capture_output=True, timeout=10, check=False)
             # Tear down both possible artifacts via the uninstaller script
             logger.info(f"[kiosk] running uninstaller: {KIOSK_UNINSTALL_SCRIPT}")
@@ -3130,7 +3130,7 @@ def _dispatch_kiosk_change(prev_enabled: bool, new_enabled: bool, settings_chang
             else:
                 # Autostart mode: kill any running kiosk chromium and relaunch
                 # so it picks up new settings.
-                subprocess.run(['sudo', 'pkill', '-f', 'ragnar-kiosk-chromium'],
+                subprocess.run(['sudo', 'pkill', '-f', 'optaris-defense-kiosk-chromium'],
                                capture_output=True, timeout=10, check=False)
                 time.sleep(1)
                 _spawn_kiosk_in_session()
@@ -3141,29 +3141,29 @@ def _dispatch_kiosk_change(prev_enabled: bool, new_enabled: bool, settings_chang
 
 
 def _deferred_self_stop(delay: int = 1) -> None:
-    """Stop the ragnar.service via a systemd-run transient unit.
+    """Stop the optaris-defense.service via a systemd-run transient unit.
 
-    Because Ragnar is stopping *itself*, a direct systemctl stop kills the
+    Because OptarisDefense is stopping *itself*, a direct systemctl stop kills the
     thread before status files and config can be persisted.  We use
     systemd-run so the stop command runs in its own cgroup — completely
-    outside ragnar.service — and survives ragnar's cgroup teardown.
+    outside optaris-defense.service — and survives optaris_defense's cgroup teardown.
     subprocess.Popen with start_new_session=True is NOT sufficient: it
     creates a new session but inherits the same cgroup, so systemd kills
-    it when tearing down ragnar.service.
+    it when tearing down optaris-defense.service.
     """
     try:
         subprocess.Popen(
             ['systemd-run', '--no-block', '--collect',
-             '--unit=ragnar-deferred-stop',
-             'bash', '-c', f'sleep {delay} && systemctl stop ragnar.service'],
+             '--unit=optaris-defense-deferred-stop',
+             'bash', '-c', f'sleep {delay} && systemctl stop optaris-defense.service'],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
-        logger.info(f"Scheduled deferred ragnar.service stop in {delay}s (systemd-run)")
+        logger.info(f"Scheduled deferred optaris-defense.service stop in {delay}s (systemd-run)")
     except Exception as exc:
-        logger.error(f"Failed to schedule deferred ragnar.service stop: {exc}")
+        logger.error(f"Failed to schedule deferred optaris-defense.service stop: {exc}")
         # Last resort: try direct stop (may be interrupted)
-        _stop_service('ragnar.service')
+        _stop_service('optaris-defense.service')
 
 
 def _show_epaper_transition(message: str) -> None:
@@ -3220,7 +3220,7 @@ def _execute_pwn_mode_switch(target_mode: str) -> None:
         # E-paper retains its image without power, so the message stays visible.
         shared_data.display_should_exit = True
 
-        # Show transition message on e-paper before Ragnar stops.
+        # Show transition message on e-paper before OptarisDefense stops.
         # Run in a thread with a timeout so a blocked SPI bus never hangs the swap.
         _epd_t = threading.Thread(target=_show_epaper_transition, args=("Switching to Pwnagotchi...",), daemon=True)
         _epd_t.start()
@@ -3232,45 +3232,45 @@ def _execute_pwn_mode_switch(target_mode: str) -> None:
         _update_pwn_config({'pwnagotchi_mode': 'pwnagotchi', 'pwnagotchi_last_status': message})
         _emit_pwn_status_update()
 
-        # Stop Ragnar first so it releases the GPIO/e-paper display, then start
-        # pwnagotchi and bettercap.  Starting them before Ragnar stops causes a
+        # Stop OptarisDefense first so it releases the GPIO/e-paper display, then start
+        # pwnagotchi and bettercap.  Starting them before OptarisDefense stops causes a
         # 'GPIO busy' crash because both processes fight over the display pins.
         #
         # IMPORTANT: subprocess.Popen with start_new_session=True creates a new
-        # session but NOT a new cgroup.  When systemd stops ragnar.service it
+        # session but NOT a new cgroup.  When systemd stops optaris-defense.service it
         # kills every process in the cgroup — including any bash child — so the
         # "&& start pwnagotchi" tail would never execute.  systemd-run launches
-        # the sequence in its own transient cgroup, fully outside ragnar.service,
-        # so it survives ragnar's cgroup teardown.
+        # the sequence in its own transient cgroup, fully outside optaris-defense.service,
+        # so it survives optaris_defense's cgroup teardown.
         try:
             subprocess.Popen(
                 ['systemd-run', '--no-block', '--collect',
-                 '--unit=ragnar-to-pwnagotchi-swap',
+                 '--unit=optaris-defense-to-pwnagotchi-swap',
                  'bash', '-c',
-                 'systemctl stop ragnar.service'
-                 ' && python3 -OO /home/ragnar/Ragnar/wipe_epd.py 2>/dev/null; true'
+                 'systemctl stop optaris-defense.service'
+                 ' && python3 -OO /home/optaris-defense/OptarisDefense/wipe_epd.py 2>/dev/null; true'
                  ' && systemctl start bettercap.service'
                  ' && systemctl start pwnagotchi.service'
-                 ' && systemctl start ragnar-swap-button.service'],
+                 ' && systemctl start optaris-defense-swap-button.service'],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
-            logger.info("Scheduled systemd-run swap: stop ragnar → start pwnagotchi")
+            logger.info("Scheduled systemd-run swap: stop optaris_defense → start pwnagotchi")
         except Exception as exc:
             logger.error(f"Failed to schedule pwnagotchi start sequence: {exc}")
         return
     else:
-        success, detail = _start_service_with_monitor('ragnar.service')
+        success, detail = _start_service_with_monitor('optaris-defense.service')
         if success:
-            logger.info("Ragnar service reported active; stopping Pwnagotchi and bettercap services")
+            logger.info("OptarisDefense service reported active; stopping Pwnagotchi and bettercap services")
             _stop_service('pwnagotchi.service')
             _stop_service('bettercap.service')
-            message = 'Ragnar service is running'
-            _write_pwn_status_file('running', message, 'swap', {'target_mode': 'ragnar'})
-            _update_pwn_config({'pwnagotchi_mode': 'ragnar', 'pwnagotchi_last_status': message})
+            message = 'OptarisDefense service is running'
+            _write_pwn_status_file('running', message, 'swap', {'target_mode': 'optaris_defense'})
+            _update_pwn_config({'pwnagotchi_mode': 'optaris_defense', 'pwnagotchi_last_status': message})
         else:
-            logger.error(f"Ragnar service failed to start: {detail}")
-            failure_message = _format_service_failure_message('ragnar.service')
+            logger.error(f"OptarisDefense service failed to start: {detail}")
+            failure_message = _format_service_failure_message('optaris-defense.service')
             extra = {'target_mode': 'pwnagotchi'}
             if detail:
                 extra['service_error_detail'] = detail
@@ -3406,7 +3406,7 @@ def broadcast_status_update():
         if clients_connected > 0:
             status_data = get_current_status()
             socketio.emit('status_update', status_data)
-            logger.debug(f"Broadcasted status update: {status_data.get('ragnar_status', 'unknown')}")
+            logger.debug(f"Broadcasted status update: {status_data.get('optaris_defense_status', 'unknown')}")
     except Exception as e:
         logger.error(f"Error broadcasting status update: {e}")
 
@@ -3414,11 +3414,11 @@ def broadcast_status_update():
 def is_orchestrator_running() -> bool:
     """Determine whether the orchestrator thread is currently alive."""
     try:
-        ragnar_instance = getattr(shared_data, 'ragnar_instance', None)
-        if not ragnar_instance:
+        optaris_defense_instance = getattr(shared_data, 'optaris_defense_instance', None)
+        if not optaris_defense_instance:
             return False
 
-        orchestrator_thread = getattr(ragnar_instance, 'orchestrator_thread', None)
+        orchestrator_thread = getattr(optaris_defense_instance, 'orchestrator_thread', None)
         if orchestrator_thread and orchestrator_thread.is_alive():
             return not getattr(shared_data, 'orchestrator_should_exit', False)
         return False
@@ -5132,17 +5132,17 @@ def get_system_headless():
 
 @app.route('/api/status')
 def get_status():
-    """Get current Ragnar status (optimized - uses cached data from background sync)"""
+    """Get current OptarisDefense status (optimized - uses cached data from background sync)"""
     try:
         # OPTIMIZATION: Don't call sync_all_counts() here - it's expensive!
         # Background thread handles syncing every SYNC_BACKGROUND_INTERVAL seconds
         # This endpoint now returns cached data instantly for fast dashboard loading
         
         status_data = {
-            'ragnar_status': safe_str(shared_data.ragnarstatustext),
-            'ragnar_status2': safe_str(shared_data.ragnarstatustext2),
-            'ragnar_says': safe_str(shared_data.ragnarsays),
-            'orchestrator_status': safe_str(shared_data.ragnarorch_status),
+            'optaris_defense_status': safe_str(shared_data.optaris_defensestatustext),
+            'optaris_defense_status2': safe_str(shared_data.optaris_defensestatustext2),
+            'optaris_defense_says': safe_str(shared_data.optaris_defensesays),
+            'orchestrator_status': safe_str(shared_data.optaris_defenseorch_status),
             'automation_enabled': is_orchestrator_running(),
             'target_count': safe_int(shared_data.targetnbr),
             'port_count': safe_int(shared_data.portnbr),
@@ -5163,7 +5163,7 @@ def get_status():
             'usb_active': safe_bool(shared_data.usb_active),
             'manual_mode': safe_bool(shared_data.config.get('manual_mode', False)),
             'headless_mode': safe_bool(getattr(shared_data, 'headless_mode', False)),
-            'pwnagotchi_mode': shared_data.config.get('pwnagotchi_mode', 'ragnar'),
+            'pwnagotchi_mode': shared_data.config.get('pwnagotchi_mode', 'optaris_defense'),
             'pwnagotchi_installed': safe_bool(shared_data.config.get('pwnagotchi_installed', False)),
             'release_gate': _build_release_gate_payload(),
             'timestamp': datetime.now().isoformat()
@@ -5303,11 +5303,11 @@ def update_config():
         # EPD type change requires a full service restart to reinitialize hardware
         if epd_type_changed:
             response['restart_required'] = True
-            response['message'] = 'Display type changed - restarting Ragnar service...'
+            response['message'] = 'Display type changed - restarting OptarisDefense service...'
             def _delayed_restart():
                 time.sleep(2)  # Give the response time to reach the client
-                logger.info(f"Restarting Ragnar service for EPD type change to: {shared_data.config.get('epd_type')}")
-                subprocess.Popen(['systemctl', 'restart', 'ragnar.service'])
+                logger.info(f"Restarting OptarisDefense service for EPD type change to: {shared_data.config.get('epd_type')}")
+                subprocess.Popen(['systemctl', 'restart', 'optaris-defense.service'])
             threading.Thread(target=_delayed_restart, daemon=True).start()
 
         return jsonify(response)
@@ -5324,7 +5324,7 @@ def kiosk_status():
     try:
         mode = _kiosk_mode()
         if mode == 'service':
-            state = _systemctl_state_label('ragnar-kiosk')
+            state = _systemctl_state_label('optaris-defense-kiosk')
         elif mode == 'autostart':
             state = 'active' if _kiosk_running() else 'inactive'
         else:
@@ -6183,7 +6183,7 @@ def _batch_ai_classify(nodes, indices, ai_service, labels, valid_types):
             f"{n.get('mac','') or '?'}|{','.join(n['ports'][:10]) or 'none'}"
         )
 
-    valid_list = ", ".join(sorted(valid_types - {"ragnar", "unknown"}))
+    valid_list = ", ".join(sorted(valid_types - {"optaris_defense", "unknown"}))
 
     system = (
         "You are a network device classifier. For each numbered line, reply with "
@@ -6237,7 +6237,7 @@ def get_network_topology():
             hosts = shared_data.db.get_all_hosts()
             gw = getattr(shared_data, 'gateway_info', {}) or {}
             gateway_ip = gw.get('gateway_ip')
-            ragnar_ip = gw.get('ragnar_ip')
+            optaris_defense_ip = gw.get('optaris_defense_ip')
             subnet = gw.get('subnet')
             interface = gw.get('interface')
 
@@ -6257,7 +6257,7 @@ def get_network_topology():
                         interface = gw_tuple[1]
                         iface_addrs = netifaces.ifaddresses(gw_tuple[1]).get(netifaces.AF_INET)
                         if iface_addrs:
-                            ragnar_ip = iface_addrs[0]['addr']
+                            optaris_defense_ip = iface_addrs[0]['addr']
                 except Exception:
                     pass
 
@@ -6320,7 +6320,7 @@ def get_network_topology():
                     'risk': risk,
                     'last_seen': host.get('last_seen', ''),
                     'is_gateway': ip == gateway_ip,
-                    'is_ragnar': ip == ragnar_ip,
+                    'is_optaris_defense': ip == optaris_defense_ip,
                 }
                 nodes.append(node)
                 node_ids.add(ip)
@@ -6380,14 +6380,14 @@ def get_network_topology():
                     'risk': 0,
                     'last_seen': '',
                     'is_gateway': True,
-                    'is_ragnar': False,
+                    'is_optaris_defense': False,
                 })
                 node_ids.add(gateway_ip)
 
             # Identify network-extending devices (APs, extenders, secondary routers)
             _NETWORK_EXTENDER_TYPES = {'access_point', 'extender', 'switch'}
             for node in nodes:
-                if node['is_gateway'] or node['is_ragnar']:
+                if node['is_gateway'] or node['is_optaris_defense']:
                     continue
                 if node['type'] in _NETWORK_EXTENDER_TYPES:
                     potential_aps.append(node)
@@ -6481,8 +6481,8 @@ def get_network_topology():
                     'mac': gw.get('gateway_mac', ''),
                     'vendor': gw.get('gateway_vendor', ''),
                 },
-                'ragnar': {
-                    'ip': ragnar_ip,
+                'optaris_defense': {
+                    'ip': optaris_defense_ip,
                     'interface': interface,
                 },
                 'subnet': subnet,
@@ -6701,7 +6701,7 @@ def export_report():
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ragnar Scan Report — {e(generated_at)}</title>
+<title>OptarisDefense Scan Report — {e(generated_at)}</title>
 <style>
   *{{box-sizing:border-box;margin:0;padding:0}}
   body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;padding:2rem}}
@@ -6725,7 +6725,7 @@ def export_report():
 </style>
 </head>
 <body>
-<h1>Ragnar Scan Report</h1>
+<h1>OptarisDefense Scan Report</h1>
 <p class="subtitle">Generated: {e(generated_at)} &nbsp;|&nbsp; Network: {e(network_ssid)}</p>
 
 <div class="stats">
@@ -6758,11 +6758,11 @@ def export_report():
   </div>
 </section>
 
-<p class="footer">Ragnar Security Scanner &mdash; For authorized testing only</p>
+<p class="footer">OptarisDefense Security Scanner &mdash; For authorized testing only</p>
 </body>
 </html>"""
 
-        filename = f"ragnar_report_{_dt.now().strftime('%Y%m%d_%H%M%S')}.html"
+        filename = f"optaris_defense_report_{_dt.now().strftime('%Y%m%d_%H%M%S')}.html"
         response = make_response(html_report)
         response.headers['Content-Type'] = 'text/html; charset=utf-8'
         response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
@@ -6795,7 +6795,7 @@ def compliance_report_export():
         cis = reporter.build_cis_report()
         pci = reporter.build_pci_report(credentials=_flatten_credentials_for_compliance())
         html_report = render_compliance_html(cis, pci)
-        filename = f"ragnar_compliance_{_dt.now().strftime('%Y%m%d_%H%M%S')}.html"
+        filename = f"optaris_defense_compliance_{_dt.now().strftime('%Y%m%d_%H%M%S')}.html"
         response = make_response(html_report)
         response.headers['Content-Type'] = 'text/html; charset=utf-8'
         response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
@@ -7263,7 +7263,7 @@ def get_logs():
                 vuln_logs = [line.strip() for line in lines[-10:] if line.strip()]
                 all_logs.extend(vuln_logs)
         
-        # 2. Get Ragnar main activity logs from data/logs directory
+        # 2. Get OptarisDefense main activity logs from data/logs directory
         logs_dir = shared_data.logsdir
         if os.path.exists(logs_dir):
             skip_console_logs = {
@@ -7453,22 +7453,22 @@ def get_activity_logs():
         
         # 4. Current system status
         status_entries = []
-        if safe_str(shared_data.ragnarstatustext) and safe_str(shared_data.ragnarstatustext) != "Idle":
+        if safe_str(shared_data.optaris_defensestatustext) and safe_str(shared_data.optaris_defensestatustext) != "Idle":
             status_entries.append({
                 'timestamp': current_time.strftime("%H:%M:%S"),
                 'type': 'status',
                 'icon': '🤖',
-                'message': f"Ragnar: {safe_str(shared_data.ragnarstatustext)}",
-                'details': safe_str(shared_data.ragnarstatustext2) if safe_str(shared_data.ragnarstatustext2) else '',
+                'message': f"OptarisDefense: {safe_str(shared_data.optaris_defensestatustext)}",
+                'details': safe_str(shared_data.optaris_defensestatustext2) if safe_str(shared_data.optaris_defensestatustext2) else '',
                 'severity': 'info'
             })
         
-        if safe_str(shared_data.ragnarsays) and safe_str(shared_data.ragnarsays).strip():
+        if safe_str(shared_data.optaris_defensesays) and safe_str(shared_data.optaris_defensesays).strip():
             status_entries.append({
                 'timestamp': current_time.strftime("%H:%M:%S"),
                 'type': 'activity',
                 'icon': '⚡',
-                'message': safe_str(shared_data.ragnarsays),
+                'message': safe_str(shared_data.optaris_defensesays),
                 'details': '',
                 'severity': 'info'
             })
@@ -7999,8 +7999,8 @@ def get_orchestrator_diagnostic():
     try:
         diagnostic = {
             'timestamp': datetime.now().isoformat(),
-            'orchestrator_status': safe_str(shared_data.ragnarorch_status),
-            'orchestrator_status2': safe_str(shared_data.ragnarstatustext2),
+            'orchestrator_status': safe_str(shared_data.optaris_defenseorch_status),
+            'orchestrator_status2': safe_str(shared_data.optaris_defensestatustext2),
             'manual_mode': shared_data.config.get('manual_mode', False),
             'manual_mode_reason': 'Manual mode is ENABLED - orchestrator will not run automatic attacks' if shared_data.config.get('manual_mode', False) else 'Manual mode is DISABLED - orchestrator should run attacks',
             'wifi_connected': getattr(shared_data, 'wifi_connected', False),
@@ -8059,7 +8059,7 @@ def get_orchestrator_diagnostic():
         
         # Diagnose issues
         if diagnostic['manual_mode']:
-            diagnostic['diagnosis'].append('🔴 MANUAL MODE IS ENABLED - This is why Ragnar is not performing attacks!')
+            diagnostic['diagnosis'].append('🔴 MANUAL MODE IS ENABLED - This is why OptarisDefense is not performing attacks!')
             diagnostic['recommendations'].append('Disable manual mode in the Config tab to allow automatic attacks')
         
         if not diagnostic['wifi_connected']:
@@ -8068,7 +8068,7 @@ def get_orchestrator_diagnostic():
         
         if diagnostic['orchestrator_should_exit']:
             diagnostic['diagnosis'].append('🔴 Orchestrator exit flag is set')
-            diagnostic['recommendations'].append('Restart the Ragnar service to clear the exit flag')
+            diagnostic['recommendations'].append('Restart the OptarisDefense service to clear the exit flag')
         
         if diagnostic['targets']['alive_count'] == 0:
             diagnostic['diagnosis'].append('⚠️ No alive targets found on the network')
@@ -8082,7 +8082,7 @@ def get_orchestrator_diagnostic():
             diagnostic['recommendations'].append('Enable vulnerability scanning in Config tab')
         
         if not diagnostic['config']['enable_attacks']:
-            diagnostic['diagnosis'].append('⚠️ Attacks are disabled - Ragnar will only scan, not attack')
+            diagnostic['diagnosis'].append('⚠️ Attacks are disabled - OptarisDefense will only scan, not attack')
             diagnostic['recommendations'].append('Enable attacks in Config tab to allow SSH/FTP/SMB/SQL attacks')
         
         # Check if actions are available
@@ -8571,14 +8571,14 @@ def wardriving_export(session_id):
             content = session.export_kml()
             return app.response_class(
                 content, mimetype='application/vnd.google-earth.kml+xml',
-                headers={'Content-Disposition': f'attachment; filename=ragnar_wardriving_{session_id}.kml'}
+                headers={'Content-Disposition': f'attachment; filename=optaris_defense_wardriving_{session_id}.kml'}
             )
         else:
-            device_name = engine.device_name or shared_data.config.get('wardriving_device_name', 'Ragnar')
+            device_name = engine.device_name or shared_data.config.get('wardriving_device_name', 'OptarisDefense')
             content = session.export_wigle_csv(device_name=device_name)
             return app.response_class(
                 content, mimetype='text/csv',
-                headers={'Content-Disposition': f'attachment; filename=ragnar_wardriving_{session_id}.csv'}
+                headers={'Content-Disposition': f'attachment; filename=optaris_defense_wardriving_{session_id}.csv'}
             )
     except Exception as e:
         logger.error(f"Wardriving export error: {e}")
@@ -9551,15 +9551,15 @@ def deep_scan_host():
 # newer git also aborts a divergent pull unless a reconcile strategy is set
 # — either would fail the in-app update on user devices.
 _GIT_UPDATE_ID = [
-    '-c', 'user.name=Ragnar Updater',
-    '-c', 'user.email=ragnar-updater@localhost',
+    '-c', 'user.name=OptarisDefense Updater',
+    '-c', 'user.email=optaris-defense-updater@localhost',
     '-c', 'pull.rebase=false',
 ]
 
 
 def _ensure_git_safe_dir(repo_path: str) -> None:
     """Whitelist the checkout in the running user's global git config so root
-    operating on a 'ragnar'-owned tree doesn't hit 'detected dubious ownership'.
+    operating on a 'optaris_defense'-owned tree doesn't hit 'detected dubious ownership'.
     --add only when missing so repeated updates don't pile up duplicates."""
     try:
         existing = subprocess.run(
@@ -9629,16 +9629,16 @@ def _prepare_git_repo(repo_path: str, warnings: list) -> None:
     """Make the checkout usable BEFORE the first git command runs.
 
     Fresh user devices hit three pre-conditions that fail the first git
-    command (and with it the whole update): mixed pi/ragnar/root file
+    command (and with it the whole update): mixed pi/optaris_defense/root file
     ownership, stale lock files from interrupted runs, and git's "dubious
     ownership" refusal because the service runs as root while the checkout
-    belongs to user 'ragnar'.
+    belongs to user 'optaris_defense'.
     """
     # Fix permissions ahead of git to avoid ownership issues on devices
     try:
         logger.info("Correcting file permissions before git update...")
         subprocess.run(
-            ['sudo', 'chown', '-R', 'ragnar:ragnar', repo_path],
+            ['sudo', 'chown', '-R', 'optaris_defense:optaris_defense', repo_path],
             capture_output=True,
             text=True,
             check=True
@@ -9663,7 +9663,7 @@ def _prepare_git_repo(repo_path: str, warnings: list) -> None:
 
 
 def _execute_git_update(repo_path: str, prepared: bool = False) -> dict:
-    """Run the git pull sequence Ragnar uses, returning status metadata."""
+    """Run the git pull sequence OptarisDefense uses, returning status metadata."""
     result = {
         'success': False,
         'output': '',
@@ -9788,11 +9788,11 @@ def _execute_git_update(repo_path: str, prepared: bool = False) -> dict:
         # chmod does not expand globs when invoked without a shell, so the
         # wildcard passes go through find instead.
         chmod_commands = [
-            ['sudo', 'chmod', '+x', '/home/ragnar/Ragnar/Ragnar.py'],
-            ['sudo', 'chmod', '+x', '/home/ragnar/Ragnar/kill_port_8000.sh'],
-            ['sudo', 'chmod', '+x', '/home/ragnar/Ragnar/webapp_modern.py'],
-            ['sudo', 'find', '/home/ragnar/Ragnar', '-name', '*.sh', '-exec', 'chmod', '+x', '{}', ';'],
-            ['sudo', 'find', '/home/ragnar/Ragnar', '-maxdepth', '1', '-name', '*.py', '-exec', 'chmod', '+x', '{}', ';']
+            ['sudo', 'chmod', '+x', '/home/optaris-defense/OptarisDefense/optaris_defense.py'],
+            ['sudo', 'chmod', '+x', '/home/optaris-defense/OptarisDefense/kill_port_8000.sh'],
+            ['sudo', 'chmod', '+x', '/home/optaris-defense/OptarisDefense/webapp_modern.py'],
+            ['sudo', 'find', '/home/optaris-defense/OptarisDefense', '-name', '*.sh', '-exec', 'chmod', '+x', '{}', ';'],
+            ['sudo', 'find', '/home/optaris-defense/OptarisDefense', '-maxdepth', '1', '-name', '*.py', '-exec', 'chmod', '+x', '{}', ';']
         ]
 
         for cmd in chmod_commands:
@@ -9853,7 +9853,7 @@ def _execute_pwn_git_update(repo_path: str) -> dict:
     Mirrors `_execute_git_update` but:
       - All git operations go through `sudo -n` (non-interactive) so a
         misconfigured NOPASSWD surfaces as an error instead of hanging.
-      - Skips the Ragnar-specific pre-pull chown and post-pull chmod steps.
+      - Skips the OptarisDefense-specific pre-pull chown and post-pull chmod steps.
       - Never restarts any service (callers handle that decision).
     """
     result = {
@@ -9863,7 +9863,7 @@ def _execute_pwn_git_update(repo_path: str) -> dict:
         'warnings': []
     }
 
-    # Remove stale lock files via sudo (the dir is not owned by ragnar).
+    # Remove stale lock files via sudo (the dir is not owned by optaris_defense).
     git_dir = os.path.join(repo_path, '.git')
     for lock_name in ('index.lock', 'shallow.lock', 'HEAD.lock',
                       os.path.join('refs', 'heads', 'noai.lock'),
@@ -9980,12 +9980,12 @@ def _execute_pwn_git_update(repo_path: str) -> dict:
 
 
 def _schedule_service_restart(delay_seconds: int = 2) -> None:
-    """Restart the Ragnar service after a short delay so HTTP responses return first."""
+    """Restart the OptarisDefense service after a short delay so HTTP responses return first."""
 
     def restart_service_delayed():
         time.sleep(delay_seconds)
         try:
-            subprocess.run(['sudo', 'systemctl', 'restart', 'ragnar'], check=True)
+            subprocess.run(['sudo', 'systemctl', 'restart', 'optaris_defense'], check=True)
         except subprocess.CalledProcessError as e:
             logger.error(f"Failed to restart service: {e}")
 
@@ -10189,7 +10189,7 @@ def stash_and_update():
     """Automatically stash local changes, pull updates, and drop the temporary stash."""
     repo_path = os.getcwd()
     payload = request.get_json(silent=True) or {}
-    stash_message = payload.get('message') or f"Ragnar auto stash {datetime.utcnow().isoformat()}"
+    stash_message = payload.get('message') or f"OptarisDefense auto stash {datetime.utcnow().isoformat()}"
     include_untracked = payload.get('include_untracked', True)
 
     stash_cmd = ['git'] + _GIT_UPDATE_ID + ['stash', 'push']
@@ -10475,7 +10475,7 @@ def pwn_stash_and_update():
         }), 400
 
     payload = request.get_json(silent=True) or {}
-    stash_message = payload.get('message') or f"Ragnar pwn auto stash {datetime.utcnow().isoformat()}"
+    stash_message = payload.get('message') or f"OptarisDefense pwn auto stash {datetime.utcnow().isoformat()}"
     include_untracked = payload.get('include_untracked', True)
 
     stash_cmd = ['sudo', '-n', 'git', '-C', repo_path, 'stash', 'push']
@@ -10715,14 +10715,14 @@ def swap_to_pwnagotchi_mode():
         data = request.get_json(silent=True) or {}
         target_mode = (data.get('target') or 'pwnagotchi').strip().lower()
 
-        if target_mode not in {'pwnagotchi', 'ragnar'}:
+        if target_mode not in {'pwnagotchi', 'optaris_defense'}:
             return jsonify({'success': False, 'error': f'Invalid target mode: {target_mode}'}), 400
 
         status = _build_pwnagotchi_status()
         if not status.get('installed'):
             return jsonify({'success': False, 'error': 'Pwnagotchi is not installed'}), 409
 
-        if target_mode == status.get('mode', 'ragnar') and target_mode == 'pwnagotchi':
+        if target_mode == status.get('mode', 'optaris_defense') and target_mode == 'pwnagotchi':
             return jsonify({'success': False, 'error': 'Already scheduled for Pwnagotchi mode'}), 409
 
         # Persist the requested boot mode when supplied so the handoff starts
@@ -10731,9 +10731,9 @@ def swap_to_pwnagotchi_mode():
             _set_pwn_manual_mode(bool(data.get('manual')))
 
         if target_mode == 'pwnagotchi':
-            message = 'Ragnar service will stop and Pwnagotchi will start. Reboot to return to Ragnar.'
+            message = 'OptarisDefense service will stop and Pwnagotchi will start. Reboot to return to OptarisDefense.'
         else:
-            message = 'Switching back to Ragnar service. This is typically triggered after reboot.'
+            message = 'Switching back to OptarisDefense service. This is typically triggered after reboot.'
 
         _write_pwn_status_file('switching', message, 'swap', {'target_mode': target_mode})
 
@@ -10833,8 +10833,8 @@ def get_pwnagotchi_config():
             'ui.display.rotation': int(ui_display.get('rotation', 180)),
             'ui.web.enabled': bool(ui_web.get('enabled', True)),
             'ui.web.address': str(ui_web.get('address', '0.0.0.0')),
-            'ui.web.username': str(ui_web.get('username', 'ragnar')),
-            'ui.web.password': str(ui_web.get('password', 'ragnar')),
+            'ui.web.username': str(ui_web.get('username', 'optaris_defense')),
+            'ui.web.password': str(ui_web.get('password', 'optaris_defense')),
             'ui.web.port': int(ui_web.get('port', 8080)),
             'main.plugins.grid.enabled': bool(plugins.get('grid', {}).get('enabled', False)),
             'main.plugins.fix_services.enabled': bool(plugins.get('fix_services', {}).get('enabled', False)),
@@ -11051,9 +11051,9 @@ def kill_switch():
     
     This endpoint provides a secure way to completely wipe all data after educational
     demonstrations. Deletion order:
-    1. Delete ragnar.db database file
+    1. Delete optaris_defense.db database file
     2. Delete entire data/ folder
-    3. Delete entire Ragnar/ repository
+    3. Delete entire OptarisDefense/ repository
     
     Security: Requires confirmation token to prevent accidental triggering
     """
@@ -11083,20 +11083,20 @@ def kill_switch():
             'errors': []
         }
         
-        # Get the Ragnar directory path
-        ragnar_dir = shared_data.currentdir
+        # Get the OptarisDefense directory path
+        optaris_defense_dir = shared_data.currentdir
         home_dir = os.path.expanduser('~')
-        ragnar_home_path = os.path.join(home_dir, 'Ragnar')
+        optaris_defense_home_path = os.path.join(home_dir, 'OptarisDefense')
         
         # Use home path if it exists, otherwise use current directory
-        if os.path.exists(ragnar_home_path):
-            ragnar_dir = ragnar_home_path
+        if os.path.exists(optaris_defense_home_path):
+            optaris_defense_dir = optaris_defense_home_path
         
-        logger.critical(f"Target Ragnar directory: {ragnar_dir}")
+        logger.critical(f"Target OptarisDefense directory: {optaris_defense_dir}")
         
-        # STEP 1: Delete ragnar.db database file
+        # STEP 1: Delete optaris_defense.db database file
         try:
-            db_path = os.path.join(ragnar_dir, 'data', 'ragnar.db')
+            db_path = os.path.join(optaris_defense_dir, 'data', 'optaris_defense.db')
             logger.critical(f"Step 1/3: Deleting database file: {db_path}")
             
             if os.path.isfile(db_path):
@@ -11114,7 +11114,7 @@ def kill_switch():
         
         # STEP 2: Delete entire data/ folder
         try:
-            data_dir = os.path.join(ragnar_dir, 'data')
+            data_dir = os.path.join(optaris_defense_dir, 'data')
             logger.critical(f"Step 2/3: Deleting data folder: {data_dir}")
             
             if os.path.exists(data_dir):
@@ -11130,23 +11130,23 @@ def kill_switch():
             logger.error(error_msg)
             results['errors'].append(error_msg)
         
-        # STEP 3: Delete entire Ragnar/ repository
+        # STEP 3: Delete entire OptarisDefense/ repository
         # Use a background thread to allow response to be sent first
         def delete_repository():
             try:
                 time.sleep(3)  # Wait 3 seconds for response to be sent
-                logger.critical(f"Step 3/3: Deleting entire repository: {ragnar_dir}")
+                logger.critical(f"Step 3/3: Deleting entire repository: {optaris_defense_dir}")
                 
-                if os.path.exists(ragnar_dir):
+                if os.path.exists(optaris_defense_dir):
                     # Change to parent directory to avoid issues
-                    parent_dir = os.path.dirname(ragnar_dir)
+                    parent_dir = os.path.dirname(optaris_defense_dir)
                     os.chdir(parent_dir)
                     
-                    # Delete the entire Ragnar directory
-                    shutil.rmtree(ragnar_dir, ignore_errors=False)
-                    logger.critical(f"✓ Deleted: {ragnar_dir}")
+                    # Delete the entire OptarisDefense directory
+                    shutil.rmtree(optaris_defense_dir, ignore_errors=False)
+                    logger.critical(f"✓ Deleted: {optaris_defense_dir}")
                 else:
-                    logger.warning(f"Repository not found: {ragnar_dir}")
+                    logger.warning(f"Repository not found: {optaris_defense_dir}")
                     
             except Exception as e:
                 logger.error(f"Error deleting repository: {str(e)}")
@@ -11156,13 +11156,13 @@ def kill_switch():
         deletion_thread = threading.Thread(target=delete_repository, daemon=True)
         deletion_thread.start()
         results['repository_deleted'] = True  # Marked as scheduled
-        logger.critical(f"✓ Repository deletion scheduled in 3 seconds: {ragnar_dir}")
+        logger.critical(f"✓ Repository deletion scheduled in 3 seconds: {optaris_defense_dir}")
         
         # Optional shutdown
         if shutdown_after:
             try:
                 logger.critical("Scheduling system shutdown in 60 seconds...")
-                subprocess.Popen(['sudo', 'shutdown', '-h', '+1', 'Ragnar kill switch activated'],
+                subprocess.Popen(['sudo', 'shutdown', '-h', '+1', 'OptarisDefense kill switch activated'],
                                stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL,
                                start_new_session=True)
@@ -11186,7 +11186,7 @@ def kill_switch():
             'success': True,
             'message': 'Kill switch executed successfully. Repository will be deleted in 3 seconds.',
             'details': results,
-            'ragnar_path': ragnar_dir,
+            'optaris_defense_path': optaris_defense_dir,
             'timestamp': datetime.now().isoformat()
         })
         
@@ -11201,7 +11201,7 @@ def kill_switch():
 
 @app.route('/api/system/restart-service', methods=['POST'])
 def restart_service():
-    """Restart the Ragnar service"""
+    """Restart the OptarisDefense service"""
     try:
         import subprocess
         
@@ -11210,7 +11210,7 @@ def restart_service():
             import time
             time.sleep(2)  # Give time for response to be sent
             try:
-                subprocess.run(['sudo', 'systemctl', 'restart', 'ragnar'], check=True)
+                subprocess.run(['sudo', 'systemctl', 'restart', 'optaris_defense'], check=True)
             except subprocess.CalledProcessError as e:
                 logger.error(f"Failed to restart service: {e}")
         
@@ -11495,7 +11495,7 @@ def get_wifi_status():
         connected_interface = next((iface['name'] for iface in interfaces if iface.get('connected')), None)
         active_interface = requested_interface or connected_interface or default_interface
 
-        wifi_manager_wrapper = getattr(shared_data, 'ragnar_instance', None)
+        wifi_manager_wrapper = getattr(shared_data, 'optaris_defense_instance', None)
         if wifi_manager_wrapper and hasattr(wifi_manager_wrapper, 'wifi_manager'):
             status = wifi_manager_wrapper.wifi_manager.get_status()
             logger.debug(f"Wi-Fi status from manager: {status}")
@@ -11772,7 +11772,7 @@ def network_threat_sweep():
         #           2) virtual monitor vif on primary (rarely works on Broadcom)
         #           3) iw event fallback (own network only)
         deauth_events = []
-        _mon = 'mon_ragnar'
+        _mon = 'mon_optaris_defense'
         _monitor_mode_used = [False]  # mutable so inner function can set it
 
         def _capture_deauth_frames():
@@ -12251,7 +12251,7 @@ def scan_wifi_networks():
             requested_interface = _parse_wifi_interface_arg(payload.get('interface'))
         except ValueError as invalid_iface:
             return jsonify({'success': False, 'error': str(invalid_iface)}), 400
-        wifi_manager = getattr(shared_data, 'ragnar_instance', None)
+        wifi_manager = getattr(shared_data, 'optaris_defense_instance', None)
         if wifi_manager and hasattr(wifi_manager, 'wifi_manager'):
             manager = wifi_manager.wifi_manager
             effective_interface = requested_interface or getattr(manager, 'default_wifi_interface', _get_wifi_iface())
@@ -12303,7 +12303,7 @@ def scan_wifi_networks():
         logger.error(f"Error scanning Wi-Fi networks: {e}")
         # Fallback to cached networks if scanning fails
         try:
-            wifi_manager = getattr(shared_data, 'ragnar_instance', None)
+            wifi_manager = getattr(shared_data, 'optaris_defense_instance', None)
             if wifi_manager and hasattr(wifi_manager, 'wifi_manager'):
                 known_networks = wifi_manager.wifi_manager.get_known_networks()
                 return jsonify({
@@ -12330,7 +12330,7 @@ def get_wifi_networks():
             requested_interface = _parse_wifi_interface_arg(request.args.get('interface'))
         except ValueError as invalid_iface:
             return jsonify({'success': False, 'error': str(invalid_iface)}), 400
-        wifi_manager = getattr(shared_data, 'ragnar_instance', None)
+        wifi_manager = getattr(shared_data, 'optaris_defense_instance', None)
         if wifi_manager and hasattr(wifi_manager, 'wifi_manager'):
             manager = wifi_manager.wifi_manager
             effective_interface = requested_interface or getattr(manager, 'default_wifi_interface', _get_wifi_iface())
@@ -12438,7 +12438,7 @@ def connect_wifi():
         priority = data.get('priority', 1)
         save_network = data.get('save', True)
         
-        wifi_manager = getattr(shared_data, 'ragnar_instance', None)
+        wifi_manager = getattr(shared_data, 'optaris_defense_instance', None)
         if not wifi_manager or not hasattr(wifi_manager, 'wifi_manager'):
             return jsonify({'success': False, 'error': 'Wi-Fi manager not available'}), 503
         
@@ -12461,7 +12461,7 @@ def connect_wifi():
             
             message = 'Connected successfully'
             if is_ap_client_request():
-                message = 'Connected successfully! Ragnar will now use this network. You can disconnect from this AP.'
+                message = 'Connected successfully! OptarisDefense will now use this network. You can disconnect from this AP.'
         else:
             logger.error(f"API: Failed to connect to {ssid}")
             message = 'Connection failed. Please check the password and try again.'
@@ -12483,7 +12483,7 @@ def connect_wifi():
 def disconnect_wifi():
     """Disconnect from current Wi-Fi network"""
     try:
-        wifi_manager = getattr(shared_data, 'ragnar_instance', None)
+        wifi_manager = getattr(shared_data, 'optaris_defense_instance', None)
         if not wifi_manager or not hasattr(wifi_manager, 'wifi_manager'):
             return jsonify({'error': 'Wi-Fi manager not available'}), 503
         
@@ -12503,7 +12503,7 @@ def disconnect_wifi():
 def exit_ap_mode():
     """Exit AP mode and reconnect to WiFi"""
     try:
-        wifi_manager = getattr(shared_data, 'ragnar_instance', None)
+        wifi_manager = getattr(shared_data, 'optaris_defense_instance', None)
         if not wifi_manager or not hasattr(wifi_manager, 'wifi_manager'):
             return jsonify({'success': False, 'error': 'Wi-Fi manager not available'}), 503
         
@@ -12529,7 +12529,7 @@ def forget_wifi_network():
         
         ssid = data['ssid']
         
-        wifi_manager = getattr(shared_data, 'ragnar_instance', None)
+        wifi_manager = getattr(shared_data, 'optaris_defense_instance', None)
         if not wifi_manager or not hasattr(wifi_manager, 'wifi_manager'):
             return jsonify({'error': 'Wi-Fi manager not available'}), 503
         
@@ -12548,7 +12548,7 @@ def forget_wifi_network():
 def enable_wifi_ap_mode():
     """Enable Wi-Fi Access Point mode with smart cycling"""
     try:
-        wifi_manager = getattr(shared_data, 'ragnar_instance', None)
+        wifi_manager = getattr(shared_data, 'optaris_defense_instance', None)
         if not wifi_manager or not hasattr(wifi_manager, 'wifi_manager'):
             return jsonify({'error': 'Wi-Fi manager not available'}), 503
         
@@ -12575,7 +12575,7 @@ def enable_wifi_ap_mode():
 def start_wifi_ap():
     """Start Wi-Fi Access Point mode"""
     try:
-        wifi_manager = getattr(shared_data, 'ragnar_instance', None)
+        wifi_manager = getattr(shared_data, 'optaris_defense_instance', None)
         if not wifi_manager or not hasattr(wifi_manager, 'wifi_manager'):
             return jsonify({'error': 'Wi-Fi manager not available'}), 503
         
@@ -12594,7 +12594,7 @@ def start_wifi_ap():
 def stop_wifi_ap():
     """Stop Wi-Fi Access Point mode"""
     try:
-        wifi_manager = getattr(shared_data, 'ragnar_instance', None)
+        wifi_manager = getattr(shared_data, 'optaris_defense_instance', None)
         if not wifi_manager or not hasattr(wifi_manager, 'wifi_manager'):
             return jsonify({'error': 'Wi-Fi manager not available'}), 503
         
@@ -12613,7 +12613,7 @@ def stop_wifi_ap():
 def reconnect_wifi():
     """Force Wi-Fi reconnection attempt"""
     try:
-        wifi_manager = getattr(shared_data, 'ragnar_instance', None)
+        wifi_manager = getattr(shared_data, 'optaris_defense_instance', None)
         if not wifi_manager or not hasattr(wifi_manager, 'wifi_manager'):
             return jsonify({'error': 'Wi-Fi manager not available'}), 503
         
@@ -12632,7 +12632,7 @@ def reconnect_wifi():
 def exit_wifi_ap_mode():
     """Exit AP mode and start WiFi search (Endless Loop)"""
     try:
-        wifi_manager = getattr(shared_data, 'ragnar_instance', None)
+        wifi_manager = getattr(shared_data, 'optaris_defense_instance', None)
         if not wifi_manager or not hasattr(wifi_manager, 'wifi_manager'):
             return jsonify({'error': 'Wi-Fi manager not available'}), 503
         
@@ -12652,7 +12652,7 @@ def exit_wifi_ap_mode():
 def force_wifi_recovery():
     """Force WiFi recovery - stop AP mode and aggressively search for known networks"""
     try:
-        wifi_manager = getattr(shared_data, 'ragnar_instance', None)
+        wifi_manager = getattr(shared_data, 'optaris_defense_instance', None)
         if not wifi_manager or not hasattr(wifi_manager, 'wifi_manager'):
             return jsonify({'error': 'Wi-Fi manager not available'}), 503
         
@@ -12691,12 +12691,12 @@ def force_wifi_recovery():
 
 @app.route('/api/wifi/log')
 def get_wifi_log():
-    """Get comprehensive WiFi logs including system status, Ragnar WiFi manager, and e-paper display updates"""
+    """Get comprehensive WiFi logs including system status, OptarisDefense WiFi manager, and e-paper display updates"""
     try:
         wifi_log_data = {
             'timestamp': datetime.now().isoformat(),
             'system_wifi': {},
-            'ragnar_wifi_manager': {},
+            'optaris_defense_wifi_manager': {},
             'epaper_display': {}
         }
         
@@ -12727,14 +12727,14 @@ def get_wifi_log():
         except Exception as e:
             wifi_log_data['system_wifi']['error'] = str(e)
         
-        # === RAGNAR WIFI MANAGER STATUS ===
+        # === OPTARIS_DEFENSE WIFI MANAGER STATUS ===
         try:
-            if (hasattr(shared_data, 'ragnar_instance') and 
-                shared_data.ragnar_instance and 
-                hasattr(shared_data.ragnar_instance, 'wifi_manager')):
+            if (hasattr(shared_data, 'optaris_defense_instance') and 
+                shared_data.optaris_defense_instance and 
+                hasattr(shared_data.optaris_defense_instance, 'wifi_manager')):
                 
-                wifi_mgr = shared_data.ragnar_instance.wifi_manager
-                wifi_log_data['ragnar_wifi_manager'] = {
+                wifi_mgr = shared_data.optaris_defense_instance.wifi_manager
+                wifi_log_data['optaris_defense_wifi_manager'] = {
                     'wifi_connected': getattr(wifi_mgr, 'wifi_connected', False),
                     'ap_mode_active': getattr(wifi_mgr, 'ap_mode_active', False),
                     'cycling_mode': getattr(wifi_mgr, 'cycling_mode', False),
@@ -12743,18 +12743,18 @@ def get_wifi_log():
                     'ap_clients_count': getattr(wifi_mgr, 'ap_clients_count', 0)
                 }
             else:
-                wifi_log_data['ragnar_wifi_manager']['error'] = "WiFi manager not available"
+                wifi_log_data['optaris_defense_wifi_manager']['error'] = "WiFi manager not available"
                 
         except Exception as e:
-            wifi_log_data['ragnar_wifi_manager']['error'] = str(e)
+            wifi_log_data['optaris_defense_wifi_manager']['error'] = str(e)
         
         # === E-PAPER DISPLAY WIFI STATUS ===
         try:
-            if (hasattr(shared_data, 'ragnar_instance') and 
-                shared_data.ragnar_instance and 
-                hasattr(shared_data.ragnar_instance, 'display')):
+            if (hasattr(shared_data, 'optaris_defense_instance') and 
+                shared_data.optaris_defense_instance and 
+                hasattr(shared_data.optaris_defense_instance, 'display')):
                 
-                display = shared_data.ragnar_instance.display
+                display = shared_data.optaris_defense_instance.display
                 wifi_log_data['epaper_display'] = {
                     'wifi_status_text': display.get_wifi_status_text(),
                     'is_wifi_connected': display.is_wifi_connected()
@@ -12814,8 +12814,8 @@ def get_epaper_display():
                     'timestamp': int(os.path.getctime(display_image_path)),
                     'width': orig_w,
                     'height': orig_h,
-                    'status_text': safe_str(shared_data.ragnarstatustext),
-                    'status_text2': safe_str(shared_data.ragnarstatustext2)
+                    'status_text': safe_str(shared_data.optaris_defensestatustext),
+                    'status_text2': safe_str(shared_data.optaris_defensestatustext2)
                 })
         
         # If no image found, return status only
@@ -12823,8 +12823,8 @@ def get_epaper_display():
             'image': None,
             'message': 'No e-paper display image available',
             'timestamp': int(time.time()),
-            'status_text': safe_str(shared_data.ragnarstatustext),
-            'status_text2': safe_str(shared_data.ragnarstatustext2)
+            'status_text': safe_str(shared_data.optaris_defensestatustext),
+            'status_text2': safe_str(shared_data.optaris_defensestatustext2)
         })
         
     except Exception as e:
@@ -13963,7 +13963,7 @@ def enrich_target_endpoint():
                 # This should ideally be replaced with real vulnerability scanner integration
                 return jsonify({
                     'error': f'No vulnerability findings detected for target: {target}',
-                    'message': 'Ragnar needs to discover vulnerabilities first through network scanning. Try running vulnerability scans on this target.',
+                    'message': 'OptarisDefense needs to discover vulnerabilities first through network scanning. Try running vulnerability scans on this target.',
                     'target_type': 'no_findings',
                     'suggestion': f'Run network scan on {target} first, then threat intelligence can enrich any discovered vulnerabilities'
                 }), 404
@@ -14151,7 +14151,7 @@ Risk Score: {report_content.get('risk_score', 0):.1f}/10
 
 REPORT METADATA
 ---------------
-Generated by: Ragnar Threat Intelligence System
+Generated by: OptarisDefense Threat Intelligence System
 Report ID: {hashlib.md5(report_content['target'].encode()).hexdigest()[:12]}
 Timestamp: {report_content['generated_at']}
 
@@ -14217,7 +14217,7 @@ Dynamic Risk Score: {report_content['risk_score']:.1f}/10
         
         report_text += f"""REPORT METADATA
 ---------------
-Generated by: Ragnar Threat Intelligence System
+Generated by: OptarisDefense Threat Intelligence System
 Report ID: {hashlib.md5(report_content['target'].encode()).hexdigest()[:12]}
 Timestamp: {report_content['generated_at']}
 
@@ -14571,12 +14571,12 @@ def legacy_netkb_json():
 # WEB TERMINAL (interactive PTY over Socket.IO, /terminal namespace)
 #
 # Off by default (config 'terminal_enabled'). Runs a shell as the non-root
-# 'ragnar' user in the repo dir. Gated by login AND the config flag; the
-# service runs as root only to drop to 'ragnar' via `su`.
+# 'optaris_defense' user in the repo dir. Gated by login AND the config flag; the
+# service runs as root only to drop to 'optaris_defense' via `su`.
 # ============================================================================
 
-_TERM_USER = 'ragnar'
-_TERM_CWD = '/home/ragnar/Ragnar'
+_TERM_USER = 'optaris_defense'
+_TERM_CWD = '/home/optaris-defense/OptarisDefense'
 _term_sessions = {}          # socket sid -> {'fd': int, 'pid': int}
 _term_lock = threading.Lock()
 
@@ -14731,7 +14731,7 @@ def handle_connect():
     clients_connected += 1
     logger.info(f"Client connected. Total clients: {clients_connected}")
     emit('connected', {
-        'message': 'Connected to Ragnar',
+        'message': 'Connected to OptarisDefense',
         'auth_configured': auth_mgr.is_configured()
     })
 
@@ -14898,22 +14898,22 @@ def handle_activity_request():
                 pass
         
         # Add current status
-        if safe_str(shared_data.ragnarstatustext) and safe_str(shared_data.ragnarstatustext) != "Idle":
+        if safe_str(shared_data.optaris_defensestatustext) and safe_str(shared_data.optaris_defensestatustext) != "Idle":
             activity_logs.append({
                 'timestamp': current_time.strftime("%H:%M:%S"),
                 'type': 'status',
                 'icon': '🤖',
-                'message': f"Ragnar: {safe_str(shared_data.ragnarstatustext)}",
-                'details': safe_str(shared_data.ragnarstatustext2) if safe_str(shared_data.ragnarstatustext2) else '',
+                'message': f"OptarisDefense: {safe_str(shared_data.optaris_defensestatustext)}",
+                'details': safe_str(shared_data.optaris_defensestatustext2) if safe_str(shared_data.optaris_defensestatustext2) else '',
                 'severity': 'info'
             })
         
-        if safe_str(shared_data.ragnarsays) and safe_str(shared_data.ragnarsays).strip():
+        if safe_str(shared_data.optaris_defensesays) and safe_str(shared_data.optaris_defensesays).strip():
             activity_logs.append({
                 'timestamp': current_time.strftime("%H:%M:%S"),
                 'type': 'activity',
                 'icon': '⚡',
-                'message': safe_str(shared_data.ragnarsays),
+                'message': safe_str(shared_data.optaris_defensesays),
                 'details': '',
                 'severity': 'info'
             })
@@ -14938,17 +14938,17 @@ def get_current_status():
     # Get WiFi status details from WiFi manager
     wifi_status = {}
     try:
-        wifi_manager = getattr(shared_data, 'ragnar_instance', None)
+        wifi_manager = getattr(shared_data, 'optaris_defense_instance', None)
         if wifi_manager and hasattr(wifi_manager, 'wifi_manager'):
             wifi_status = wifi_manager.wifi_manager.get_status()
     except Exception as e:
         logger.debug(f"Could not get WiFi status from manager: {e}")
 
     return {
-        'ragnar_status': safe_str(shared_data.ragnarstatustext),
-        'ragnar_status2': safe_str(shared_data.ragnarstatustext2),
-        'ragnar_says': safe_str(shared_data.ragnarsays),
-        'orchestrator_status': safe_str(shared_data.ragnarorch_status),
+        'optaris_defense_status': safe_str(shared_data.optaris_defensestatustext),
+        'optaris_defense_status2': safe_str(shared_data.optaris_defensestatustext2),
+        'optaris_defense_says': safe_str(shared_data.optaris_defensesays),
+        'orchestrator_status': safe_str(shared_data.optaris_defenseorch_status),
         'automation_enabled': is_orchestrator_running(),
         'target_count': safe_int(shared_data.targetnbr),
         'port_count': safe_int(shared_data.portnbr),
@@ -15029,25 +15029,25 @@ def get_recent_logs():
         # 2. Add recent activity summary (only if security-related)
         current_time = datetime.now().strftime("%H:%M:%S")
         
-        # Add Ragnar status (only if active scanning/attacking)
-        ragnar_status = safe_str(shared_data.ragnarstatustext)
-        if ragnar_status and ragnar_status != "Idle":
-            status_lower = ragnar_status.lower()
+        # Add OptarisDefense status (only if active scanning/attacking)
+        optaris_defense_status = safe_str(shared_data.optaris_defensestatustext)
+        if optaris_defense_status and optaris_defense_status != "Idle":
+            status_lower = optaris_defense_status.lower()
             if any(keyword in status_lower for keyword in ['scan', 'attack', 'discovery', 'exploit', 'brute', 'crack']):
-                logs.append(f"[{current_time}] [RAGNAR] 🎯 {ragnar_status}")
+                logs.append(f"[{current_time}] [OPTARIS_DEFENSE] 🎯 {optaris_defense_status}")
         
         # Add orchestrator status (only if active)
-        orch_status = safe_str(shared_data.ragnarorch_status)
+        orch_status = safe_str(shared_data.optaris_defenseorch_status)
         if orch_status and orch_status != "Idle":
             orch_lower = orch_status.lower()
             if any(keyword in orch_lower for keyword in ['scan', 'attack', 'discovery', 'exploit', 'target', 'running']):
                 logs.append(f"[{current_time}] [ORCHESTRATOR] ⚡ {orch_status}")
         
-        # Add what Ragnar says (activity description) - only if security-related
-        ragnar_says = safe_str(shared_data.ragnarsays)
-        if ragnar_says and ragnar_says.strip():
-            if should_include_realtime_log(ragnar_says):
-                logs.append(f"[{current_time}] [ACTIVITY] 🔍 {ragnar_says}")
+        # Add what OptarisDefense says (activity description) - only if security-related
+        optaris_defense_says = safe_str(shared_data.optaris_defensesays)
+        if optaris_defense_says and optaris_defense_says.strip():
+            if should_include_realtime_log(optaris_defense_says):
+                logs.append(f"[{current_time}] [ACTIVITY] 🔍 {optaris_defense_says}")
         
         # 3. Add concise stats summary (less frequent)
         if safe_int(shared_data.vulnnbr) > 0 or safe_int(shared_data.crednbr) > 0:
@@ -15102,25 +15102,25 @@ def broadcast_status_updates():
                     activity_update = []
                     current_time = datetime.now().strftime("%H:%M:%S")
                     
-                    # Add current Ragnar activity
-                    ragnar_says = safe_str(shared_data.ragnarsays)
-                    if ragnar_says and ragnar_says.strip():
+                    # Add current OptarisDefense activity
+                    optaris_defense_says = safe_str(shared_data.optaris_defensesays)
+                    if optaris_defense_says and optaris_defense_says.strip():
                         activity_update.append({
                             'timestamp': current_time,
                             'type': 'activity',
                             'icon': '⚡',
-                            'message': ragnar_says,
+                            'message': optaris_defense_says,
                             'severity': 'info'
                         })
                     
                     # Add status if something is happening
-                    ragnar_status = safe_str(shared_data.ragnarstatustext)
-                    if ragnar_status and ragnar_status not in ["Idle", ""]:
+                    optaris_defense_status = safe_str(shared_data.optaris_defensestatustext)
+                    if optaris_defense_status and optaris_defense_status not in ["Idle", ""]:
                         activity_update.append({
                             'timestamp': current_time,
                             'type': 'status',
                             'icon': '🤖',
-                            'message': f"Status: {ragnar_status}",
+                            'message': f"Status: {optaris_defense_status}",
                             'severity': 'info'
                         })
                     
@@ -15296,7 +15296,7 @@ def get_manual_mode_status():
     try:
         return jsonify({
             'manual_mode': shared_data.config.get('manual_mode', False),
-            'orchestrator_status': shared_data.ragnarorch_status
+            'orchestrator_status': shared_data.optaris_defenseorch_status
         })
     except Exception as e:
         logger.error(f"Error getting manual mode status: {e}")
@@ -15535,20 +15535,20 @@ def execute_manual_attack():
         }
         
         if attack_type not in attack_modules:
-            shared_data.ragnarstatustext = "IDLE"
-            shared_data.ragnarstatustext2 = "Invalid attack type"
+            shared_data.optaris_defensestatustext = "IDLE"
+            shared_data.optaris_defensestatustext2 = "Invalid attack type"
             return jsonify({'success': False, 'error': 'Invalid attack type'}), 400
 
         normalized_port = _normalize_port_value(target_port)
         if not normalized_port:
-            shared_data.ragnarstatustext = "IDLE"
-            shared_data.ragnarstatustext2 = "Invalid port provided"
+            shared_data.optaris_defensestatustext = "IDLE"
+            shared_data.optaris_defensestatustext2 = "Invalid port provided"
             return jsonify({'success': False, 'error': 'Invalid port supplied'}), 400
 
         if not _is_port_allowed_for_action(attack_type, normalized_port):
             allowed_ports = ', '.join(str(port) for port in MANUAL_ATTACK_MATRIX.get(attack_type, {}).get('ports', []))
-            shared_data.ragnarstatustext = "IDLE"
-            shared_data.ragnarstatustext2 = "Port/action mismatch"
+            shared_data.optaris_defensestatustext = "IDLE"
+            shared_data.optaris_defensestatustext2 = "Port/action mismatch"
             return jsonify({
                 'success': False,
                 'error': f"{attack_type.upper()} attacks are only permitted on port(s): {allowed_ports or 'restricted'}."
@@ -15568,8 +15568,8 @@ def execute_manual_attack():
         )
 
         status_name = attack_display_names.get(attack_type, f"{attack_type.upper()}Bruteforce")
-        shared_data.ragnarstatustext = status_name
-        shared_data.ragnarstatustext2 = f"Attacking: {target_ip}:{target_port}"
+        shared_data.optaris_defensestatustext = status_name
+        shared_data.optaris_defensestatustext2 = f"Attacking: {target_ip}:{target_port}"
 
         # Immediately broadcast the status change
         broadcast_status_update()
@@ -15622,8 +15622,8 @@ def execute_manual_attack():
                     result_message = f"{attack_type.upper()} module is unavailable on this build."
                     
                 # Update status when attack completes
-                shared_data.ragnarstatustext = "IDLE"
-                shared_data.ragnarstatustext2 = f"{attack_type.upper()} attack completed"
+                shared_data.optaris_defensestatustext = "IDLE"
+                shared_data.optaris_defensestatustext2 = f"{attack_type.upper()} attack completed"
                 
                 # Broadcast completion status
                 broadcast_status_update()
@@ -15641,8 +15641,8 @@ def execute_manual_attack():
             except Exception as e:
                 logger.error(f"Error executing manual attack: {e}")
                 # Reset status on error
-                shared_data.ragnarstatustext = "IDLE"
-                shared_data.ragnarstatustext2 = f"Attack error: {str(e)[:40]}"
+                shared_data.optaris_defensestatustext = "IDLE"
+                shared_data.optaris_defensestatustext2 = f"Attack error: {str(e)[:40]}"
                 # Broadcast error status
                 broadcast_status_update()
                 _emit_manual_attack_update(
@@ -15673,9 +15673,9 @@ def execute_manual_attack():
 def start_orchestrator_automation():
     """Start the orchestrator thread to enable automation."""
     try:
-        ragnar_instance = getattr(shared_data, 'ragnar_instance', None)
-        if not ragnar_instance:
-            return jsonify({'success': False, 'error': 'Core Ragnar instance is not initialized yet'}), 503
+        optaris_defense_instance = getattr(shared_data, 'optaris_defense_instance', None)
+        if not optaris_defense_instance:
+            return jsonify({'success': False, 'error': 'Core OptarisDefense instance is not initialized yet'}), 503
 
         if is_orchestrator_running():
             return jsonify({
@@ -15684,7 +15684,7 @@ def start_orchestrator_automation():
                 'automation_enabled': True
             })
 
-        ragnar_instance.start_orchestrator()
+        optaris_defense_instance.start_orchestrator()
         automation_enabled = is_orchestrator_running()
 
         broadcast_status_update()
@@ -15705,9 +15705,9 @@ def start_orchestrator_automation():
 def stop_orchestrator_automation():
     """Stop the orchestrator thread so automation sleeps."""
     try:
-        ragnar_instance = getattr(shared_data, 'ragnar_instance', None)
-        if not ragnar_instance:
-            return jsonify({'success': False, 'error': 'Core Ragnar instance is not initialized yet'}), 503
+        optaris_defense_instance = getattr(shared_data, 'optaris_defense_instance', None)
+        if not optaris_defense_instance:
+            return jsonify({'success': False, 'error': 'Core OptarisDefense instance is not initialized yet'}), 503
 
         if not is_orchestrator_running():
             broadcast_status_update()
@@ -15717,7 +15717,7 @@ def stop_orchestrator_automation():
                 'automation_enabled': False
             })
 
-        ragnar_instance.stop_orchestrator()
+        optaris_defense_instance.stop_orchestrator()
         automation_enabled = is_orchestrator_running()
         broadcast_status_update()
 
@@ -15784,8 +15784,8 @@ def trigger_network_scan():
             }), 400
 
         # Update status to show scanning is active
-        shared_data.ragnarstatustext = "NetworkScanner"
-        shared_data.ragnarstatustext2 = f"Manual scan: {target_range}"
+        shared_data.optaris_defensestatustext = "NetworkScanner"
+        shared_data.optaris_defensestatustext2 = f"Manual scan: {target_range}"
         
         # Immediately broadcast the status change
         broadcast_status_update()
@@ -15801,8 +15801,8 @@ def trigger_network_scan():
                 scanner.scan()
                 
                 # Update status when scan completes
-                shared_data.ragnarstatustext = "IDLE"
-                shared_data.ragnarstatustext2 = "Manual scan completed"
+                shared_data.optaris_defensestatustext = "IDLE"
+                shared_data.optaris_defensestatustext2 = "Manual scan completed"
                 
                 # Broadcast completion status
                 broadcast_status_update()
@@ -15812,8 +15812,8 @@ def trigger_network_scan():
             except Exception as e:
                 logger.error(f"Error executing network scan: {e}")
                 # Reset status on error
-                shared_data.ragnarstatustext = "IDLE"
-                shared_data.ragnarstatustext2 = f"Scan error: {str(e)[:50]}"
+                shared_data.optaris_defensestatustext = "IDLE"
+                shared_data.optaris_defensestatustext2 = f"Scan error: {str(e)[:50]}"
                 # Broadcast error status
                 broadcast_status_update()
         
@@ -15831,8 +15831,8 @@ def trigger_network_scan():
     except Exception as e:
         logger.error(f"Error triggering network scan: {e}")
         # Reset status on error
-        shared_data.ragnarstatustext = "IDLE"
-        shared_data.ragnarstatustext2 = f"Failed to start scan"
+        shared_data.optaris_defensestatustext = "IDLE"
+        shared_data.optaris_defensestatustext2 = f"Failed to start scan"
         return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/manual/scan/vulnerability', methods=['POST'])
@@ -15857,8 +15857,8 @@ def trigger_vulnerability_scan():
         status_target = 'All Targets' if is_all_targets else target_ip
 
         # Update status to show vulnerability scanning is active
-        shared_data.ragnarstatustext = "NmapVulnScanner"
-        shared_data.ragnarstatustext2 = f"Starting scan: {status_target}"
+        shared_data.optaris_defensestatustext = "NmapVulnScanner"
+        shared_data.optaris_defensestatustext2 = f"Starting scan: {status_target}"
 
         # Immediately broadcast the status change
         broadcast_status_update()
@@ -15874,22 +15874,22 @@ def trigger_vulnerability_scan():
                     """Real-time callback for vulnerability scan progress"""
                     try:
                         if event_type == "scan_started":
-                            shared_data.ragnarstatustext2 = f"Scanning {data.get('total_hosts', 0)} hosts"
+                            shared_data.optaris_defensestatustext2 = f"Scanning {data.get('total_hosts', 0)} hosts"
                             broadcast_status_update()
                         elif event_type == "scan_progress":
                             current_ip = data.get('current_ip', '')
                             scanned = data.get('scanned', 0)
                             total = data.get('total_hosts', 0)
                             progress = data.get('progress_percent', 0)
-                            shared_data.ragnarstatustext2 = f"Scanning {current_ip} ({scanned}/{total}) - {progress}%"
+                            shared_data.optaris_defensestatustext2 = f"Scanning {current_ip} ({scanned}/{total}) - {progress}%"
                             broadcast_status_update()
                         elif event_type == "scan_completed":
                             scanned_count = data.get('scanned', 0)
-                            shared_data.ragnarstatustext2 = f"Completed: {scanned_count} hosts scanned"
+                            shared_data.optaris_defensestatustext2 = f"Completed: {scanned_count} hosts scanned"
                             broadcast_status_update()
                         elif event_type == "scan_error":
                             error_ip = data.get('ip', 'unknown')
-                            shared_data.ragnarstatustext2 = f"Error scanning {error_ip}"
+                            shared_data.optaris_defensestatustext2 = f"Error scanning {error_ip}"
                             broadcast_status_update()
                     except Exception as callback_error:
                         logger.error(f"Error in vulnerability scan callback: {callback_error}")
@@ -15917,15 +15917,15 @@ def trigger_vulnerability_scan():
                         logger.info(f"Single host vulnerability scan completed for {target_ip}: {result}")
 
                 # Update status when scan completes
-                shared_data.ragnarstatustext = "IDLE"
-                shared_data.ragnarstatustext2 = "Vulnerability scan completed"
+                shared_data.optaris_defensestatustext = "IDLE"
+                shared_data.optaris_defensestatustext2 = "Vulnerability scan completed"
                 broadcast_status_update()
                 
             except Exception as e:
                 logger.error(f"Error executing vulnerability scan: {e}")
                 # Reset status on error
-                shared_data.ragnarstatustext = "IDLE"
-                shared_data.ragnarstatustext2 = f"Vuln scan error: {str(e)[:40]}"
+                shared_data.optaris_defensestatustext = "IDLE"
+                shared_data.optaris_defensestatustext2 = f"Vuln scan error: {str(e)[:40]}"
                 broadcast_status_update()
         
         # Start scan in background thread
@@ -15942,8 +15942,8 @@ def trigger_vulnerability_scan():
     except Exception as e:
         logger.error(f"Error triggering vulnerability scan: {e}")
         # Reset status on error
-        shared_data.ragnarstatustext = "IDLE"
-        shared_data.ragnarstatustext2 = f"Failed to start vuln scan"
+        shared_data.optaris_defensestatustext = "IDLE"
+        shared_data.optaris_defensestatustext2 = f"Failed to start vuln scan"
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
@@ -15962,8 +15962,8 @@ def run_manual_lynis_pentest():
         if not target_ip or not username or not password:
             return jsonify({'success': False, 'error': 'IP, username, and password are required'}), 400
 
-        shared_data.ragnarstatustext = "LynisPentest"
-        shared_data.ragnarstatustext2 = f"Manual pentest: {target_ip}"
+        shared_data.optaris_defensestatustext = "LynisPentest"
+        shared_data.optaris_defensestatustext2 = f"Manual pentest: {target_ip}"
         broadcast_status_update()
 
         def execute_manual_lynis():
@@ -16004,8 +16004,8 @@ def run_manual_lynis_pentest():
                         'message': f'Lynis audit failed for {target_ip}'
                     })
                 
-                shared_data.ragnarstatustext = "IDLE"
-                shared_data.ragnarstatustext2 = (
+                shared_data.optaris_defensestatustext = "IDLE"
+                shared_data.optaris_defensestatustext2 = (
                     "Lynis pentest completed" if success else "Lynis pentest failed"
                 )
                 broadcast_status_update()
@@ -16017,8 +16017,8 @@ def run_manual_lynis_pentest():
                     'ip': target_ip,
                     'message': f'Lynis audit error: {str(exc)}'
                 })
-                shared_data.ragnarstatustext = "IDLE"
-                shared_data.ragnarstatustext2 = "Lynis pentest error"
+                shared_data.optaris_defensestatustext = "IDLE"
+                shared_data.optaris_defensestatustext2 = "Lynis pentest error"
                 broadcast_status_update()
 
         threading.Thread(target=execute_manual_lynis, daemon=True).start()
@@ -16027,8 +16027,8 @@ def run_manual_lynis_pentest():
 
     except Exception as e:
         logger.error(f"Error starting manual Lynis pentest: {e}")
-        shared_data.ragnarstatustext = "IDLE"
-        shared_data.ragnarstatustext2 = "Lynis pentest error"
+        shared_data.optaris_defensestatustext = "IDLE"
+        shared_data.optaris_defensestatustext2 = "Lynis pentest error"
         broadcast_status_update()
         return jsonify({'success': False, 'error': str(e)}), 500
 
@@ -16170,7 +16170,7 @@ def _network_loot_dirs(network_rel_path, virtual_root):
 
 @app.route('/api/networks/all')
 def get_all_scanned_networks():
-    """Return summary info for every network Ragnar has ever scanned."""
+    """Return summary info for every network OptarisDefense has ever scanned."""
     try:
         networks = _list_all_networks()
         result = []
@@ -16708,7 +16708,7 @@ def clear_files_api():
             if not base:
                 continue  # missing config attr — skip rather than risk wildcard / expansion
             real_base = os.path.realpath(base)
-            # Hard floor: never delete anything outside Ragnar's install/data tree
+            # Hard floor: never delete anything outside OptarisDefense's install/data tree
             if real_base in ('/', os.sep) or not real_base:
                 continue
             for hit in _glob.glob(pattern):
@@ -16882,8 +16882,8 @@ def get_system_status_api():
         # Battery (PiSugar UPS - only if connected)
         battery_data = None
         try:
-            ragnar_inst = getattr(shared_data, 'ragnar_instance', None)
-            pisugar = getattr(ragnar_inst, 'pisugar_listener', None) if ragnar_inst else None
+            optaris_defense_inst = getattr(shared_data, 'optaris_defense_instance', None)
+            pisugar = getattr(optaris_defense_inst, 'pisugar_listener', None) if optaris_defense_inst else None
             if pisugar and pisugar.available:
                 level = pisugar.get_battery_level()
                 if level is not None:
@@ -17872,7 +17872,7 @@ def download_scan_report(scan_id):
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Ragnar Security Scan Report - {scan_id}</title>
+    <title>OptarisDefense Security Scan Report - {scan_id}</title>
     <style>
         body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #f1f5f9; margin: 0; padding: 20px; }}
         .container {{ max-width: 1200px; margin: 0 auto; }}
@@ -17902,7 +17902,7 @@ def download_scan_report(scan_id):
 <body>
     <div class="container">
         <div class="header">
-            <h1>Ragnar Security Scan Report</h1>
+            <h1>OptarisDefense Security Scan Report</h1>
             <p>Generated: {timestamp}</p>
         </div>
 
@@ -17935,7 +17935,7 @@ def download_scan_report(scan_id):
 </body>
 </html>'''
 
-        filename = f'ragnar_scan_report_{scan_id}_{datetime.now().strftime("%Y%m%d_%H%M%S")}.html'
+        filename = f'optaris_defense_scan_report_{scan_id}_{datetime.now().strftime("%Y%m%d_%H%M%S")}.html'
         response = Response(html_report, content_type='text/html')
         response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
@@ -17971,7 +17971,7 @@ def download_zap_report():
 
         from datetime import datetime
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f'ragnar_zap_report_{timestamp}.{report_format}'
+        filename = f'optaris_defense_zap_report_{timestamp}.{report_format}'
 
         response = Response(report_data, content_type=content_types.get(report_format, 'text/plain'))
         response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
@@ -18881,7 +18881,7 @@ def delete_zap_credentials(target_host):
 # ============================================================================
 
 def _count_scanned_networks() -> int:
-    """Return the number of distinct Wi-Fi networks Ragnar has stored (excluding default)."""
+    """Return the number of distinct Wi-Fi networks OptarisDefense has stored (excluding default)."""
     try:
         return shared_data._calculate_scanned_networks_count()
     except Exception as exc:
@@ -19024,7 +19024,7 @@ def get_dashboard_quick():
 
         wifi_status = {}
         try:
-            wifi_manager = getattr(shared_data, 'ragnar_instance', None)
+            wifi_manager = getattr(shared_data, 'optaris_defense_instance', None)
             if wifi_manager and hasattr(wifi_manager, 'wifi_manager'):
                 wifi_status = wifi_manager.wifi_manager.get_status()
         except Exception:
@@ -19055,10 +19055,10 @@ def get_dashboard_quick():
             'last_sync_timestamp': last_sync_ts,
             'last_sync_iso': last_sync_iso,
             'last_sync_age_seconds': last_sync_age,
-            'ragnar_status': safe_str(shared_data.ragnarstatustext),
-            'ragnar_status2': safe_str(shared_data.ragnarstatustext2),
-            'ragnar_says': safe_str(shared_data.ragnarsays),
-            'orchestrator_status': safe_str(shared_data.ragnarorch_status),
+            'optaris_defense_status': safe_str(shared_data.optaris_defensestatustext),
+            'optaris_defense_status2': safe_str(shared_data.optaris_defensestatustext2),
+            'optaris_defense_says': safe_str(shared_data.optaris_defensesays),
+            'orchestrator_status': safe_str(shared_data.optaris_defenseorch_status),
             'automation_enabled': is_orchestrator_running(),
             'wifi_connected': wifi_status.get('wifi_connected', safe_bool(shared_data.wifi_connected)),
             'current_ssid': wifi_status.get('current_ssid'),
@@ -19702,8 +19702,8 @@ def get_pushover_keys():
     try:
         from env_manager import EnvManager
         em = EnvManager()
-        user_key = em.get_env_key("RAGNAR_PUSHOVER_USER_KEY")
-        api_token = em.get_env_key("RAGNAR_PUSHOVER_API_TOKEN")
+        user_key = em.get_env_key("OPTARIS_DEFENSE_PUSHOVER_USER_KEY")
+        api_token = em.get_env_key("OPTARIS_DEFENSE_PUSHOVER_API_TOKEN")
         return jsonify({
             'user_key_configured': bool(user_key),
             'api_token_configured': bool(api_token),
@@ -19730,18 +19730,18 @@ def save_pushover_keys():
         api_token = data.get('api_token', '').strip()
 
         if user_key:
-            em.set_env_key("RAGNAR_PUSHOVER_USER_KEY", user_key)
+            em.set_env_key("OPTARIS_DEFENSE_PUSHOVER_USER_KEY", user_key)
             saved.append("User Key")
         if api_token:
-            em.set_env_key("RAGNAR_PUSHOVER_API_TOKEN", api_token)
+            em.set_env_key("OPTARIS_DEFENSE_PUSHOVER_API_TOKEN", api_token)
             saved.append("API Token")
 
         if not saved:
             return jsonify({'error': 'No keys provided'}), 400
 
         # Auto-enable Pushover if both keys are now set
-        uk = em.get_env_key("RAGNAR_PUSHOVER_USER_KEY")
-        at = em.get_env_key("RAGNAR_PUSHOVER_API_TOKEN")
+        uk = em.get_env_key("OPTARIS_DEFENSE_PUSHOVER_USER_KEY")
+        at = em.get_env_key("OPTARIS_DEFENSE_PUSHOVER_API_TOKEN")
         auto_enabled = False
         if uk and at and not shared_data.config.get('pushover_enabled', False):
             shared_data.config['pushover_enabled'] = True
@@ -19765,8 +19765,8 @@ def remove_pushover_keys():
     try:
         from env_manager import EnvManager
         em = EnvManager()
-        em.delete_env_key("RAGNAR_PUSHOVER_USER_KEY")
-        em.delete_env_key("RAGNAR_PUSHOVER_API_TOKEN")
+        em.delete_env_key("OPTARIS_DEFENSE_PUSHOVER_USER_KEY")
+        em.delete_env_key("OPTARIS_DEFENSE_PUSHOVER_API_TOKEN")
         shared_data.config['pushover_enabled'] = False
         shared_data.save_config()
         return jsonify({'success': True, 'message': 'Pushover keys removed'})
@@ -19790,7 +19790,7 @@ def test_pushover():
 
         result = pushover.send(
             message="Hello there Viking, are you ready for adventures?",
-            title="Ragnar says",
+            title="OptarisDefense says",
             sound="bugle"
         )
         return jsonify(result)
@@ -20020,9 +20020,9 @@ def generate_self_signed_cert(cert_path: str, key_path: str):
         subject = issuer = x509.Name([
             x509.NameAttribute(NameOID.COUNTRY_NAME, "US"),
             x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, "Security"),
-            x509.NameAttribute(NameOID.LOCALITY_NAME, "Ragnar"),
-            x509.NameAttribute(NameOID.ORGANIZATION_NAME, "Ragnar Security Scanner"),
-            x509.NameAttribute(NameOID.COMMON_NAME, "ragnar.local"),
+            x509.NameAttribute(NameOID.LOCALITY_NAME, "OptarisDefense"),
+            x509.NameAttribute(NameOID.ORGANIZATION_NAME, "OptarisDefense Security Scanner"),
+            x509.NameAttribute(NameOID.COMMON_NAME, "optaris_defense.local"),
         ])
 
         cert = x509.CertificateBuilder().subject_name(
@@ -20040,7 +20040,7 @@ def generate_self_signed_cert(cert_path: str, key_path: str):
         ).add_extension(
             x509.SubjectAlternativeName([
                 x509.DNSName("localhost"),
-                x509.DNSName("ragnar.local"),
+                x509.DNSName("optaris_defense.local"),
                 x509.IPAddress(ipaddress.IPv4Address("127.0.0.1")),
             ]),
             critical=False,
@@ -20133,12 +20133,12 @@ def run_server(host='0.0.0.0', port=8000, ssl_cert=None, ssl_key=None, https_por
                 logger.info(f"SSL enabled with certificate: {ssl_cert}")
             else:
                 logger.warning(f"SSL cert/key not found. Running HTTP only.")
-        elif ssl_cert == 'adhoc' or os.environ.get('RAGNAR_HTTPS', '').lower() == 'true':
+        elif ssl_cert == 'adhoc' or os.environ.get('OPTARIS_DEFENSE_HTTPS', '').lower() == 'true':
             # Generate self-signed certificate
             cert_dir = os.path.join(os.path.dirname(__file__), 'certs')
             os.makedirs(cert_dir, exist_ok=True)
-            cert_path = os.path.join(cert_dir, 'ragnar.crt')
-            key_path = os.path.join(cert_dir, 'ragnar.key')
+            cert_path = os.path.join(cert_dir, 'optaris_defense.crt')
+            key_path = os.path.join(cert_dir, 'optaris_defense.key')
 
             if os.path.exists(cert_path) and os.path.exists(key_path):
                 ssl_context = (cert_path, key_path)
@@ -20154,7 +20154,7 @@ def run_server(host='0.0.0.0', port=8000, ssl_cert=None, ssl_key=None, https_por
         effective_port = https_port if (use_https and https_port) else port
 
         protocol = "https" if use_https else "http"
-        logger.info(f"Starting Ragnar web server on {host}:{effective_port}")
+        logger.info(f"Starting OptarisDefense web server on {host}:{effective_port}")
         logger.info(f"Access the interface at {protocol}://{host}:{effective_port}")
 
         if use_https:
@@ -20196,7 +20196,7 @@ def run_server(host='0.0.0.0', port=8000, ssl_cert=None, ssl_key=None, https_por
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description='Ragnar Security Scanner Web Server')
+    parser = argparse.ArgumentParser(description='OptarisDefense Security Scanner Web Server')
     parser.add_argument('--host', default='0.0.0.0', help='Host to bind to (default: 0.0.0.0)')
     parser.add_argument('--port', type=int, default=8000, help='HTTP port (default: 8000)')
     parser.add_argument('--ssl-cert', help='Path to SSL certificate file')

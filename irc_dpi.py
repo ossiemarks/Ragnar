@@ -1,5 +1,5 @@
 """
-IRC protocol DPI for Ragnar (server mode).
+IRC protocol DPI for OptarisDefense (server mode).
 
 Cleartext IRC (port 6667, 6697-without-STARTTLS, common alternates) is
 historically the most popular botnet C2 channel. This module reconstructs

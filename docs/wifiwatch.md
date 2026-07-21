@@ -66,7 +66,7 @@ census). Tunable to `0` in a known-clean environment.
 ```bash
 python3 python/wifiwatch.py --self-test                       # 30/30, no root/Scapy
 sudo python3 python/wifiwatch.py --iface wlan1 --echo         # live, echo to stderr
-sudo python3 python/wifiwatch.py --iface wlan1 --jsonl /var/lib/ragnar/wifiwatch/events.jsonl
+sudo python3 python/wifiwatch.py --iface wlan1 --jsonl /var/lib/optaris_defense/wifiwatch/events.jsonl
 python3 python/wifiwatch.py --replay attack.pcap --echo       # replay a capture (no radio)
 python3 python/wifiwatch.py --replay attack.pcap --replay-freq 2437   # force channel if no radiotap
 ```
@@ -107,7 +107,7 @@ the first `beacon_warmup_sec`, front-load ambient beacons or set
 
 `scripts/wifiwatch.service` runs `DynamicUser=yes` with exactly `CAP_NET_RAW` +
 `CAP_NET_ADMIN`, a strict syscall filter, and `MemoryMax=128M`; state lands in
-`/var/lib/ragnar/wifiwatch/`. It puts the NIC in monitor mode via
+`/var/lib/optaris_defense/wifiwatch/`. It puts the NIC in monitor mode via
 `wifiwatch-setup-mon.sh` first.
 
 ## Relation to the integrated WiFi Defense

@@ -1,4 +1,4 @@
-"""Path-asymmetry / one-way-delay (OWD) detector for Ragnar — the data-plane side.
+"""Path-asymmetry / one-way-delay (OWD) detector for OptarisDefense — the data-plane side.
 
 Replaces hop-count (TTL) inference with *measured* one-way delay. A tiny UDP
 reflector stamps the reverse leg, a prober stamps the forward leg, giving the

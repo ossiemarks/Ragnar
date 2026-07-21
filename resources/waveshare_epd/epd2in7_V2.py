@@ -53,7 +53,7 @@ class EPD:
         self.GRAY2  = GRAY2
         self.GRAY3  = GRAY3 #gray
         self.GRAY4  = GRAY4 #Blackest
-        self.is_initialized = False  # Track if the display has been initialized (Ragnar compatibility)
+        self.is_initialized = False  # Track if the display has been initialized (OptarisDefense compatibility)
 
     LUT_DATA_4Gray = [
         0x40,0x48,0x80,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,

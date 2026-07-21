@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Utility to clear the Waveshare E-Paper display when Ragnar restarts."""
+"""Utility to clear the Waveshare E-Paper display when OptarisDefense restarts."""
 
 from __future__ import annotations
 

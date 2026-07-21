@@ -1,1 +1,1 @@
-"""Ragnar test suite."""
+"""OptarisDefense test suite."""

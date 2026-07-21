@@ -1,7 +1,7 @@
 """
-Graphical startup menu for Ragnar on WiFi Pineapple Pager.
+Graphical startup menu for OptarisDefense on WiFi Pineapple Pager.
 Uses libpagerctl.so for fast native rendering in landscape mode (270, 480x222).
-Adapted from pineapple_pager_bjorn's bjorn_menu.py for Ragnar branding.
+Adapted from pineapple_pager_bjorn's bjorn_menu.py for OptarisDefense branding.
 """
 
 import os
@@ -31,7 +31,7 @@ TTF_SMALL = 13.0
 TTF_MEDIUM = 16.0
 TTF_LARGE = 20.0
 
-# Loot directory paths (use Ragnar data dir structure)
+# Loot directory paths (use OptarisDefense data dir structure)
 DATA_DIR = os.path.join(PAYLOAD_DIR, "data")
 LOGS_DIR = os.path.join(DATA_DIR, "logs")
 CREDS_DIR = os.path.join(DATA_DIR, "output", "crackedpwd")
@@ -122,8 +122,8 @@ def detect_interfaces():
     return interfaces
 
 
-class RagnarMenu:
-    """Graphical startup menu for Ragnar on the Pager LCD."""
+class OptarisDefenseMenu:
+    """Graphical startup menu for OptarisDefense on the Pager LCD."""
 
     def __init__(self, interfaces):
         self.interfaces = interfaces
@@ -192,7 +192,7 @@ class RagnarMenu:
         self.gfx.clear(Pager.BLACK)
 
         # Title using Viking font
-        self.gfx.draw_ttf_centered(2, "Ragnar", TITLE_COLOR, FONT_VIKING, 38.0)
+        self.gfx.draw_ttf_centered(2, "OptarisDefense", TITLE_COLOR, FONT_VIKING, 38.0)
 
         y = 50
         items = self._get_menu_items(iface_idx, web_ui)
@@ -222,7 +222,7 @@ class RagnarMenu:
         self.gfx.flip()
 
     def _get_menu_items(self, iface_idx, web_ui):
-        items = [{'label': 'Start Ragnar'}]
+        items = [{'label': 'Start OptarisDefense'}]
 
         if self.interfaces:
             iface = self.interfaces[iface_idx]
@@ -430,7 +430,7 @@ class RagnarMenu:
 
 
 def main():
-    """Main entry point: menu loop -> launch Ragnar -> repeat."""
+    """Main entry point: menu loop -> launch OptarisDefense -> repeat."""
     menu = None
     log_file = os.path.join(DATA_DIR, 'payload.log')
     try:
@@ -439,11 +439,11 @@ def main():
             time.sleep(0.3)
 
             try:
-                menu = RagnarMenu(interfaces)
+                menu = OptarisDefenseMenu(interfaces)
             except Exception as e:
                 time.sleep(1)
                 try:
-                    menu = RagnarMenu(interfaces)
+                    menu = OptarisDefenseMenu(interfaces)
                 except Exception:
                     sys.stderr.write(f"Failed to init display: {e}\n")
                     break
@@ -458,33 +458,33 @@ def main():
                 time.sleep(0.5)
                 break
 
-            menu._show_message("Starting Ragnar...", TITLE_COLOR, result['interface'] + " " + result['ip'], DIM_COLOR)
+            menu._show_message("Starting OptarisDefense...", TITLE_COLOR, result['interface'] + " " + result['ip'], DIM_COLOR)
             menu.cleanup()
             menu = None
 
             # Small delay to let the display hardware settle after cleanup
             time.sleep(0.3)
 
-            # Launch PagerRagnar as subprocess
+            # Launch PagerOptarisDefense as subprocess
             env = os.environ.copy()
-            env['RAGNAR_INTERFACE'] = result['interface']
-            env['RAGNAR_IP'] = result['ip']
-            env['RAGNAR_WEB_UI'] = 'on' if result['web_ui'] else 'off'
+            env['OPTARIS_DEFENSE_INTERFACE'] = result['interface']
+            env['OPTARIS_DEFENSE_IP'] = result['ip']
+            env['OPTARIS_DEFENSE_WEB_UI'] = 'on' if result['web_ui'] else 'off'
 
             # Open log for capturing subprocess output
             try:
                 os.makedirs(DATA_DIR, exist_ok=True)
                 with open(log_file, 'a') as lf:
-                    lf.write(f"\n=== PagerRagnar.py starting at {time.strftime('%H:%M:%S')} ===\n")
+                    lf.write(f"\n=== Pageroptaris_defense.py starting at {time.strftime('%H:%M:%S')} ===\n")
                     proc = subprocess.run(
-                        ['python3', 'PagerRagnar.py'],
+                        ['python3', 'Pageroptaris_defense.py'],
                         cwd=PAYLOAD_DIR,
                         env=env,
                         stdout=lf,
                         stderr=lf,
                     )
             except Exception as e:
-                sys.stderr.write(f"Failed to launch PagerRagnar.py: {e}\n")
+                sys.stderr.write(f"Failed to launch Pageroptaris_defense.py: {e}\n")
                 break
 
             if proc.returncode == 42:
@@ -492,7 +492,7 @@ def main():
             elif proc.returncode == 99:
                 continue
             elif proc.returncode != 0:
-                sys.stderr.write(f"PagerRagnar.py exited with code {proc.returncode}\n")
+                sys.stderr.write(f"Pageroptaris_defense.py exited with code {proc.returncode}\n")
                 break
 
             break

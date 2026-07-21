@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Ragnar — Piglet Coordinator Forge (C5 / S3-LCD)</title>
-    <meta name="description" content="Forge the Ragnar Piglet Coordinator firmware onto your ESP32-C5 (headless) or ESP32-S3-Touch-LCD-4B (480x480 display) directly from your browser. Sails with the Piglet mesh, reports to Ragnar over USB." />
+    <title>OptarisDefense — Piglet Coordinator Forge (C5 / S3-LCD)</title>
+    <meta name="description" content="Forge the OptarisDefense Piglet Coordinator firmware onto your ESP32-C5 (headless) or ESP32-S3-Touch-LCD-4B (480x480 display) directly from your browser. Sails with the Piglet mesh, reports to OptarisDefense over USB." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="css/style.css?v=ragnarblue1" />
+    <link rel="stylesheet" href="css/style.css?v=optaris_defenseblue1" />
   </head>
   <body>
     <div class="rune-strip" aria-hidden="true">
@@ -20,7 +20,7 @@
       <!-- Header -->
       <header class="site-header">
         <div class="logo-mark" aria-hidden="true">🐗</div>
-        <span class="brand">RAGNAR &mdash; <span>Piglet Coordinator</span></span>
+        <span class="brand">OPTARIS_DEFENSE &mdash; <span>Piglet Coordinator</span></span>
       </header>
 
       <!-- Hero -->
@@ -30,7 +30,7 @@
         <p class="tagline">Piglet Core &nbsp;⚔&nbsp; ESP-Now mesh &nbsp;⚔&nbsp; HuginnESP-compatible JSON</p>
         <p class="desc">
           Two longships to choose from. Either board pairs automatically with the Piglet
-          mesh on channel&nbsp;6 and herds WiGLE / BLE records back to Ragnar over USB
+          mesh on channel&nbsp;6 and herds WiGLE / BLE records back to OptarisDefense over USB
           serial as one-object-per-line JSON. Pick a board, plug it in, raise the sails.
         </p>
       </div>
@@ -41,7 +41,7 @@
         <p>
           <strong>Waveshare ESP32-C5-WIFI6-KIT</strong> &middot; single-core RISC-V @240&nbsp;MHz,
           16&nbsp;MB flash, 4&nbsp;MB PSRAM, dual-band Wi-Fi&nbsp;6, BLE&nbsp;5. No display,
-          no fuss &mdash; the smallest, lightest pig in the sty. Plug it into Ragnar's USB
+          no fuss &mdash; the smallest, lightest pig in the sty. Plug it into OptarisDefense's USB
           and it starts oinking immediately.
         </p>
 
@@ -103,7 +103,7 @@
         <p>
           Open a browser-based serial monitor for any forged coordinator. Default baud
           is <code>460800</code>. Once awake, the board announces itself with
-          <code>{"device":"RagnarCoord","fw":"c5-1","board":"ESP32-C5",...}</code>,
+          <code>{"device":"OptarisDefenseCoord","fw":"c5-1","board":"ESP32-C5",...}</code>,
           then emits <code>[CORE]&nbsp;alive</code> every 10&nbsp;s and one
           <code>{"type":"WIFI",...}</code> / <code>{"type":"NODE",...}</code> line per
           record as paired Piglets report in.
@@ -124,7 +124,7 @@
         <div>Channel: <code>6</code> &middot; Baud: <code>460800</code> &middot; Output: HuginnESP-style JSON</div>
         <div>Build: <code id="build">&mdash;</code></div>
         <div>
-          <a href="https://github.com/PierreGode/Ragnar" target="_blank" rel="noopener">Ragnar</a>
+          <a href="https://github.com/PierreGode/OptarisDefense" target="_blank" rel="noopener">OptarisDefense</a>
           &nbsp;⚔&nbsp;
           <a href="https://github.com/PierreGode/piglet" target="_blank" rel="noopener">Piglet firmware</a>
         </div>

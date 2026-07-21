@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Advanced Threat Intelligence Integration for Ragnar
+Advanced Threat Intelligence Integration for OptarisDefense
 Provides real-time threat intelligence enrichment and analysis
 
 Features:

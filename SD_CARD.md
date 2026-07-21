@@ -40,8 +40,8 @@
   3. **`.md5sums` control files** (72 pkgs incl. old kernels not in the repo): regenerated
      locally from on-disk files (script `/tmp/gen_md5sums.py`) — no re-download needed.
 - **Final: `dpkg --audit` CLEAN, 0 unconfigured, `dpkg --verify` passes.** Sensing stack
-  self-heals on boot: `sensing-server` + `ragnar-csi-fanout` active, UDP :5005/:5105, nodes API
-  detecting node 1. `ragnar-sensing`/`ragnar.service` still inactive (the "to be completed"
+  self-heals on boot: `sensing-server` + `optaris-defense-csi-fanout` active, UDP :5005/:5105, nodes API
+  detecting node 1. `optaris-defense-sensing`/`optaris-defense.service` still inactive (the "to be completed"
   units — §4). No `badblocks` needed — corruption was brownout, not a failing card.
 
 **Open items (NOT SD-card related):** (a) MacBook on the LAN holds the beamsense data — to be
@@ -60,7 +60,7 @@ investigate.
   learns the Pi's MAC** → the Pi transmits **zero** Ethernet frames → `eth0` is not coming up
   at the OS level. Not on WiFi either.
 - **Most likely cause:** ext4 **root filesystem corruption** from the repeated brownout
-  hard-resets, and/or an **interrupted Ragnar `apt` install** that left `dpkg` half-configured
+  hard-resets, and/or an **interrupted OptarisDefense `apt` install** that left `dpkg` half-configured
   and wedged boot/networking. (Earlier in the session the FS was intact; several more hard
   resets happened since.)
 - **Fix:** `fsck` the ext4 root on another machine, reboot, then finish the interrupted install
@@ -119,18 +119,18 @@ sudo vcgencmd get_throttled   # 0x0 good; 0x50000 = under-voltage occurred (marg
 
 **Production sensing stack should self-heal on boot** (enabled systemd units) — verify:
 ```bash
-systemctl is-active sensing-server.service ragnar-csi-fanout.service   # OptarisSense + fan-out
+systemctl is-active sensing-server.service optaris-defense-csi-fanout.service   # OptarisSense + fan-out
 curl -s http://127.0.0.1:8080/api/v1/nodes   # ESP32 nodes 2/3/5 active?
 sudo ss -ulnp | grep -E ':5005|:5105'         # fan-out :5005, OptarisSense :5105
 ```
 
-**Finish the interrupted Ragnar deployment** (was mid-`apt` when it crashed):
+**Finish the interrupted OptarisDefense deployment** (was mid-`apt` when it crashed):
 ```bash
-cd /home/pi/ragnar-app 2>/dev/null || git clone --branch feature/optaris-edge-rusense-deploy \
-    https://github.com/ossiemarks/Ragnar.git /home/pi/ragnar-app
+cd /home/pi/optaris-defense-app 2>/dev/null || git clone --branch feature/optaris-edge-rusense-deploy \
+    https://github.com/ossiemarks/OptarisDefense.git /home/pi/optaris-defense-app
 sudo dpkg --configure -a && sudo apt-get -f install     # clear the interrupted state first
 # then re-run the installer (headless server profile) + sensing on the SEPARATE ports:
-sudo ./install_ragnar.sh                                 # ragnar.service + web :8000
+sudo ./install_optaris_defense.sh                                 # optaris-defense.service + web :8000
 sudo SENSING_UDP_PORT=5006 SENSING_HTTP_PORT=3000 SENSING_WS_PORT=3100 ./scripts/install_sensing.sh
 ```
 
@@ -138,17 +138,17 @@ sudo SENSING_UDP_PORT=5006 SENSING_HTTP_PORT=3000 SENSING_WS_PORT=3100 ./scripts
 
 | Component | Ports | Notes |
 |---|---|---|
-| CSI UDP fan-out (`ragnar-csi-fanout.service`) | UDP **:5005** → dup to :5105 + :5006 | `/home/pi/csi_udp_fanout.py` |
+| CSI UDP fan-out (`optaris-defense-csi-fanout.service`) | UDP **:5005** → dup to :5105 + :5006 | `/home/pi/csi_udp_fanout.py` |
 | OptarisSense `sensing-server.service` | UDP **:5105**, HTTP **:8080**, WS :8765 | override in `…/sensing-server.service.d/sentinel-ops.conf` |
-| Ragnar `ragnar-sensing.service` (in progress) | UDP **:5006**, HTTP **:3000**, WS :3100 | to be completed (step 4) |
-| Ragnar web app (in progress) | HTTP **:8000** | to be completed |
+| OptarisDefense `optaris-defense-sensing.service` (in progress) | UDP **:5006**, HTTP **:3000**, WS :3100 | to be completed (step 4) |
+| OptarisDefense web app (in progress) | HTTP **:8000** | to be completed |
 | ESP32 nodes | → fan-out :5005 | ids 2/3/5, native ADR-018 |
 | Node 210 (Intel AX210 / FeitCSI) | → fan-out :5005 | run **on-demand** (out-of-tree driver, power/thermal heavy); scripts: `scripts/build_feitcsi.sh`, `scripts/feitcsi_capture_loop.sh` |
 
 ## 6. Repo / references
 
-- Repo: **github.com/ossiemarks/Ragnar**, branch `feature/optaris-edge-rusense-deploy`
-  (fork of PierreGode/Ragnar = `upstream`).
+- Repo: **github.com/ossiemarks/OptarisDefense**, branch `feature/optaris-edge-rusense-deploy`
+  (fork of PierreGode/OptarisDefense = `upstream`).
 - Design/plans: `docs/superpowers/specs/` and `docs/superpowers/plans/`; decisions in
   `decisionTree.md`.
 - `csi_shim` package: `python/csi_shim/` (ADR-018 encoder + nexmon/feitcsi readers); tests in
@@ -158,7 +158,7 @@ sudo SENSING_UDP_PORT=5006 SENSING_HTTP_PORT=3000 SENSING_WS_PORT=3100 ./scripts
 
 ## 7. Known constraints
 - Pi power is **marginal under load** — a heavy `apt` install can brown it out mid-run (that's
-  what interrupted the Ragnar install). Prefer the UPS + a certified 5 A supply; consider
+  what interrupted the OptarisDefense install). Prefer the UPS + a certified 5 A supply; consider
   removing the AX210 during heavy installs to cut PCIe draw.
 - macOS **cannot** `fsck` ext4 without `e2fsprogs` (`fsck.ext4` on the raw device) — hence the
   Linux laptop. Docker Desktop on macOS can't reach the physical SD card either.

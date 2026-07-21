@@ -513,7 +513,7 @@ input:checked + .slider:before {
     z-index: 100;
 }
 
-#ragnar_home {
+#optaris_defense_home {
     border-radius: 11% !important;
 }
 
@@ -798,7 +798,7 @@ body, html {
    ON-SCREEN KIOSK MODE (?kiosk=1)
    Optimized for Pi Flux (1280x400 landscape) and similar small HDMI/DSI
    displays. The .kiosk-mode class is set by the bootstrap in
-   ragnar_modern.js when the page is loaded with the kiosk query param.
+   optaris_defense_modern.js when the page is loaded with the kiosk query param.
    ============================================================================ */
 
 body.kiosk-mode {

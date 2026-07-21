@@ -63,7 +63,7 @@ class SMBBruteforce:
             else:
                 logger.warning(f"Existing credentials for {ip} no longer valid, will re-bruteforce")
         
-        self.shared_data.ragnarorch_status = "SMBBruteforce"
+        self.shared_data.optaris_defenseorch_status = "SMBBruteforce"
         success, results = self.bruteforce_smb(ip, port)
         return 'success' if success else 'failed'
     

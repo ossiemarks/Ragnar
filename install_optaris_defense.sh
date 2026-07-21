@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# ragnar Installation Script
-# This script handles the complete installation of ragnar
+# optaris_defense Installation Script
+# This script handles the complete installation of optaris_defense
 # Author: infinition
 # Version: 1.0 - 071124 - 0954
 
@@ -19,20 +19,20 @@ WHITE='\033[1;37m'
 NC='\033[0m'
 
 # Logging configuration
-LOG_DIR="/var/log/ragnar_install"
+LOG_DIR="/var/log/optaris_defense_install"
 mkdir -p "$LOG_DIR"
-LOG_FILE="$LOG_DIR/ragnar_install_$(date +%Y%m%d_%H%M%S).log"
+LOG_FILE="$LOG_DIR/optaris_defense_install_$(date +%Y%m%d_%H%M%S).log"
 VERBOSE=false
 
 # Global variables
-ragnar_USER="ragnar"
-ragnar_PATH="/home/${ragnar_USER}/Ragnar"
+optaris_defense_USER="optaris_defense"
+optaris_defense_PATH="/home/${optaris_defense_USER}/OptarisDefense"
 CURRENT_STEP=0
 TOTAL_STEPS=11
 HEADLESS_MODE=false
 HEADLESS_VARIANT=""
 HEADLESS_VARIANT_LABEL=""
-RAGNAR_ENTRYPOINT="Ragnar.py"
+OPTARIS_DEFENSE_ENTRYPOINT="optaris_defense.py"
 SERVER_INSTALL=false
 TFT_MODE=false
 GIT_WORKS=true
@@ -49,7 +49,7 @@ ARCH=""
 IS_ARM=false
 
 if [[ "$1" == "--help" ]]; then
-    echo "Usage: sudo ./install_ragnar.sh"
+    echo "Usage: sudo ./install_optaris_defense.sh"
     echo "Make sure you have the necessary permissions and that all dependencies are met."
     exit 0
 fi
@@ -145,7 +145,7 @@ clone_or_download() {
     repo_path="${repo_path%.git}"
     local tarball_url="https://github.com/${repo_path}/archive/refs/heads/${branch}.tar.gz"
     local temp_tar
-    temp_tar=$(mktemp /tmp/ragnar-dl-XXXXXX.tar.gz)
+    temp_tar=$(mktemp /tmp/optaris-defense-dl-XXXXXX.tar.gz)
 
     log "INFO" "Downloading ${repo_path} tarball (branch: ${branch})..."
     if wget -q --timeout=60 -O "$temp_tar" "$tarball_url" 2>/dev/null \
@@ -322,7 +322,7 @@ check_system_compatibility() {
     log "INFO" "Checking system compatibility..."
     local should_ask_confirmation=false
     
-    # Skip hardware gating - Ragnar now supports all tested platforms
+    # Skip hardware gating - OptarisDefense now supports all tested platforms
 
     # Check RAM (Raspberry Pi Zero has 512MB RAM)
     total_ram=$(free -m | awk '/^Mem:/{print $2}')
@@ -512,7 +512,7 @@ install_dependencies() {
         || log "WARNING" "Failed to install sslyze/dnspython/tldextract — recon engine will report errors per scan"
 
     # Recon engine wordlist for content discovery
-    local wordlist_dir="/opt/ragnar/wordlists"
+    local wordlist_dir="/opt/optaris_defense/wordlists"
     local wordlist_path="$wordlist_dir/common.txt"
     if [ ! -f "$wordlist_path" ]; then
         log "INFO" "Fetching SecLists common.txt wordlist for content discovery..."
@@ -544,13 +544,13 @@ install_dependencies() {
         # fresh clone/install "just works" without manual `rfkill unblock all`.
         local rfkill_bin
         rfkill_bin="$(command -v rfkill)"
-        cat > /etc/udev/rules.d/99-ragnar-rfkill.rules << EOF
-# Ragnar: auto-unblock every radio when it appears (boot + hot-plug).
+        cat > /etc/udev/rules.d/99-optaris-defense-rfkill.rules << EOF
+# OptarisDefense: auto-unblock every radio when it appears (boot + hot-plug).
 # USB Bluetooth and monitor-mode/injection WiFi dongles are soft-blocked by
 # default and stay dead until unblocked.
 SUBSYSTEM=="rfkill", ACTION=="add", RUN+="$rfkill_bin unblock all"
 EOF
-        chmod 644 /etc/udev/rules.d/99-ragnar-rfkill.rules
+        chmod 644 /etc/udev/rules.d/99-optaris-defense-rfkill.rules
         if command -v udevadm >/dev/null 2>&1; then
             udevadm control --reload-rules 2>/dev/null || true
             udevadm trigger --subsystem-match=rfkill 2>/dev/null || true
@@ -566,7 +566,7 @@ EOF
     if command -v lldpd >/dev/null 2>&1 || command -v lldpctl >/dev/null 2>&1; then
         mkdir -p /etc/default
         cat > /etc/default/lldpd << 'EOF'
-# Ragnar: decode CDP (Cisco), EDP (Extreme), FDP (Foundry), SONMP (Nortel)
+# OptarisDefense: decode CDP (Cisco), EDP (Extreme), FDP (Foundry), SONMP (Nortel)
 # neighbours in addition to LLDP, so switch discovery covers non-LLDP gear.
 DAEMON_ARGS="-c -e -f -s"
 EOF
@@ -595,7 +595,7 @@ country=US
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
 
-# This file will be managed by NetworkManager and Ragnar WiFi Manager
+# This file will be managed by NetworkManager and OptarisDefense WiFi Manager
 # Networks will be added dynamically
 EOF
         chmod 600 /etc/wpa_supplicant/wpa_supplicant.conf
@@ -612,19 +612,19 @@ configure_system_limits() {
     # Configure /etc/security/limits.conf for file descriptors AND process limits
     cat >> /etc/security/limits.conf << EOF
 
-# Ragnar system limits - File descriptors
+# OptarisDefense system limits - File descriptors
 * soft nofile 65535
 * hard nofile 65535
 root soft nofile 65535
 root hard nofile 65535
 
-# Ragnar system limits - Process limits (critical for threading and OpenBLAS)
+# OptarisDefense system limits - Process limits (critical for threading and OpenBLAS)
 * soft nproc 4096
 * hard nproc 8192
 root soft nproc 4096
 root hard nproc 8192
-$ragnar_USER soft nproc 4096
-$ragnar_USER hard nproc 8192
+$optaris_defense_USER soft nproc 4096
+$optaris_defense_USER hard nproc 8192
 EOF
 
     # Configure systemd limits
@@ -656,26 +656,26 @@ EOF
     sed -i '/^#\?RuntimeWatchdogSec=/d;/^#\?RebootWatchdogSec=/d' /etc/systemd/system.conf
     printf 'RuntimeWatchdogSec=15\nRebootWatchdogSec=2min\n' >> /etc/systemd/system.conf
 
-    # Create /etc/security/limits.d/90-ragnar-limits.conf with both file and process limits
-    cat > /etc/security/limits.d/90-ragnar-limits.conf << EOF
-# Ragnar System Limits Configuration
+    # Create /etc/security/limits.d/90-optaris-defense-limits.conf with both file and process limits
+    cat > /etc/security/limits.d/90-optaris-defense-limits.conf << EOF
+# OptarisDefense System Limits Configuration
 # File descriptor limits
 root soft nofile 65535
 root hard nofile 65535
-$ragnar_USER soft nofile 65535
-$ragnar_USER hard nofile 65535
+$optaris_defense_USER soft nofile 65535
+$optaris_defense_USER hard nofile 65535
 
 # Process/thread limits (prevents OpenBLAS pthread_create errors)
 root soft nproc 4096
 root hard nproc 8192
-$ragnar_USER soft nproc 4096
-$ragnar_USER hard nproc 8192
+$optaris_defense_USER soft nproc 4096
+$optaris_defense_USER hard nproc 8192
 EOF
 
     # Configure sysctl for file handles and process limits
     cat >> /etc/sysctl.conf << EOF
 
-# Ragnar system tuning
+# OptarisDefense system tuning
 fs.file-max = 2097152
 kernel.pid_max = 32768
 kernel.threads-max = 65536
@@ -714,7 +714,7 @@ install_pisugar_server() {
     echo -e "${CYAN}  PiSugar UPS Support${NC}"
     echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
     echo -e "${BLUE}PiSugar provides battery power, battery monitoring, and a${NC}"
-    echo -e "${BLUE}hardware button for Ragnar. If you have a PiSugar UPS${NC}"
+    echo -e "${BLUE}hardware button for OptarisDefense. If you have a PiSugar UPS${NC}"
     echo -e "${BLUE}attached, the pisugar-server daemon is required.${NC}"
     echo ""
     read -p "Do you have a PiSugar UPS? Install pisugar-server? (y/n): " install_pisugar
@@ -759,9 +759,9 @@ configure_interfaces() {
     fi
 }
 
-# Setup ragnar
-setup_ragnar() {
-    log "INFO" "Setting up ragnar..."
+# Setup optaris_defense
+setup_optaris_defense() {
+    log "INFO" "Setting up optaris_defense..."
 
     # Use PiWheels for faster installs on Raspberry Pi architectures
     local machine_arch
@@ -775,35 +775,35 @@ setup_ragnar() {
         log "INFO" "Using PiWheels Python package index for ${machine_arch}"
     fi
 
-    # Create ragnar user if it doesn't exist
-    if ! id -u $ragnar_USER >/dev/null 2>&1; then
-        adduser --disabled-password --gecos "" $ragnar_USER
-        check_success "Created ragnar user"
+    # Create optaris_defense user if it doesn't exist
+    if ! id -u $optaris_defense_USER >/dev/null 2>&1; then
+        adduser --disabled-password --gecos "" $optaris_defense_USER
+        check_success "Created optaris_defense user"
     fi
 
-    # Check for existing ragnar directory with a valid git clone
-    cd /home/$ragnar_USER
-    if [ -d "Ragnar/.git" ] || [ -d "Ragnar/actions" ]; then
-        log "INFO" "Using existing ragnar directory"
-        echo -e "${GREEN}Using existing ragnar directory${NC}"
+    # Check for existing optaris_defense directory with a valid git clone
+    cd /home/$optaris_defense_USER
+    if [ -d "OptarisDefense/.git" ] || [ -d "OptarisDefense/actions" ]; then
+        log "INFO" "Using existing optaris_defense directory"
+        echo -e "${GREEN}Using existing optaris_defense directory${NC}"
     else
         # Remove empty/invalid directory if it exists
-        if [ -d "Ragnar" ]; then
-            log "WARNING" "Ragnar directory exists but is not a valid clone, removing..."
-            rm -rf Ragnar
+        if [ -d "OptarisDefense" ]; then
+            log "WARNING" "OptarisDefense directory exists but is not a valid clone, removing..."
+            rm -rf OptarisDefense
         fi
         # Proceed with clone (falls back to wget tarball if git is broken)
-        log "INFO" "Cloning ragnar repository"
-        if ! clone_or_download https://github.com/PierreGode/Ragnar.git Ragnar main; then
-            log "ERROR" "Cannot obtain Ragnar repository — installation cannot continue"
+        log "INFO" "Cloning optaris_defense repository"
+        if ! clone_or_download https://github.com/PierreGode/OptarisDefense.git OptarisDefense main; then
+            log "ERROR" "Cannot obtain OptarisDefense repository — installation cannot continue"
             log "ERROR" "If git crashes with 'Illegal instruction', your git binary may be"
             log "ERROR" "compiled for a newer ARM architecture. Try: sudo apt reinstall git"
-            log "ERROR" "or download manually: wget https://github.com/PierreGode/Ragnar/archive/refs/heads/main.tar.gz"
+            log "ERROR" "or download manually: wget https://github.com/PierreGode/OptarisDefense/archive/refs/heads/main.tar.gz"
             clean_exit 1
         fi
     fi
 
-    cd Ragnar
+    cd OptarisDefense
 
     # Update the default display type in shared.py with the detected/selected version
     log "INFO" "Updating display default configuration in shared.py..."
@@ -813,19 +813,19 @@ setup_ragnar() {
         else
             log "WARNING" "Display version not detected - skipping shared.py update"
         fi
-    elif [ -f "$ragnar_PATH/shared.py" ]; then
+    elif [ -f "$optaris_defense_PATH/shared.py" ]; then
         # Replace whatever epd_type default is currently in shared.py with the user's selection.
         # Using a wildcard pattern instead of hardcoding "epd2in13_V4" so this works correctly
         # on reinstalls where a previous run already changed the default to a different version.
-        sed -i "s/\"epd_type\": \"[^\"]*\"/\"epd_type\": \"$EPD_VERSION\"/" "$ragnar_PATH/shared.py"
+        sed -i "s/\"epd_type\": \"[^\"]*\"/\"epd_type\": \"$EPD_VERSION\"/" "$optaris_defense_PATH/shared.py"
         check_success "Updated shared.py default EPD configuration to $EPD_VERSION"
-        log "INFO" "Modified: $ragnar_PATH/shared.py"
+        log "INFO" "Modified: $optaris_defense_PATH/shared.py"
 
         # Always write the selected epd_type into shared_config.json so the running service
         # uses the right driver immediately — even on a fresh install where the file doesn't
-        # exist yet (previous code skipped this, leaving Ragnar to regenerate config from
+        # exist yet (previous code skipped this, leaving OptarisDefense to regenerate config from
         # shared.py defaults, which could be stale if sed failed for any reason).
-        local config_json="$ragnar_PATH/config/shared_config.json"
+        local config_json="$optaris_defense_PATH/config/shared_config.json"
         mkdir -p "$(dirname "$config_json")"
         python3 -c "
 import json, os
@@ -844,7 +844,7 @@ print('SUCCESS: Set shared_config.json epd_type to $EPD_VERSION')
 " && log "INFO" "Config JSON epd_type set to $EPD_VERSION" \
   || log "WARNING" "Could not write shared_config.json — epd_type will be read from shared.py on first run"
     else
-        log "WARNING" "shared.py not found at $ragnar_PATH/shared.py - skipping E-Paper configuration update"
+        log "WARNING" "shared.py not found at $optaris_defense_PATH/shared.py - skipping E-Paper configuration update"
     fi
 
     # Install requirements with --break-system-packages flag
@@ -895,7 +895,7 @@ print('SUCCESS: Set shared_config.json epd_type to $EPD_VERSION')
     fi
     
     # Install remaining packages from requirements.txt with retry logic
-    # This includes all dependencies for full Ragnar functionality:
+    # This includes all dependencies for full OptarisDefense functionality:
     # - netifaces: Network interface detection for NetworkScanner
     # - smbprotocol/pysmb: SMB protocol support for StealFilesSMB and SMBBruteforce
     # - sqlalchemy: SQL database operations for StealDataSQL
@@ -953,30 +953,30 @@ print('SUCCESS: Set shared_config.json epd_type to $EPD_VERSION')
     if [ "$HEADLESS_MODE" = true ] || [ -z "${EPD_VERSION:-}" ]; then
         log "INFO" "Headless mode or unknown display version detected - skipping driver verification"
     elif [ "$EPD_VERSION" = "gc9a01" ]; then
-        # TFT drivers ship with Ragnar in resources/waveshare_epd/, verify the file exists
-        if [ -f "$ragnar_PATH/resources/waveshare_epd/gc9a01.py" ]; then
+        # TFT drivers ship with OptarisDefense in resources/waveshare_epd/, verify the file exists
+        if [ -f "$optaris_defense_PATH/resources/waveshare_epd/gc9a01.py" ]; then
             log "SUCCESS" "GC9A01 TFT driver verified (resources/waveshare_epd/gc9a01.py)"
         else
-            log "ERROR" "GC9A01 TFT driver not found at $ragnar_PATH/resources/waveshare_epd/gc9a01.py"
+            log "ERROR" "GC9A01 TFT driver not found at $optaris_defense_PATH/resources/waveshare_epd/gc9a01.py"
         fi
         # Ensure spidev is installed for TFT SPI communication
         pip3 install spidev --break-system-packages >/dev/null 2>&1
         log "INFO" "SPI dependencies installed for TFT display"
     elif [ "$EPD_VERSION" = "whisplay" ]; then
-        # TFT drivers ship with Ragnar in resources/waveshare_epd/, verify the file exists
-        if [ -f "$ragnar_PATH/resources/waveshare_epd/whisplay.py" ]; then
+        # TFT drivers ship with OptarisDefense in resources/waveshare_epd/, verify the file exists
+        if [ -f "$optaris_defense_PATH/resources/waveshare_epd/whisplay.py" ]; then
             log "SUCCESS" "Whisplay TFT driver verified (resources/waveshare_epd/whisplay.py)"
         else
-            log "ERROR" "Whisplay TFT driver not found at $ragnar_PATH/resources/waveshare_epd/whisplay.py"
+            log "ERROR" "Whisplay TFT driver not found at $optaris_defense_PATH/resources/waveshare_epd/whisplay.py"
         fi
         # Ensure spidev is installed for TFT SPI communication
         pip3 install spidev --break-system-packages >/dev/null 2>&1
         log "INFO" "SPI dependencies installed for TFT display"
     elif [ "$EPD_VERSION" = "ssd1306" ]; then
-        if [ -f "$ragnar_PATH/resources/waveshare_epd/ssd1306.py" ]; then
+        if [ -f "$optaris_defense_PATH/resources/waveshare_epd/ssd1306.py" ]; then
             log "SUCCESS" "SSD1306 OLED driver verified (resources/waveshare_epd/ssd1306.py)"
         else
-            log "ERROR" "SSD1306 OLED driver not found at $ragnar_PATH/resources/waveshare_epd/ssd1306.py"
+            log "ERROR" "SSD1306 OLED driver not found at $optaris_defense_PATH/resources/waveshare_epd/ssd1306.py"
         fi
         # Install smbus2 for I2C communication
         pip3 install smbus2 --break-system-packages >/dev/null 2>&1
@@ -984,10 +984,10 @@ print('SUCCESS: Set shared_config.json epd_type to $EPD_VERSION')
         raspi-config nonint do_i2c 0 2>/dev/null || true
         log "INFO" "I2C interface enabled for SSD1306"
     elif [ "$EPD_VERSION" = "lcd1602" ]; then
-        if [ -f "$ragnar_PATH/resources/waveshare_epd/lcd1602.py" ]; then
+        if [ -f "$optaris_defense_PATH/resources/waveshare_epd/lcd1602.py" ]; then
             log "SUCCESS" "LCD1602 driver verified (resources/waveshare_epd/lcd1602.py)"
         else
-            log "ERROR" "LCD1602 driver not found at $ragnar_PATH/resources/waveshare_epd/lcd1602.py"
+            log "ERROR" "LCD1602 driver not found at $optaris_defense_PATH/resources/waveshare_epd/lcd1602.py"
         fi
         # Install smbus2 for I2C communication
         pip3 install smbus2 --break-system-packages >/dev/null 2>&1
@@ -996,7 +996,7 @@ print('SUCCESS: Set shared_config.json epd_type to $EPD_VERSION')
         log "INFO" "I2C interface enabled for LCD1602"
     else
         log "INFO" "Verifying Waveshare e-Paper library installation for $EPD_VERSION..."
-        cd /home/$ragnar_USER/e-Paper/RaspberryPi_JetsonNano/python
+        cd /home/$optaris_defense_USER/e-Paper/RaspberryPi_JetsonNano/python
         pip3 install . --break-system-packages
         
         python3 -c "from waveshare_epd import ${EPD_VERSION}; print('EPD module OK')" \
@@ -1010,19 +1010,19 @@ print('SUCCESS: Set shared_config.json epd_type to $EPD_VERSION')
 
     check_success "Installed Python requirements"
 
-    # Configure Ragnar entrypoint according to the selected mode
-    log "INFO" "Configuring Ragnar entrypoint ($RAGNAR_ENTRYPOINT)..."
-    local entrypoint_path="$ragnar_PATH/$RAGNAR_ENTRYPOINT"
+    # Configure OptarisDefense entrypoint according to the selected mode
+    log "INFO" "Configuring OptarisDefense entrypoint ($OPTARIS_DEFENSE_ENTRYPOINT)..."
+    local entrypoint_path="$optaris_defense_PATH/$OPTARIS_DEFENSE_ENTRYPOINT"
 
     if [ -f "$entrypoint_path" ]; then
-        if [ "$RAGNAR_ENTRYPOINT" = "Ragnar.py" ]; then
-            if [ -f "$ragnar_PATH/webapp_modern.py" ]; then
-                # Backup original Ragnar.py if not already backed up
+        if [ "$OPTARIS_DEFENSE_ENTRYPOINT" = "optaris_defense.py" ]; then
+            if [ -f "$optaris_defense_PATH/webapp_modern.py" ]; then
+                # Backup original optaris_defense.py if not already backed up
                 if [ ! -f "${entrypoint_path}.original" ]; then
                     cp "$entrypoint_path" "${entrypoint_path}.original"
                 fi
 
-                # Update Ragnar.py to use modern webapp
+                # Update optaris_defense.py to use modern webapp
                 if grep -q "from webapp import web_thread" "$entrypoint_path"; then
                     sed -i 's/from webapp import web_thread/# Old webapp - replaced with modern\n# from webapp import web_thread\nfrom webapp_modern import run_server as web_thread/' "$entrypoint_path"
                     log "SUCCESS" "Configured to use modern web interface"
@@ -1040,42 +1040,42 @@ print('SUCCESS: Set shared_config.json epd_type to $EPD_VERSION')
     fi
 
     # Set correct permissions and ownership
-    chown -R $ragnar_USER:$ragnar_USER /home/$ragnar_USER/Ragnar
-    chmod -R 755 /home/$ragnar_USER/Ragnar
+    chown -R $optaris_defense_USER:$optaris_defense_USER /home/$optaris_defense_USER/OptarisDefense
+    chmod -R 755 /home/$optaris_defense_USER/OptarisDefense
 
-    # Whitelist the checkout for root's git. The ragnar service runs as root
-    # while the files belong to the ragnar user; newer git refuses that mix
+    # Whitelist the checkout for root's git. The optaris_defense service runs as root
+    # while the files belong to the optaris_defense user; newer git refuses that mix
     # ("detected dubious ownership"), which made the in-app updater fail on
     # fresh installs until the path is added to root's global git config.
-    git config --global --get-all safe.directory 2>/dev/null | grep -qxF "/home/$ragnar_USER/Ragnar" \
-        || git config --global --add safe.directory "/home/$ragnar_USER/Ragnar"
+    git config --global --get-all safe.directory 2>/dev/null | grep -qxF "/home/$optaris_defense_USER/OptarisDefense" \
+        || git config --global --add safe.directory "/home/$optaris_defense_USER/OptarisDefense"
     
     # Make utility scripts executable with proper ownership
-    chmod +x $ragnar_PATH/kill_port_8000.sh 2>/dev/null || true
-    chmod +x $ragnar_PATH/scripts/update_ragnar.sh 2>/dev/null || true
-    chmod +x $ragnar_PATH/scripts/quick_update.sh 2>/dev/null || true
-    chmod +x $ragnar_PATH/scripts/uninstall_ragnar.sh 2>/dev/null || true
-    chmod +x $ragnar_PATH/scripts/wifi_fix.sh 2>/dev/null || true
-    chmod +x $ragnar_PATH/scripts/init_data_files.sh 2>/dev/null || true
-    chmod +x $ragnar_PATH/scripts/preserve_local_data.sh 2>/dev/null || true
-    chmod +x $ragnar_PATH/wipe_epd.py 2>/dev/null || true
+    chmod +x $optaris_defense_PATH/kill_port_8000.sh 2>/dev/null || true
+    chmod +x $optaris_defense_PATH/scripts/update_optaris_defense.sh 2>/dev/null || true
+    chmod +x $optaris_defense_PATH/scripts/quick_update.sh 2>/dev/null || true
+    chmod +x $optaris_defense_PATH/scripts/uninstall_optaris_defense.sh 2>/dev/null || true
+    chmod +x $optaris_defense_PATH/scripts/wifi_fix.sh 2>/dev/null || true
+    chmod +x $optaris_defense_PATH/scripts/init_data_files.sh 2>/dev/null || true
+    chmod +x $optaris_defense_PATH/scripts/preserve_local_data.sh 2>/dev/null || true
+    chmod +x $optaris_defense_PATH/wipe_epd.py 2>/dev/null || true
 
-    # Ensure ragnar user owns all script files
-    chown $ragnar_USER:$ragnar_USER $ragnar_PATH/*.sh 2>/dev/null || true
-    chown $ragnar_USER:$ragnar_USER $ragnar_PATH/scripts/*.sh 2>/dev/null || true
+    # Ensure optaris_defense user owns all script files
+    chown $optaris_defense_USER:$optaris_defense_USER $optaris_defense_PATH/*.sh 2>/dev/null || true
+    chown $optaris_defense_USER:$optaris_defense_USER $optaris_defense_PATH/scripts/*.sh 2>/dev/null || true
 
     # Initialize data files from templates
     log "INFO" "Initializing data files from templates..."
-    bash $ragnar_PATH/scripts/init_data_files.sh
-    chown -R $ragnar_USER:$ragnar_USER $ragnar_PATH/data
+    bash $optaris_defense_PATH/scripts/init_data_files.sh
+    chown -R $optaris_defense_USER:$optaris_defense_USER $optaris_defense_PATH/data
     
     # Create missing directories and files that are needed for proper operation
     log "INFO" "Creating missing directories and files..."
     
     # Create dictionary directory and files
-    mkdir -p $ragnar_PATH/data/input/dictionary
-    if [ ! -f "$ragnar_PATH/data/input/dictionary/users.txt" ]; then
-        cat > $ragnar_PATH/data/input/dictionary/users.txt << EOF
+    mkdir -p $optaris_defense_PATH/data/input/dictionary
+    if [ ! -f "$optaris_defense_PATH/data/input/dictionary/users.txt" ]; then
+        cat > $optaris_defense_PATH/data/input/dictionary/users.txt << EOF
 admin
 root
 user
@@ -1086,8 +1086,8 @@ EOF
         log "SUCCESS" "Created users.txt dictionary file"
     fi
     
-    if [ ! -f "$ragnar_PATH/data/input/dictionary/passwords.txt" ]; then
-        cat > $ragnar_PATH/data/input/dictionary/passwords.txt << EOF
+    if [ ! -f "$optaris_defense_PATH/data/input/dictionary/passwords.txt" ]; then
+        cat > $optaris_defense_PATH/data/input/dictionary/passwords.txt << EOF
 password
 123456
 admin
@@ -1101,21 +1101,21 @@ EOF
     fi
     
     # Create comments.json file if missing
-    if [ ! -f "$ragnar_PATH/resources/comments/comments.json" ]; then
-        mkdir -p $ragnar_PATH/resources/comments
-        echo "[]" > $ragnar_PATH/resources/comments/comments.json
+    if [ ! -f "$optaris_defense_PATH/resources/comments/comments.json" ]; then
+        mkdir -p $optaris_defense_PATH/resources/comments
+        echo "[]" > $optaris_defense_PATH/resources/comments/comments.json
         log "SUCCESS" "Created comments.json file"
     fi
     
-    # Create missing ragnar1.bmp placeholder if needed (optional since we handle this gracefully now)
-    if [ ! -f "$ragnar_PATH/resources/images/static/ragnar1.bmp" ] && [ -f "$ragnar_PATH/resources/images/static/bjorn1.bmp" ]; then
-        cp "$ragnar_PATH/resources/images/static/bjorn1.bmp" "$ragnar_PATH/resources/images/static/ragnar1.bmp"
-        log "SUCCESS" "Created ragnar1.bmp from bjorn1.bmp"
+    # Create missing optaris_defense1.bmp placeholder if needed (optional since we handle this gracefully now)
+    if [ ! -f "$optaris_defense_PATH/resources/images/static/optaris_defense1.bmp" ] && [ -f "$optaris_defense_PATH/resources/images/static/bjorn1.bmp" ]; then
+        cp "$optaris_defense_PATH/resources/images/static/bjorn1.bmp" "$optaris_defense_PATH/resources/images/static/optaris_defense1.bmp"
+        log "SUCCESS" "Created optaris_defense1.bmp from bjorn1.bmp"
     fi
     
     # Set proper ownership for all created files
-    chown -R $ragnar_USER:$ragnar_USER $ragnar_PATH/data/
-    chown -R $ragnar_USER:$ragnar_USER $ragnar_PATH/resources/
+    chown -R $optaris_defense_USER:$optaris_defense_USER $optaris_defense_PATH/data/
+    chown -R $optaris_defense_USER:$optaris_defense_USER $optaris_defense_PATH/resources/
     
     # Validate and fix actions.json file
     log "INFO" "Validating actions.json configuration..."
@@ -1123,7 +1123,7 @@ EOF
 import json
 import os
 
-actions_file = "/home/ragnar/Ragnar/config/actions.json"
+actions_file = "/home/optaris-defense/OptarisDefense/config/actions.json"
 
 # Check if scanning module exists in actions.json
 try:
@@ -1154,37 +1154,37 @@ except Exception as e:
     print(f"ERROR validating actions.json: {e}")
 PYTHON_EOF
     
-    # Add ragnar user to necessary groups (including sudo for WiFi management)
-    usermod -a -G spi,gpio,i2c,sudo,netdev $ragnar_USER
+    # Add optaris_defense user to necessary groups (including sudo for WiFi management)
+    usermod -a -G spi,gpio,i2c,sudo,netdev $optaris_defense_USER
     
     # Configure sudo for WiFi management commands without password
     log "INFO" "Configuring sudo permissions for WiFi management..."
-    cat > /etc/sudoers.d/ragnar-wifi << EOF
-# Allow ragnar user to run WiFi management commands without password
-ragnar ALL=(ALL) NOPASSWD: /usr/bin/nmcli, /sbin/iwlist, /sbin/ip, /bin/systemctl start hostapd, /bin/systemctl stop hostapd, /bin/systemctl start dnsmasq, /bin/systemctl stop dnsmasq, /usr/sbin/hostapd, /usr/sbin/dnsmasq
+    cat > /etc/sudoers.d/optaris-defense-wifi << EOF
+# Allow optaris_defense user to run WiFi management commands without password
+optaris_defense ALL=(ALL) NOPASSWD: /usr/bin/nmcli, /sbin/iwlist, /sbin/ip, /bin/systemctl start hostapd, /bin/systemctl stop hostapd, /bin/systemctl start dnsmasq, /bin/systemctl stop dnsmasq, /usr/sbin/hostapd, /usr/sbin/dnsmasq
 EOF
-    chmod 440 /etc/sudoers.d/ragnar-wifi
+    chmod 440 /etc/sudoers.d/optaris-defense-wifi
     
     # Configure sudo for nmap port scanning without password
     log "INFO" "Configuring sudo permissions for nmap..."
-    cat > /etc/sudoers.d/ragnar-nmap << EOF
-# Allow ragnar user to run nmap without password for port scanning
-ragnar ALL=(ALL) NOPASSWD: /usr/bin/nmap
+    cat > /etc/sudoers.d/optaris-defense-nmap << EOF
+# Allow optaris_defense user to run nmap without password for port scanning
+optaris_defense ALL=(ALL) NOPASSWD: /usr/bin/nmap
 EOF
-    chmod 440 /etc/sudoers.d/ragnar-nmap
+    chmod 440 /etc/sudoers.d/optaris-defense-nmap
     
     # Configure sudo for traffic analysis tools without password
     log "INFO" "Configuring sudo permissions for traffic analysis..."
-    cat > /etc/sudoers.d/ragnar-traffic << EOF
-# Allow ragnar user to run traffic analysis tools without password
-ragnar ALL=(ALL) NOPASSWD: /usr/bin/tcpdump
-ragnar ALL=(ALL) NOPASSWD: /usr/bin/tshark
-ragnar ALL=(ALL) NOPASSWD: /usr/sbin/iftop
-ragnar ALL=(ALL) NOPASSWD: /usr/sbin/nethogs
+    cat > /etc/sudoers.d/optaris-defense-traffic << EOF
+# Allow optaris_defense user to run traffic analysis tools without password
+optaris_defense ALL=(ALL) NOPASSWD: /usr/bin/tcpdump
+optaris_defense ALL=(ALL) NOPASSWD: /usr/bin/tshark
+optaris_defense ALL=(ALL) NOPASSWD: /usr/sbin/iftop
+optaris_defense ALL=(ALL) NOPASSWD: /usr/sbin/nethogs
 EOF
-    chmod 440 /etc/sudoers.d/ragnar-traffic
+    chmod 440 /etc/sudoers.d/optaris-defense-traffic
     
-    check_success "Added ragnar user to required groups and configured sudo permissions"
+    check_success "Added optaris_defense user to required groups and configured sudo permissions"
 }
 
 
@@ -1192,14 +1192,14 @@ EOF
 setup_services() {
     log "INFO" "Setting up system services..."
 
-    local entrypoint_file="$RAGNAR_ENTRYPOINT"
+    local entrypoint_file="$OPTARIS_DEFENSE_ENTRYPOINT"
     local wipe_exec=""
     if [ "$HEADLESS_MODE" != true ]; then
         wipe_exec="yes"
     fi
     
     # Create kill_port_8000.sh script
-    cat > $ragnar_PATH/kill_port_8000.sh << 'EOF'
+    cat > $optaris_defense_PATH/kill_port_8000.sh << 'EOF'
 #!/bin/bash
 PORT=8000
 PIDS=$(lsof -w -t -i:$PORT 2>/dev/null)
@@ -1208,30 +1208,30 @@ if [ -n "$PIDS" ]; then
     kill -9 $PIDS
 fi
 EOF
-    chmod +x $ragnar_PATH/kill_port_8000.sh
-    chown ragnar:ragnar $ragnar_PATH/kill_port_8000.sh
+    chmod +x $optaris_defense_PATH/kill_port_8000.sh
+    chown optaris_defense:optaris_defense $optaris_defense_PATH/kill_port_8000.sh
 
-    # Create ragnar service
-    cat > /etc/systemd/system/ragnar.service << EOF
+    # Create optaris_defense service
+    cat > /etc/systemd/system/optaris-defense.service << EOF
 [Unit]
-Description=ragnar Service
+Description=optaris_defense Service
 After=network.target
 
 [Service]
-ExecStartPre=-/bin/bash -c '/home/ragnar/Ragnar/kill_port_8000.sh; ip link set mon0 down >/dev/null 2>&1; iw dev mon0 del >/dev/null 2>&1; systemctl stop pwnagotchi 2>/dev/null; systemctl stop bettercap 2>/dev/null; true'
+ExecStartPre=-/bin/bash -c '/home/optaris-defense/OptarisDefense/kill_port_8000.sh; ip link set mon0 down >/dev/null 2>&1; iw dev mon0 del >/dev/null 2>&1; systemctl stop pwnagotchi 2>/dev/null; systemctl stop bettercap 2>/dev/null; true'
 EOF
 
     if [ -n "$wipe_exec" ]; then
         # Prefix with - so wipe_epd failure does not block service start
         # Must run as separate process: GPIO pins conflict if shared with Display's EPDHelper
-        cat >> /etc/systemd/system/ragnar.service << EOF
-ExecStartPre=-/usr/bin/python3 -OO /home/ragnar/Ragnar/wipe_epd.py
+        cat >> /etc/systemd/system/optaris-defense.service << EOF
+ExecStartPre=-/usr/bin/python3 -OO /home/optaris-defense/OptarisDefense/wipe_epd.py
 EOF
     fi
 
-    cat >> /etc/systemd/system/ragnar.service << EOF
-ExecStart=/usr/bin/python3 -OO /home/ragnar/Ragnar/${entrypoint_file}
-WorkingDirectory=/home/ragnar/Ragnar
+    cat >> /etc/systemd/system/optaris-defense.service << EOF
+ExecStart=/usr/bin/python3 -OO /home/optaris-defense/OptarisDefense/${entrypoint_file}
+WorkingDirectory=/home/optaris-defense/OptarisDefense
 StandardOutput=inherit
 StandardError=inherit
 Restart=always
@@ -1241,7 +1241,7 @@ TimeoutStopSec=5
 KillMode=mixed
 
 # Check open files and restart if it reached the limit (ulimit -n buffer of 10000)
-# ExecStartPost=/bin/bash -c 'FILE_LIMIT=\$(ulimit -n); THRESHOLD=\$(( FILE_LIMIT - 10000 )); while :; do TOTAL_OPEN_FILES=\$(lsof -w 2>/dev/null | wc -l); if [ "\$TOTAL_OPEN_FILES" -ge "\$THRESHOLD" ]; then echo "File descriptor threshold reached: \$TOTAL_OPEN_FILES (threshold: \$THRESHOLD). Restarting service."; systemctl restart ragnar.service; exit 0; fi; sleep 10; done &'
+# ExecStartPost=/bin/bash -c 'FILE_LIMIT=\$(ulimit -n); THRESHOLD=\$(( FILE_LIMIT - 10000 )); while :; do TOTAL_OPEN_FILES=\$(lsof -w 2>/dev/null | wc -l); if [ "\$TOTAL_OPEN_FILES" -ge "\$THRESHOLD" ]; then echo "File descriptor threshold reached: \$TOTAL_OPEN_FILES (threshold: \$THRESHOLD). Restarting service."; systemctl restart optaris-defense.service; exit 0; fi; sleep 10; done &'
 
 [Install]
 WantedBy=multi-user.target
@@ -1255,9 +1255,9 @@ EOF
     systemctl start NetworkManager
     
     # Configure NetworkManager for WiFi management priority
-    cat > /etc/NetworkManager/conf.d/99-ragnar-wifi.conf << EOF
+    cat > /etc/NetworkManager/conf.d/99-optaris-defense-wifi.conf << EOF
 [main]
-# Ragnar WiFi Management Configuration
+# OptarisDefense WiFi Management Configuration
 dns=default
 
 [device]
@@ -1274,11 +1274,11 @@ EOF
     
     # Enable and start services
     systemctl daemon-reload
-    systemctl enable ragnar.service
-    if systemctl start ragnar.service; then
-        log "SUCCESS" "Started ragnar.service"
+    systemctl enable optaris-defense.service
+    if systemctl start optaris-defense.service; then
+        log "SUCCESS" "Started optaris-defense.service"
     else
-        log "WARNING" "Failed to start ragnar.service (it will start on next boot); check logs"
+        log "WARNING" "Failed to start optaris-defense.service (it will start on next boot); check logs"
     fi
 
     check_success "Services setup completed"
@@ -1413,7 +1413,7 @@ EOF
 select_headless_variant() {
     echo -e "\n${BLUE}Headless Installation Options${NC}"
     echo "1. Install on Raspberry Pi (no e-paper display)"
-    echo "2. Install hbp0_ragnar by DezusAZ"
+    echo "2. Install hbp0_optaris_defense by DezusAZ"
 
     while true; do
         read -p "Choose an option (1/2): " headless_choice
@@ -1422,16 +1422,16 @@ select_headless_variant() {
                 HEADLESS_MODE=true
                 HEADLESS_VARIANT="raspberry_pi"
                 HEADLESS_VARIANT_LABEL="Raspberry Pi headless"
-                RAGNAR_ENTRYPOINT="headlessRagnar.py"
+                OPTARIS_DEFENSE_ENTRYPOINT="headless_optaris_defense.py"
                 log "INFO" "Selected headless installation for Raspberry Pi"
                 break
                 ;;
             2)
                 HEADLESS_MODE=true
-                HEADLESS_VARIANT="hbp0_ragnar"
-                HEADLESS_VARIANT_LABEL="hbp0_ragnar by DezusAZ"
-                RAGNAR_ENTRYPOINT="headlessRagnar.py"
-                log "INFO" "Selected headless installation: hbp0_ragnar by DezusAZ"
+                HEADLESS_VARIANT="hbp0_optaris_defense"
+                HEADLESS_VARIANT_LABEL="hbp0_optaris_defense by DezusAZ"
+                OPTARIS_DEFENSE_ENTRYPOINT="headless_optaris_defense.py"
+                log "INFO" "Selected headless installation: hbp0_optaris_defense by DezusAZ"
                 break
                 ;;
             *)
@@ -1498,10 +1498,10 @@ else:
 " && log "SUCCESS" "Python dependencies verified" || log "ERROR" "Some Python dependencies missing"
     
     # Check if services are running
-    if ! systemctl is-active --quiet ragnar.service; then
-        log "WARNING" "ragnar service is not running"
+    if ! systemctl is-active --quiet optaris-defense.service; then
+        log "WARNING" "optaris_defense service is not running"
     else
-        log "SUCCESS" "ragnar service is running"
+        log "SUCCESS" "optaris_defense service is running"
     fi
     
     # Check web interface
@@ -1519,10 +1519,10 @@ else:
 clean_exit() {
     local exit_code=$1
     if [ $exit_code -eq 0 ]; then
-        log "SUCCESS" "ragnar installation completed successfully!"
+        log "SUCCESS" "optaris_defense installation completed successfully!"
         log "INFO" "Log file available at: $LOG_FILE"
     else
-        log "ERROR" "ragnar installation failed!"
+        log "ERROR" "optaris_defense installation failed!"
         log "ERROR" "Check the log file for details: $LOG_FILE"
     fi
     exit $exit_code
@@ -1573,7 +1573,7 @@ BANNER
 
 # Main installation process
 main() {
-    log "INFO" "Starting ragnar installation..."
+    log "INFO" "Starting optaris_defense installation..."
 
     detect_platform
     log_system_summary
@@ -1608,7 +1608,7 @@ main() {
                     TFT_MODE=false
                     HEADLESS_VARIANT=""
                     HEADLESS_VARIANT_LABEL=""
-                    RAGNAR_ENTRYPOINT="Ragnar.py"
+                    OPTARIS_DEFENSE_ENTRYPOINT="optaris_defense.py"
                     log "INFO" "Raspberry Pi with e-Paper installation selected"
                     break
                     ;;
@@ -1618,7 +1618,7 @@ main() {
                     TFT_MODE=true
                     HEADLESS_VARIANT=""
                     HEADLESS_VARIANT_LABEL=""
-                    RAGNAR_ENTRYPOINT="Ragnar.py"
+                    OPTARIS_DEFENSE_ENTRYPOINT="optaris_defense.py"
                     log "INFO" "Raspberry Pi with TFT LCD installation selected"
                     break
                     ;;
@@ -1628,7 +1628,7 @@ main() {
                     TFT_MODE=false
                     HEADLESS_VARIANT=""
                     HEADLESS_VARIANT_LABEL="Server install with display"
-                    RAGNAR_ENTRYPOINT="Ragnar.py"
+                    OPTARIS_DEFENSE_ENTRYPOINT="optaris_defense.py"
                     log "INFO" "Server install with display selected on Raspberry Pi hardware"
                     break
                     ;;
@@ -1638,23 +1638,23 @@ main() {
                     TFT_MODE=false
                     HEADLESS_VARIANT="server"
                     HEADLESS_VARIANT_LABEL="Server install"
-                    RAGNAR_ENTRYPOINT="headlessRagnar.py"
+                    OPTARIS_DEFENSE_ENTRYPOINT="headless_optaris_defense.py"
                     log "INFO" "Server install (headless) selected on Raspberry Pi hardware"
                     break
                     ;;
                 5)
                     log "INFO" "WiFi Pineapple Pager installation selected"
                     echo ""
-                    echo -e "${BLUE}   This will package and deploy Ragnar to your Pineapple Pager.${NC}"
+                    echo -e "${BLUE}   This will package and deploy OptarisDefense to your Pineapple Pager.${NC}"
                     echo -e "${YELLOW}   Make sure your Pager is connected and accessible via SSH.${NC}"
                     echo ""
                     read -p "   Enter Pager IP address [172.16.42.1]: " pager_ip
                     pager_ip="${pager_ip:-172.16.42.1}"
 
                     pager_exit_code=0
-                    if [ -f "$ragnar_PATH/scripts/install_pineapple_pager.sh" ]; then
-                        chmod +x "$ragnar_PATH/scripts/install_pineapple_pager.sh"
-                        bash "$ragnar_PATH/scripts/install_pineapple_pager.sh" "$pager_ip" || pager_exit_code=$?
+                    if [ -f "$optaris_defense_PATH/scripts/install_pineapple_pager.sh" ]; then
+                        chmod +x "$optaris_defense_PATH/scripts/install_pineapple_pager.sh"
+                        bash "$optaris_defense_PATH/scripts/install_pineapple_pager.sh" "$pager_ip" || pager_exit_code=$?
                     elif [ -f "$(dirname "$0")/scripts/install_pineapple_pager.sh" ]; then
                         chmod +x "$(dirname "$0")/scripts/install_pineapple_pager.sh"
                         bash "$(dirname "$0")/scripts/install_pineapple_pager.sh" "$pager_ip" || pager_exit_code=$?
@@ -1677,7 +1677,7 @@ main() {
                     HEADLESS_MODE=false
                     HEADLESS_VARIANT=""
                     HEADLESS_VARIANT_LABEL="Server install with e-Paper"
-                    RAGNAR_ENTRYPOINT="Ragnar.py"
+                    OPTARIS_DEFENSE_ENTRYPOINT="optaris_defense.py"
                     log "INFO" "Server install with e-Paper selected"
                     break
                     ;;
@@ -1686,14 +1686,14 @@ main() {
                     HEADLESS_MODE=true
                     HEADLESS_VARIANT="server"
                     HEADLESS_VARIANT_LABEL="Server install"
-                    RAGNAR_ENTRYPOINT="headlessRagnar.py"
+                    OPTARIS_DEFENSE_ENTRYPOINT="headless_optaris_defense.py"
                     log "INFO" "Server install (headless) profile selected"
                     break
                     ;;
                 3)
                     log "INFO" "WiFi Pineapple Pager installation selected"
                     echo ""
-                    echo -e "${BLUE}   This will package and deploy Ragnar to your Pineapple Pager.${NC}"
+                    echo -e "${BLUE}   This will package and deploy OptarisDefense to your Pineapple Pager.${NC}"
                     echo -e "${YELLOW}   Make sure your Pager is connected and accessible via SSH.${NC}"
                     echo ""
                     read -p "   Enter Pager IP address [172.16.42.1]: " pager_ip
@@ -1760,7 +1760,7 @@ main() {
         echo -e "\n${BLUE}Installing Waveshare e-Paper library...${NC}"
         log "INFO" "Installing Waveshare e-Paper library for auto-detection"
         
-        cd /home/$ragnar_USER 2>/dev/null || mkdir -p /home/$ragnar_USER
+        cd /home/$optaris_defense_USER 2>/dev/null || mkdir -p /home/$optaris_defense_USER
         if [ ! -d "e-Paper" ]; then
             local epd_cloned=false
             # Try git sparse-checkout first (smallest download)
@@ -1771,7 +1771,7 @@ main() {
                     epd_cloned=true
                 else
                     log "WARNING" "git sparse-checkout failed for e-Paper repo"
-                    cd /home/$ragnar_USER
+                    cd /home/$optaris_defense_USER
                     rm -rf e-Paper 2>/dev/null
                 fi
             fi
@@ -1783,7 +1783,7 @@ main() {
                     epd_cloned=true
                 else
                     log "ERROR" "Failed to download Waveshare e-Paper library"
-                    cd /home/$ragnar_USER
+                    cd /home/$optaris_defense_USER
                 fi
             fi
             if [ "$epd_cloned" = true ] && [ -d "RaspberryPi_JetsonNano/python" ]; then
@@ -1794,13 +1794,13 @@ main() {
                 log "ERROR" "Waveshare e-Paper library could not be installed — display auto-detection will fail"
                 log "ERROR" "You can install it manually later from: https://github.com/waveshareteam/e-Paper"
             fi
-            cd /home/$ragnar_USER
+            cd /home/$optaris_defense_USER
         else
             log "INFO" "Waveshare e-Paper repository already exists"
             if [ -d "e-Paper/RaspberryPi_JetsonNano/python" ]; then
                 cd e-Paper/RaspberryPi_JetsonNano/python
                 pip3 install . --break-system-packages >/dev/null 2>&1
-                cd /home/$ragnar_USER
+                cd /home/$optaris_defense_USER
             else
                 log "WARNING" "e-Paper directory exists but missing RaspberryPi_JetsonNano/python — try removing e-Paper/ and re-running"
             fi
@@ -1969,8 +1969,8 @@ except:
     CURRENT_STEP=6; show_progress "Installing PiSugar server (if applicable)"
     install_pisugar_server
 
-    CURRENT_STEP=7; show_progress "Setting up ragnar"
-    setup_ragnar
+    CURRENT_STEP=7; show_progress "Setting up optaris_defense"
+    setup_optaris_defense
 
     CURRENT_STEP=8; show_progress "Configuring USB Gadget"
     configure_usb_gadget
@@ -2018,22 +2018,22 @@ except:
         echo -e "${BLUE}Running advanced tools installer...${NC}"
         
         # Check if install_advanced_tools.sh exists
-        if [ -f "$ragnar_PATH/scripts/install_advanced_tools.sh" ]; then
-            chmod +x "$ragnar_PATH/scripts/install_advanced_tools.sh"
-            cd "$ragnar_PATH"
+        if [ -f "$optaris_defense_PATH/scripts/install_advanced_tools.sh" ]; then
+            chmod +x "$optaris_defense_PATH/scripts/install_advanced_tools.sh"
+            cd "$optaris_defense_PATH"
 
             # Run the advanced tools installer
-            if bash "$ragnar_PATH/scripts/install_advanced_tools.sh"; then
+            if bash "$optaris_defense_PATH/scripts/install_advanced_tools.sh"; then
                 log "SUCCESS" "Advanced security tools installed successfully"
                 echo -e "${GREEN}✓ Advanced security tools installed${NC}"
             else
                 log "WARNING" "Advanced tools installation encountered issues"
                 echo -e "${YELLOW}⚠ Some advanced tools may not have installed correctly${NC}"
                 echo -e "${YELLOW}  You can run the installer manually later:${NC}"
-                echo -e "${YELLOW}  cd /home/ragnar/Ragnar && sudo ./scripts/install_advanced_tools.sh${NC}"
+                echo -e "${YELLOW}  cd /home/optaris-defense/OptarisDefense && sudo ./scripts/install_advanced_tools.sh${NC}"
             fi
         else
-            log "ERROR" "install_advanced_tools.sh not found at $ragnar_PATH/scripts"
+            log "ERROR" "install_advanced_tools.sh not found at $optaris_defense_PATH/scripts"
             echo -e "${RED}Advanced tools installer script not found${NC}"
             echo -e "${YELLOW}You can install advanced tools manually later if needed${NC}"
         fi
@@ -2055,7 +2055,7 @@ except:
             # Apply the Simple Guide: Increase ZRAM Swap instructions before reboot prompt
             configure_zram_swap
 
-    log "SUCCESS" "ragnar installation completed!"
+    log "SUCCESS" "optaris_defense installation completed!"
     log "INFO" "Please reboot your system to apply all changes."
     echo -e "\n${GREEN}Installation completed successfully!${NC}"
     echo -e "${YELLOW}Important notes:${NC}"
@@ -2068,11 +2068,11 @@ except:
     if [ "$SERVER_INSTALL" != true ]; then
         echo "3. Make sure your e-Paper HAT (2.13-inch) is properly connected"
     fi
-    echo -e "\n${BLUE}To update ragnar in the future:${NC}"
-    echo "   cd /home/ragnar/Ragnar"
+    echo -e "\n${BLUE}To update optaris_defense in the future:${NC}"
+    echo "   cd /home/optaris-defense/OptarisDefense"
     echo "   sudo git stash  # Save any local changes"
     echo "   sudo git pull   # Get latest updates"
-    echo "   sudo systemctl restart ragnar"
+    echo "   sudo systemctl restart optaris_defense"
 
     read -p "Would you like to reboot now? (y/n): " reboot_now
     if [ "$reboot_now" = "y" ]; then
@@ -2083,7 +2083,7 @@ except:
             exit 1
         fi
     else
-        echo -e "${YELLOW}Reboot your system to apply all changes & run ragnar service.${NC}"
+        echo -e "${YELLOW}Reboot your system to apply all changes & run optaris_defense service.${NC}"
     fi
 }
 

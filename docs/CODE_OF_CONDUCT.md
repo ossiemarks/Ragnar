@@ -6,7 +6,7 @@ Take note about this… Take note…
 
 🤝 Our Commitment
 
-This project is an educational tool, and we are committed to fostering an open and welcoming environment for all participants. Everyone who contributes to Ragnar is expected to follow the guidelines in this Code of Conduct.
+This project is an educational tool, and we are committed to fostering an open and welcoming environment for all participants. Everyone who contributes to OptarisDefense is expected to follow the guidelines in this Code of Conduct.
 
 🌟 Expected Behavior
 
@@ -46,4 +46,4 @@ This code of conduct is adapted from the [Contributor Covenant, version 2.0](htt
 
 ## 📜 License
 
-2025 - ragnar is distributed under the MIT License. For more details, please refer to the [LICENSE](LICENSE) file included in this repository.
+2025 - optaris_defense is distributed under the MIT License. For more details, please refer to the [LICENSE](LICENSE) file included in this repository.

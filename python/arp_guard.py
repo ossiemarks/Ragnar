@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""arp_guard.py — layered ARP poisoning / spoofing detector (Ragnar).
+"""arp_guard.py — layered ARP poisoning / spoofing detector (OptarisDefense).
 
 Detection only: it never sends a corrective ARP, blocks traffic, or intervenes —
 it watches and alerts. Passive: Scapy is used only as the live-capture front end;

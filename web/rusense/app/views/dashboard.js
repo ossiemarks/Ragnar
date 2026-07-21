@@ -106,7 +106,7 @@ export default {
     this._brHold = makeVitalHold({ holdMs: 30000, decimals: 1 });
     // Presence toggles 0↔1 at ~46 Hz (even in an empty room); smooth it with a
     // duty-cycle hysteresis biased toward PRESENT. Fed at full frame rate below.
-    // Custom node names live in Ragnar config (set in Settings), not in the
+    // Custom node names live in OptarisDefense config (set in Settings), not in the
     // sensing-server's /api/v1/nodes roster — fetch them once to label nodes.
     this._nodeNames = {};
     fetchJSON('/api/config').then((c) => {

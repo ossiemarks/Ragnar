@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""snmpwatch.py — passive SNMP community-exposure scanner (Ragnar).
+"""snmpwatch.py — passive SNMP community-exposure scanner (OptarisDefense).
 
 Detection-only: snmpwatch never emits an SNMP packet — no walking, no community
 guessing, no GET/SET. It watches SNMP already on the wire (BPF udp port 161/162)

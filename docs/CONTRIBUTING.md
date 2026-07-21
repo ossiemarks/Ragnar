@@ -1,6 +1,6 @@
-# 🤝 Contributing to ragnar
+# 🤝 Contributing to optaris_defense
 
-We welcome contributions to ragnar! To make sure the process goes smoothly, please follow these guidelines:
+We welcome contributions to optaris_defense! To make sure the process goes smoothly, please follow these guidelines:
 
 ## 📋 Code of Conduct
 
@@ -48,4 +48,4 @@ Thank you for helping improve!
 
 ## 📜 License
 
-2025 - ragnar is distributed under the MIT License. For more details, please refer to the [LICENSE](LICENSE) file included in this repository.
+2025 - optaris_defense is distributed under the MIT License. For more details, please refer to the [LICENSE](LICENSE) file included in this repository.

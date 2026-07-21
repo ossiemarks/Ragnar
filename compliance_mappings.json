@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "description": "Curated, informal control mappings for Ragnar compliance reporting. NOT a certified CIS-CAT assessment or PCI ASV scan. Lynis test IDs map to CIS hardening areas; scan/host findings map to PCI DSS v4.0 technical requirements. Edit freely to extend coverage.",
+    "description": "Curated, informal control mappings for OptarisDefense compliance reporting. NOT a certified CIS-CAT assessment or PCI ASV scan. Lynis test IDs map to CIS hardening areas; scan/host findings map to PCI DSS v4.0 technical requirements. Edit freely to extend coverage.",
     "cis_source": "Lynis test IDs (authenticated SSH audit) -> CIS Benchmark areas",
     "pci_source": "scan_findings + hosts + discovered credentials -> PCI DSS v4.0 requirements"
   },

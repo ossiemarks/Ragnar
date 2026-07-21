@@ -42,7 +42,7 @@ update_config_value() {
         mkdir -p "$(dirname "$CONFIG_FILE")"
         cat >"$CONFIG_FILE" <<CFGEOF
 [main]
-name = "RagnarPwn"
+name = "OptarisDefensePwn"
 CFGEOF
     fi
     # Use Python + tomlkit to safely update TOML table-style configs

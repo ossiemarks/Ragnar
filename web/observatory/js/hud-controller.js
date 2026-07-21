@@ -41,7 +41,7 @@ export const SETTINGS_VERSION = '9';
 
 // ── Server-side persistence (shared across browsers / devices) ───────────────
 // The visual/scene settings historically lived only in localStorage, so a save
-// was per-browser and never reached anyone else. To match Ragnar's main
+// was per-browser and never reached anyone else. To match OptarisDefense's main
 // settings ("persistent for everyone") we ALSO mirror the whole blob into the
 // server config under this key, versioned so a future SETTINGS_VERSION bump
 // cleanly invalidates a stale server copy. localStorage stays the fast local

@@ -493,37 +493,37 @@ def run_tests():
     
     print()
     
-    # ========== TEST 3: PagerRagnar.py syntax ==========
-    print("[TEST 3] Checking PagerRagnar.py syntax...")
+    # ========== TEST 3: Pageroptaris_defense.py syntax ==========
+    print("[TEST 3] Checking Pageroptaris_defense.py syntax...")
     try:
         import importlib.util
-        spec = importlib.util.spec_from_file_location("PagerRagnar", 
-            os.path.join(os.path.dirname(__file__), "PagerRagnar.py"))
-        pager_ragnar = importlib.util.module_from_spec(spec)
-        print("[OK] PagerRagnar.py syntax OK")
+        spec = importlib.util.spec_from_file_location("PagerOptarisDefense", 
+            os.path.join(os.path.dirname(__file__), "Pageroptaris_defense.py"))
+        pager_optaris_defense = importlib.util.module_from_spec(spec)
+        print("[OK] Pageroptaris_defense.py syntax OK")
     except Exception as e:
-        print(f"[FAIL] PagerRagnar.py: {e}")
+        print(f"[FAIL] Pageroptaris_defense.py: {e}")
         import traceback
         traceback.print_exc()
-        errors.append(('PagerRagnar.py', str(e)))
+        errors.append(('Pageroptaris_defense.py', str(e)))
     
     print()
     
-    # ========== TEST 4: RagnarMenu instantiation ==========
-    print("[TEST 4] Testing pager_menu.RagnarMenu instantiation...")
+    # ========== TEST 4: OptarisDefenseMenu instantiation ==========
+    print("[TEST 4] Testing pager_menu.OptarisDefenseMenu instantiation...")
     try:
         interfaces = [
             {'name': 'eth0', 'ip': '192.168.1.100', 'subnet': '192.168.1.0/24'},
             {'name': 'wlan0', 'ip': '10.0.0.5', 'subnet': '10.0.0.0/24'},
         ]
-        menu = pager_menu.RagnarMenu(interfaces)
-        print(f"[OK] RagnarMenu created - display size: {menu.gfx.width}x{menu.gfx.height}")
+        menu = pager_menu.OptarisDefenseMenu(interfaces)
+        print(f"[OK] OptarisDefenseMenu created - display size: {menu.gfx.width}x{menu.gfx.height}")
         menu.cleanup()
     except Exception as e:
-        print(f"[FAIL] RagnarMenu instantiation: {e}")
+        print(f"[FAIL] OptarisDefenseMenu instantiation: {e}")
         import traceback
         traceback.print_exc()
-        errors.append(('RagnarMenu', str(e)))
+        errors.append(('OptarisDefenseMenu', str(e)))
     
     print()
     
@@ -531,12 +531,12 @@ def run_tests():
     print("[TEST 5] Testing pager_display.PagerDisplay instantiation...")
     try:
         from init_shared import shared_data
-        # PagerRagnar.setup_pager_shared_data patches shared_data with Pager-specific
+        # PagerOptarisDefense.setup_pager_shared_data patches shared_data with Pager-specific
         # attributes (font_arial_path, font_viking_path, static_images, etc.)
         # This MUST be called before PagerDisplay is created.
         import importlib
-        PagerRagnar = importlib.import_module('PagerRagnar')
-        PagerRagnar.setup_pager_shared_data(shared_data)
+        PagerOptarisDefense = importlib.import_module('PagerOptarisDefense')
+        PagerOptarisDefense.setup_pager_shared_data(shared_data)
         print("  [OK] setup_pager_shared_data() completed")
         
         display = pager_display.PagerDisplay(shared_data)
@@ -606,7 +606,7 @@ def run_tests():
     required_files = [
         'pager_menu.py',
         'pager_display.py',
-        'PagerRagnar.py',
+        'Pageroptaris_defense.py',
         'pagerctl.py',
         'pager_payload.sh',
         'init_shared.py',

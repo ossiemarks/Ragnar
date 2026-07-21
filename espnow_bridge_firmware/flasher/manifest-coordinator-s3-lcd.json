@@ -1,5 +1,5 @@
 {
-  "name": "Ragnar ESP32-S3-Touch-LCD-4B Coordinator (with 480x480 display)",
+  "name": "OptarisDefense ESP32-S3-Touch-LCD-4B Coordinator (with 480x480 display)",
   "version": "1.0",
   "new_install_prompt_erase": true,
   "builds": [

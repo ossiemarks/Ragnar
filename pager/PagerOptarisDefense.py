@@ -1,7 +1,7 @@
-#PagerRagnar.py
-# Entry point for Ragnar on the WiFi Pineapple Pager.
-# Combines Ragnar's orchestrator with the Pager LCD display.
-# Adapted from pineapple_pager_bjorn's Bjorn.py for Ragnar.
+#Pageroptaris_defense.py
+# Entry point for OptarisDefense on the WiFi Pineapple Pager.
+# Combines OptarisDefense's orchestrator with the Pager LCD display.
+# Adapted from pineapple_pager_bjorn's Bjorn.py for OptarisDefense.
 
 # Add local lib directory to Python path for self-contained payload
 import sys
@@ -23,12 +23,12 @@ import json
 import random
 from logger import Logger
 
-logger = Logger(name="PagerRagnar.py", level=logging.INFO)
+logger = Logger(name="Pageroptaris_defense.py", level=logging.INFO)
 
 
 def setup_pager_shared_data(shared_data):
     """Patch shared_data with Pager-specific attributes needed by pager_display.py.
-    Ragnar's shared.py loads PIL Images; the Pager needs file paths instead."""
+    OptarisDefense's shared.py loads PIL Images; the Pager needs file paths instead."""
 
     currentdir = shared_data.currentdir
     fontdir = shared_data.fontdir
@@ -39,12 +39,12 @@ def setup_pager_shared_data(shared_data):
     shared_data.font_arial_path = os.path.join(fontdir, 'Arial.ttf')
     shared_data.font_viking_path = os.path.join(fontdir, 'Viking.TTF')
 
-    # Status image path (updated by update_ragnarstatus_pager)
-    shared_data.ragnarstatusimage_path = None
+    # Status image path (updated by update_optaris_defensestatus_pager)
+    shared_data.optaris_defensestatusimage_path = None
 
     # Static image paths dict (icon_name -> file_path)
     shared_data.static_images = {}
-    static_names = ['ragnar1', 'port', 'frise', 'target', 'vuln', 'connected',
+    static_names = ['optaris_defense1', 'port', 'frise', 'target', 'vuln', 'connected',
                     'bluetooth', 'wifi', 'ethernet', 'usb', 'level', 'cred',
                     'attack', 'attacks', 'gold', 'networkkb', 'zombie', 'data', 'money']
     for name in static_names:
@@ -82,27 +82,27 @@ def setup_pager_shared_data(shared_data):
     # Current animation frame path
     shared_data.current_image_path = None
 
-    # Monkey-patch update_ragnarstatus to use file paths
-    original_update = shared_data.update_ragnarstatus
+    # Monkey-patch update_optaris_defensestatus to use file paths
+    original_update = shared_data.update_optaris_defensestatus
 
-    def update_ragnarstatus_pager():
+    def update_optaris_defensestatus_pager():
         """Update current status image path for Pager display."""
         try:
-            if shared_data.ragnarorch_status in shared_data.status_images:
-                shared_data.ragnarstatusimage_path = shared_data.status_images[shared_data.ragnarorch_status]
+            if shared_data.optaris_defenseorch_status in shared_data.status_images:
+                shared_data.optaris_defensestatusimage_path = shared_data.status_images[shared_data.optaris_defenseorch_status]
             else:
-                shared_data.ragnarstatusimage_path = shared_data.status_images.get('IDLE')
-            shared_data.ragnarstatustext = shared_data.ragnarorch_status
+                shared_data.optaris_defensestatusimage_path = shared_data.status_images.get('IDLE')
+            shared_data.optaris_defensestatustext = shared_data.optaris_defenseorch_status
         except Exception as e:
-            logger.error(f"Error updating ragnar status: {e}")
+            logger.error(f"Error updating optaris_defense status: {e}")
 
-    shared_data.update_ragnarstatus = update_ragnarstatus_pager
+    shared_data.update_optaris_defensestatus = update_optaris_defensestatus_pager
 
     # Monkey-patch update_image_randomizer to use file paths
     def update_image_randomizer_pager():
         """Select a random animation frame path for current status."""
         try:
-            status = shared_data.ragnarstatustext
+            status = shared_data.optaris_defensestatustext
             series = shared_data.pager_image_series
             if status in series and series[status]:
                 idx = random.randint(0, len(series[status]) - 1)
@@ -142,8 +142,8 @@ def setup_pager_shared_data(shared_data):
     logger.info("Pager shared_data attributes initialized")
 
 
-class PagerRagnar:
-    """Main class for Ragnar on Pineapple Pager."""
+class PagerOptarisDefense:
+    """Main class for OptarisDefense on Pineapple Pager."""
 
     def __init__(self, shared_data):
         self.shared_data = shared_data
@@ -151,7 +151,7 @@ class PagerRagnar:
         self.orchestrator = None
         self._orchestrator_lock = threading.Lock()
 
-        self.shared_data.ragnar_instance = self
+        self.shared_data.optaris_defense_instance = self
         self.shared_data.headless_mode = False
 
     def run(self):
@@ -194,8 +194,8 @@ class PagerRagnar:
         if self.orchestrator_thread is not None and self.orchestrator_thread.is_alive():
             self.shared_data.orchestrator_should_exit = True
             self.orchestrator_thread.join()
-            self.shared_data.ragnarorch_status = "IDLE"
-            self.shared_data.ragnarstatustext2 = ""
+            self.shared_data.optaris_defenseorch_status = "IDLE"
+            self.shared_data.optaris_defensestatustext2 = ""
 
     def is_wifi_connected(self):
         """Check Wi-Fi connectivity (Pager + Pi compatible)."""
@@ -211,7 +211,7 @@ class PagerRagnar:
             return False
 
 
-def handle_exit(sig, frame, display_thread, ragnar_thread, web_thread=None):
+def handle_exit(sig, frame, display_thread, optaris_defense_thread, web_thread=None):
     from init_shared import shared_data
     shared_data.should_exit = True
     shared_data.orchestrator_should_exit = True
@@ -224,8 +224,8 @@ def handle_exit(sig, frame, display_thread, ragnar_thread, web_thread=None):
 
     if display_thread and display_thread.is_alive():
         display_thread.join(timeout=5)
-    if ragnar_thread and ragnar_thread.is_alive():
-        ragnar_thread.join(timeout=5)
+    if optaris_defense_thread and optaris_defense_thread.is_alive():
+        optaris_defense_thread.join(timeout=5)
     if web_thread and web_thread.is_alive():
         web_thread.join(timeout=5)
     logger.info("Clean exit.")
@@ -233,19 +233,19 @@ def handle_exit(sig, frame, display_thread, ragnar_thread, web_thread=None):
 
 
 if __name__ == "__main__":
-    logger.info("Starting Pager Ragnar...")
+    logger.info("Starting Pager OptarisDefense...")
 
     try:
         from init_shared import shared_data
 
         # Apply interface/IP from pager_menu environment variables
-        ragnar_interface = os.environ.get('RAGNAR_INTERFACE')
-        ragnar_ip = os.environ.get('RAGNAR_IP')
-        if ragnar_interface:
-            shared_data.config['wifi_default_interface'] = ragnar_interface
-            logger.info(f"Using interface from menu: {ragnar_interface}")
-        if ragnar_ip:
-            logger.info(f"Using IP from menu: {ragnar_ip}")
+        optaris_defense_interface = os.environ.get('OPTARIS_DEFENSE_INTERFACE')
+        optaris_defense_ip = os.environ.get('OPTARIS_DEFENSE_IP')
+        if optaris_defense_interface:
+            shared_data.config['wifi_default_interface'] = optaris_defense_interface
+            logger.info(f"Using interface from menu: {optaris_defense_interface}")
+        if optaris_defense_ip:
+            logger.info(f"Using IP from menu: {optaris_defense_ip}")
 
         # Setup Pager-specific attributes on shared_data
         setup_pager_shared_data(shared_data)
@@ -260,16 +260,16 @@ if __name__ == "__main__":
         display_thread.start()
         shared_data.display_instance = display
 
-        # Start Ragnar thread
-        logger.info("Starting PagerRagnar thread...")
-        ragnar = PagerRagnar(shared_data)
-        shared_data.ragnar_instance = ragnar
-        ragnar_thread = threading.Thread(target=ragnar.run)
-        ragnar_thread.start()
+        # Start OptarisDefense thread
+        logger.info("Starting PagerOptarisDefense thread...")
+        optaris_defense = PagerOptarisDefense(shared_data)
+        shared_data.optaris_defense_instance = optaris_defense
+        optaris_defense_thread = threading.Thread(target=optaris_defense.run)
+        optaris_defense_thread.start()
 
-        # Start web server (conditional on RAGNAR_WEB_UI env var)
+        # Start web server (conditional on OPTARIS_DEFENSE_WEB_UI env var)
         web_thread = None
-        web_ui_setting = os.environ.get('RAGNAR_WEB_UI', 'on').lower()
+        web_ui_setting = os.environ.get('OPTARIS_DEFENSE_WEB_UI', 'on').lower()
         if web_ui_setting != 'off':
             logger.info("Starting the web server...")
             shared_data.webapp_should_exit = False
@@ -288,8 +288,8 @@ if __name__ == "__main__":
         else:
             logger.info("Web server disabled by menu setting")
 
-        signal.signal(signal.SIGINT, lambda sig, frame: handle_exit(sig, frame, display_thread, ragnar_thread, web_thread))
-        signal.signal(signal.SIGTERM, lambda sig, frame: handle_exit(sig, frame, display_thread, ragnar_thread, web_thread))
+        signal.signal(signal.SIGINT, lambda sig, frame: handle_exit(sig, frame, display_thread, optaris_defense_thread, web_thread))
+        signal.signal(signal.SIGTERM, lambda sig, frame: handle_exit(sig, frame, display_thread, optaris_defense_thread, web_thread))
 
         # Keep main thread alive
         while not shared_data.should_exit:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Compliance reporting for Ragnar.
+Compliance reporting for OptarisDefense.
 
 Maps existing data sources to control frameworks:
   - CIS: Lynis authenticated-audit findings (test IDs) -> CIS Benchmark areas
@@ -30,7 +30,7 @@ _HIGH_SEVERITIES = {"critical", "high"}
 
 
 class ComplianceReporter:
-    """Builds CIS and PCI compliance views from data Ragnar already collects."""
+    """Builds CIS and PCI compliance views from data OptarisDefense already collects."""
 
     def __init__(self, shared_data=None, db=None):
         self.shared_data = shared_data
@@ -400,7 +400,7 @@ def render_compliance_html(cis: Dict[str, Any], pci: Dict[str, Any]) -> str:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ragnar Compliance Report — {e(generated_at)}</title>
+<title>OptarisDefense Compliance Report — {e(generated_at)}</title>
 <style>
   *{{box-sizing:border-box;margin:0;padding:0}}
   body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;padding:2rem}}
@@ -424,7 +424,7 @@ def render_compliance_html(cis: Dict[str, Any], pci: Dict[str, Any]) -> str:
 </style>
 </head>
 <body>
-<h1>Ragnar Compliance Report</h1>
+<h1>OptarisDefense Compliance Report</h1>
 <p class="subtitle">Generated: {e(generated_at)}</p>
 <div class="disclaimer">
   <strong>Informal / internal report.</strong> Mappings are a curated subset. This is NOT a certified
@@ -458,6 +458,6 @@ def render_compliance_html(cis: Dict[str, Any], pci: Dict[str, Any]) -> str:
   </div>
 </section>
 
-<p class="footer">Ragnar Security Scanner — For authorized testing only</p>
+<p class="footer">OptarisDefense Security Scanner — For authorized testing only</p>
 </body>
 </html>"""

@@ -25,7 +25,7 @@ from wifi_interfaces import gather_wifi_interfaces, get_active_ethernet_interfac
 
 
 class WiFiManager:
-    """Manages Wi-Fi connections, AP mode, and configuration for Ragnar"""
+    """Manages Wi-Fi connections, AP mode, and configuration for OptarisDefense"""
     
     def __init__(self, shared_data):
         self.shared_data = shared_data
@@ -114,8 +114,8 @@ class WiFiManager:
         self.failsafe_disconnect_threshold = 300  # 5 minutes of disconnection before counting as a cycle
         
         # AP mode settings
-        self.ap_ssid = shared_data.config.get('wifi_ap_ssid', 'Ragnar')
-        self.ap_password = shared_data.config.get('wifi_ap_password', 'ragnarconnect')
+        self.ap_ssid = shared_data.config.get('wifi_ap_ssid', 'OptarisDefense')
+        self.ap_password = shared_data.config.get('wifi_ap_password', 'optaris_defenseconnect')
         self.ap_interface = self.default_wifi_interface
         self.ap_ip = "192.168.4.1"
         self.ap_subnet = "192.168.4.0/24"
@@ -145,8 +145,8 @@ class WiFiManager:
             self.known_networks = config.get('wifi_known_networks', [])
             
             # Load AP settings
-            self.ap_ssid = config.get('wifi_ap_ssid', 'Ragnar')
-            self.ap_password = config.get('wifi_ap_password', 'ragnarconnect')
+            self.ap_ssid = config.get('wifi_ap_ssid', 'OptarisDefense')
+            self.ap_password = config.get('wifi_ap_password', 'optaris_defenseconnect')
             self.connection_timeout = config.get('wifi_connection_timeout', 60)
             self.max_connection_attempts = config.get('wifi_max_attempts', 3)
             
@@ -218,7 +218,7 @@ class WiFiManager:
         )
 
     def _get_known_ssids(self):
-        """Return a deduplicated list of Ragnar-configured SSIDs."""
+        """Return a deduplicated list of OptarisDefense-configured SSIDs."""
         known_ssids = []
         seen = set()
         try:
@@ -517,7 +517,7 @@ class WiFiManager:
     def _save_connection_state(self, ssid=None, connected=False):
         """Save current connection state to help with service restarts"""
         try:
-            state_file = '/tmp/ragnar_wifi_state.json'
+            state_file = '/tmp/optaris_defense_wifi_state.json'
             state = {
                 'timestamp': time.time(),
                 'connected': connected,
@@ -532,7 +532,7 @@ class WiFiManager:
     def _load_connection_state(self):
         """Load previous connection state"""
         try:
-            state_file = '/tmp/ragnar_wifi_state.json'
+            state_file = '/tmp/optaris_defense_wifi_state.json'
             if os.path.exists(state_file):
                 with open(state_file, 'r') as f:
                     state = json.load(f)
@@ -546,7 +546,7 @@ class WiFiManager:
     def _cleanup_connection_state(self):
         """Clean up connection state file"""
         try:
-            state_file = '/tmp/ragnar_wifi_state.json'
+            state_file = '/tmp/optaris_defense_wifi_state.json'
             if os.path.exists(state_file):
                 os.remove(state_file)
         except Exception as e:
@@ -555,7 +555,7 @@ class WiFiManager:
     def _create_restart_marker(self):
         """Create a marker file to help detect service restarts"""
         try:
-            marker_file = '/tmp/ragnar_wifi_manager.pid'
+            marker_file = '/tmp/optaris_defense_wifi_manager.pid'
             with open(marker_file, 'w') as f:
                 f.write(f"{os.getpid()}\n{time.time()}\n")
         except Exception as e:
@@ -564,7 +564,7 @@ class WiFiManager:
     def _cleanup_restart_marker(self):
         """Clean up the restart marker file"""
         try:
-            marker_file = '/tmp/ragnar_wifi_manager.pid'
+            marker_file = '/tmp/optaris_defense_wifi_manager.pid'
             if os.path.exists(marker_file):
                 os.remove(marker_file)
         except Exception as e:
@@ -573,7 +573,7 @@ class WiFiManager:
     def _was_recently_running(self):
         """Check if WiFi manager was recently running (indicates service restart)"""
         try:
-            marker_file = '/tmp/ragnar_wifi_manager.pid'
+            marker_file = '/tmp/optaris_defense_wifi_manager.pid'
             if os.path.exists(marker_file):
                 with open(marker_file, 'r') as f:
                     lines = f.readlines()
@@ -645,9 +645,9 @@ class WiFiManager:
     def _is_wardriving_active(self):
         """Return True if the wardriving engine is currently running."""
         try:
-            ragnar = getattr(self.shared_data, 'ragnar_instance', None)
-            if ragnar and hasattr(ragnar, '_wd_engine'):
-                return getattr(ragnar._wd_engine, '_running', False)
+            optaris_defense = getattr(self.shared_data, 'optaris_defense_instance', None)
+            if optaris_defense and hasattr(optaris_defense, '_wd_engine'):
+                return getattr(optaris_defense._wd_engine, '_running', False)
             import webapp_modern
             engine = getattr(webapp_modern, '_wardriving_engine', None)
             if engine:
@@ -664,19 +664,19 @@ class WiFiManager:
         """
         if not self._is_wardriving_active():
             return
-        ragnar = getattr(self.shared_data, 'ragnar_instance', None)
-        if not ragnar:
+        optaris_defense = getattr(self.shared_data, 'optaris_defense_instance', None)
+        if not optaris_defense:
             return
         portal_active = getattr(self.shared_data, 'web_portal_active', True)
         if not self.wifi_connected and portal_active:
             threading.Thread(
-                target=ragnar.stop_web_portal,
+                target=optaris_defense.stop_web_portal,
                 daemon=True,
                 name="web-portal-stopper",
             ).start()
         elif self.wifi_connected and not portal_active:
             threading.Thread(
-                target=ragnar.start_web_portal,
+                target=optaris_defense.start_web_portal,
                 daemon=True,
                 name="web-portal-starter",
             ).start()
@@ -993,7 +993,7 @@ class WiFiManager:
             
             # Log the failsafe trigger
             try:
-                with open('/var/log/ragnar_failsafe.log', 'a') as f:
+                with open('/var/log/optaris_defense_failsafe.log', 'a') as f:
                     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     f.write(f"{timestamp} - Failsafe reboot triggered: {self.no_connection_cycles} consecutive connection failures\n")
             except:
@@ -1110,12 +1110,12 @@ class WiFiManager:
             return []
 
     def _check_known_networks_available(self):
-        """Check if any known WiFi networks (Ragnar or system) are currently available without disrupting AP mode"""
+        """Check if any known WiFi networks (OptarisDefense or system) are currently available without disrupting AP mode"""
         try:
-            # Get both Ragnar's known networks AND system profiles
-            ragnar_known = [net['ssid'] for net in self.known_networks]
+            # Get both OptarisDefense's known networks AND system profiles
+            optaris_defense_known = [net['ssid'] for net in self.known_networks]
             system_profiles = self.get_system_wifi_profiles()
-            all_known = list(set(ragnar_known + system_profiles))  # Combine and deduplicate
+            all_known = list(set(optaris_defense_known + system_profiles))  # Combine and deduplicate
 
             if not all_known:
                 return False
@@ -1157,7 +1157,7 @@ class WiFiManager:
                             if ssid and ssid != '<hidden>':
                                 available_ssids.append(ssid)
 
-                    # Check if any known networks (Ragnar or system) are available
+                    # Check if any known networks (OptarisDefense or system) are available
                     for known_ssid in all_known:
                         if known_ssid in available_ssids:
                             self.logger.info(f"Known network '{known_ssid}' detected while in AP mode")
@@ -1487,7 +1487,7 @@ class WiFiManager:
             
             # Get system WiFi profiles to mark known networks
             system_profiles = self.get_system_wifi_profiles()
-            ragnar_known = self._get_known_ssids()
+            optaris_defense_known = self._get_known_ssids()
             
             # Trigger a new scan
             rescan_cmd = ['nmcli', 'dev', 'wifi', 'rescan']
@@ -1516,8 +1516,8 @@ class WiFiManager:
                     if len(parts) >= 2 and parts[0]:
                         ssid = parts[0]
                         security = parts[2] if len(parts) > 2 and parts[2] else 'Open'
-                        # Mark as known if EITHER in Ragnar's list OR has system profile
-                        is_known = ssid in ragnar_known or ssid in system_profiles
+                        # Mark as known if EITHER in OptarisDefense's list OR has system profile
+                        is_known = ssid in optaris_defense_known or ssid in system_profiles
                         networks.append({
                             'ssid': ssid,
                             'signal': int(parts[1]) if parts[1].isdigit() else 0,
@@ -1541,7 +1541,7 @@ class WiFiManager:
                 fallback_networks = self._run_iwlist_scan(
                     target_iface,
                     system_profiles=system_profiles,
-                    known_ssids=ragnar_known
+                    known_ssids=optaris_defense_known
                 )
                 if fallback_networks:
                     unique_networks = fallback_networks
@@ -1665,12 +1665,12 @@ class WiFiManager:
 
             # Get system WiFi profiles to mark known networks
             system_profiles = self.get_system_wifi_profiles()
-            ragnar_known = [net['ssid'] for net in self.known_networks]
+            optaris_defense_known = [net['ssid'] for net in self.known_networks]
 
             # Strategy 1: Live scan via secondary WiFi adapter (if available)
             secondary_networks = self._scan_via_secondary_interface(
                 system_profiles=system_profiles,
-                known_ssids=ragnar_known
+                known_ssids=optaris_defense_known
             )
             if secondary_networks:
                 self.ap_logger.info(f"Using live scan from secondary adapter ({len(secondary_networks)} networks)")
@@ -1699,7 +1699,7 @@ class WiFiManager:
             fallback_networks = self._run_iwlist_scan(
                 target_iface,
                 system_profiles=system_profiles,
-                known_ssids=ragnar_known,
+                known_ssids=optaris_defense_known,
                 log_target=self.ap_logger
             )
             if fallback_networks:
@@ -2075,18 +2075,18 @@ class WiFiManager:
             return False
     
     def remove_known_network(self, ssid):
-        """Remove a network from Ragnar's known networks list AND delete the system NetworkManager profile"""
+        """Remove a network from optaris_defense's known networks list AND delete the system NetworkManager profile"""
         try:
-            removed_from_ragnar = False
+            removed_from_optaris_defense = False
             original_count = len(self.known_networks)
             self.known_networks = [net for net in self.known_networks if net['ssid'] != ssid]
             
             if len(self.known_networks) < original_count:
                 self.save_wifi_config()
-                self.logger.info(f"Removed {ssid} from Ragnar's known networks list")
-                removed_from_ragnar = True
+                self.logger.info(f"Removed {ssid} from optaris_defense's known networks list")
+                removed_from_optaris_defense = True
             else:
-                self.logger.warning(f"Network {ssid} not found in Ragnar's known networks")
+                self.logger.warning(f"Network {ssid} not found in OptarisDefense's known networks")
             
             # Also delete the NetworkManager system profile so it no longer shows as saved
             removed_from_nm = False
@@ -2108,7 +2108,7 @@ class WiFiManager:
                 self.interface_scan_cache.pop(iface, None)
                 self.interface_cache_time.pop(iface, None)
             
-            return removed_from_ragnar or removed_from_nm
+            return removed_from_optaris_defense or removed_from_nm
                 
         except Exception as e:
             self.logger.error(f"Error removing known network {ssid}: {e}")
@@ -2424,8 +2424,8 @@ class WiFiManager:
     def _wardriving_engine(self):
         """Return the running wardriving engine instance, or None."""
         try:
-            ragnar = getattr(self.shared_data, 'ragnar_instance', None)
-            engine = getattr(ragnar, '_wd_engine', None) if ragnar else None
+            optaris_defense = getattr(self.shared_data, 'optaris_defense_instance', None)
+            engine = getattr(optaris_defense, '_wd_engine', None) if optaris_defense else None
             if engine is not None and getattr(engine, '_running', False):
                 return engine
         except Exception:
@@ -2553,12 +2553,12 @@ wpa_pairwise=TKIP
 rsn_pairwise=CCMP
 """
             
-            os.makedirs('/tmp/ragnar', exist_ok=True)
-            with open('/tmp/ragnar/hostapd.conf', 'w') as f:
+            os.makedirs('/tmp/optaris_defense', exist_ok=True)
+            with open('/tmp/optaris_defense/hostapd.conf', 'w') as f:
                 f.write(config_content)
             
             self.logger.info("Created hostapd configuration")
-            self.ap_logger.info("Created hostapd configuration at /tmp/ragnar/hostapd.conf")
+            self.ap_logger.info("Created hostapd configuration at /tmp/optaris_defense/hostapd.conf")
             self.ap_logger.debug(f"Hostapd config content:\n{config_content}")
             return True
             
@@ -2626,12 +2626,12 @@ dhcp-option=6,8.8.8.8,8.8.4.4
 port=0
 """
             
-            with open('/tmp/ragnar/dnsmasq.conf', 'w') as f:
+            with open('/tmp/optaris_defense/dnsmasq.conf', 'w') as f:
                 f.write(config_content)
             
             config_type = "with captive portal DNS" if dns_enabled else "DHCP-only (no DNS conflicts)"
             self.logger.info(f"Created dnsmasq configuration {config_type}")
-            self.ap_logger.info(f"Created dnsmasq configuration at /tmp/ragnar/dnsmasq.conf ({config_type})")
+            self.ap_logger.info(f"Created dnsmasq configuration at /tmp/optaris_defense/dnsmasq.conf ({config_type})")
             self.ap_logger.debug(f"Dnsmasq config content:\n{config_content}")
             return True
             
@@ -2722,7 +2722,7 @@ port=0
             
             self.ap_logger.info("Starting hostapd service...")
             # Start hostapd
-            self.hostapd_process = subprocess.Popen(['sudo', 'hostapd', '/tmp/ragnar/hostapd.conf'],
+            self.hostapd_process = subprocess.Popen(['sudo', 'hostapd', '/tmp/optaris_defense/hostapd.conf'],
                                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             
             self.ap_logger.debug(f"Hostapd process started with PID: {self.hostapd_process.pid}")
@@ -2740,7 +2740,7 @@ port=0
             
             self.ap_logger.info("Starting dnsmasq service...")
             # Start dnsmasq with explicit interface binding
-            self.dnsmasq_process = subprocess.Popen(['sudo', 'dnsmasq', '-C', '/tmp/ragnar/dnsmasq.conf', '-d', '--no-daemon'],
+            self.dnsmasq_process = subprocess.Popen(['sudo', 'dnsmasq', '-C', '/tmp/optaris_defense/dnsmasq.conf', '-d', '--no-daemon'],
                                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             
             self.ap_logger.debug(f"Dnsmasq process started with PID: {self.dnsmasq_process.pid}")
@@ -2762,7 +2762,7 @@ port=0
                     return False
                 
                 # Try starting dnsmasq again with DHCP-only config
-                self.dnsmasq_process = subprocess.Popen(['sudo', 'dnsmasq', '-C', '/tmp/ragnar/dnsmasq.conf', '-d', '--no-daemon'],
+                self.dnsmasq_process = subprocess.Popen(['sudo', 'dnsmasq', '-C', '/tmp/optaris_defense/dnsmasq.conf', '-d', '--no-daemon'],
                                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 
                 self.ap_logger.debug(f"Dnsmasq fallback process started with PID: {self.dnsmasq_process.pid}")
@@ -2858,7 +2858,7 @@ port=0
             self._cleanup_ap_interface()
             
             # Remove config files
-            for config_file in ['/tmp/ragnar/hostapd.conf', '/tmp/ragnar/dnsmasq.conf']:
+            for config_file in ['/tmp/optaris_defense/hostapd.conf', '/tmp/optaris_defense/dnsmasq.conf']:
                 try:
                     if os.path.exists(config_file):
                         os.remove(config_file)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Environment Variable Manager for Ragnar
+Environment Variable Manager for OptarisDefense
 Manages OpenAI API token storage in .env file
 """
 
@@ -78,11 +78,11 @@ class EnvManager:
 
     def get_token(self):
         """
-        Gets the token from the RAGNAR_OPENAI_API_KEY in the .env file.
+        Gets the token from the OPTARIS_DEFENSE_OPENAI_API_KEY in the .env file.
         It also checks the environment variables as a fallback.
         """
         # 1. Check environment variable first (for already loaded envs)
-        token = os.environ.get('RAGNAR_OPENAI_API_KEY')
+        token = os.environ.get('OPTARIS_DEFENSE_OPENAI_API_KEY')
         if token:
             logger.info("Token found in process environment variables.")
             return token
@@ -95,12 +95,12 @@ class EnvManager:
         with open(self.env_file_path, 'r') as f:
             for line in f:
                 line = line.strip()
-                if line.startswith('RAGNAR_OPENAI_API_KEY='):
+                if line.startswith('OPTARIS_DEFENSE_OPENAI_API_KEY='):
                     token = line.split('=', 1)[1]
                     logger.info("Token found in .env file.")
                     return token
         
-        logger.info("RAGNAR_OPENAI_API_KEY not found in .env file.")
+        logger.info("OPTARIS_DEFENSE_OPENAI_API_KEY not found in .env file.")
         return None
 
     def save_token(self, token):
@@ -109,13 +109,13 @@ class EnvManager:
         """
         try:
             with open(self.env_file_path, 'w') as f:
-                f.write(f'RAGNAR_OPENAI_API_KEY={token}\n')
+                f.write(f'OPTARIS_DEFENSE_OPENAI_API_KEY={token}\n')
             
             # Also set it in the current running process's environment for immediate use
-            os.environ['RAGNAR_OPENAI_API_KEY'] = token
+            os.environ['OPTARIS_DEFENSE_OPENAI_API_KEY'] = token
             
             logger.info(f"Token saved to {self.env_file_path}")
-            return {"success": True, "message": "✓ API token saved. Please restart the Ragnar service to apply the changes."}
+            return {"success": True, "message": "✓ API token saved. Please restart the OptarisDefense service to apply the changes."}
         except Exception as e:
             logger.error(f"Failed to save token to .env file: {e}", exc_info=True)
             return {"success": False, "message": f"✗ Failed to save token to .env file: {e}"}

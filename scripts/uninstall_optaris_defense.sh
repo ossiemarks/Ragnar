@@ -8,10 +8,10 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 # Logging configuration
-LOG_DIR="/var/log/ragnar_remove"
+LOG_DIR="/var/log/optaris_defense_remove"
 mkdir -p "$LOG_DIR"
-LOG_FILE="$LOG_DIR/ragnar_remove_$(date +%Y%m%d_%H%M%S).log"
-REPO_DIR="/home/ragnar/Ragnar"
+LOG_FILE="$LOG_DIR/optaris_defense_remove_$(date +%Y%m%d_%H%M%S).log"
+REPO_DIR="/home/optaris-defense/OptarisDefense"
 
 # Logging function
 log() {
@@ -44,7 +44,7 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-# Ensure we are not inside the Ragnar repo to allow deletion
+# Ensure we are not inside the OptarisDefense repo to allow deletion
 ensure_not_inside_repo() {
     local cwd
     cwd=$(pwd)
@@ -58,7 +58,7 @@ ensure_not_inside_repo() {
                 }
                 log "INFO" "Moved out of $REPO_DIR to $(pwd)"
             else
-                log "ERROR" "Cannot remove Ragnar directory while inside it. Aborting."
+                log "ERROR" "Cannot remove OptarisDefense directory while inside it. Aborting."
                 exit 1
             fi
             ;;
@@ -71,17 +71,17 @@ ensure_not_inside_repo() {
 stop_services() {
     log "INFO" "Stopping services..."
     
-    # Kill any running ragnar processes
-    if pgrep -f "python3 /home/ragnar/Ragnar" > /dev/null; then
-        log "INFO" "Killing ragnar Python process..."
-        pkill -f "python3 /home/ragnar/Ragnar"
+    # Kill any running optaris_defense processes
+    if pgrep -f "python3 /home/optaris-defense/OptarisDefense" > /dev/null; then
+        log "INFO" "Killing optaris_defense Python process..."
+        pkill -f "python3 /home/optaris-defense/OptarisDefense"
     fi
 
-    # Stop and disable ragnar service
-    if systemctl is-active --quiet "ragnar"; then
-        log "INFO" "Stopping ragnar service..."
-        systemctl stop ragnar
-        systemctl disable ragnar
+    # Stop and disable optaris_defense service
+    if systemctl is-active --quiet "optaris_defense"; then
+        log "INFO" "Stopping optaris_defense service..."
+        systemctl stop optaris_defense
+        systemctl disable optaris_defense
     fi
 
     # Stop and disable usb-gadget service
@@ -103,11 +103,11 @@ stop_services() {
 # Function to remove service files
 remove_service_files() {
     log "INFO" "Removing service files..."
-    rm -f /etc/systemd/system/ragnar.service
+    rm -f /etc/systemd/system/optaris-defense.service
     rm -f /etc/systemd/system/usb-gadget.service
     rm -f /usr/local/bin/usb-gadget.sh
-    rm -f /etc/NetworkManager/conf.d/99-ragnar-wifi.conf
-    rm -f /etc/sudoers.d/ragnar-wifi /etc/sudoers.d/ragnar-nmap
+    rm -f /etc/NetworkManager/conf.d/99-optaris-defense-wifi.conf
+    rm -f /etc/sudoers.d/optaris-defense-wifi /etc/sudoers.d/optaris-defense-nmap
     systemctl daemon-reload
     systemctl reset-failed 2>/dev/null || true
     log "SUCCESS" "Service files removed"
@@ -144,7 +144,7 @@ reset_system_limits() {
     sed -i '/root hard nofile 65535/d' /etc/security/limits.conf
     
     # Remove limits file
-    rm -f /etc/security/limits.d/90-nofile.conf /etc/security/limits.d/90-ragnar-limits.conf
+    rm -f /etc/security/limits.d/90-nofile.conf /etc/security/limits.d/90-optaris-defense-limits.conf
     
     # Reset systemd limits
     sed -i 's/DefaultLimitNOFILE=65535/#DefaultLimitNOFILE=/' /etc/systemd/system.conf
@@ -157,35 +157,35 @@ reset_system_limits() {
     log "SUCCESS" "System limits reset"
 }
 
-# Function to remove ragnar files
-remove_ragnar_files() {
-    log "INFO" "Removing ragnar files..."
+# Function to remove optaris_defense files
+remove_optaris_defense_files() {
+    log "INFO" "Removing optaris_defense files..."
     ensure_not_inside_repo
 
     if [ -d "$REPO_DIR" ]; then
         if confirm "delete $REPO_DIR"; then
             rm -rf "$REPO_DIR"
-            log "SUCCESS" "ragnar directory removed"
+            log "SUCCESS" "optaris_defense directory removed"
         else
             log "WARNING" "Skipped removal of $REPO_DIR"
         fi
     else
-        log "INFO" "ragnar directory not found"
+        log "INFO" "optaris_defense directory not found"
     fi
 }
 
 # Main execution
-echo -e "${BLUE}ragnar Removal Script${NC}"
-echo -e "${YELLOW}This script will remove ragnar while preserving the ragnar user and system packages.${NC}"
+echo -e "${BLUE}optaris_defense Removal Script${NC}"
+echo -e "${YELLOW}This script will remove optaris_defense while preserving the optaris_defense user and system packages.${NC}"
 echo -e "${YELLOW}Each step will ask for confirmation before proceeding.${NC}"
 
 # Step 1: Stop Services
-if confirm "stop all ragnar related services"; then
+if confirm "stop all optaris_defense related services"; then
     stop_services
 fi
 
 # Step 2: Remove Service Files
-if confirm "remove ragnar service files"; then
+if confirm "remove optaris_defense service files"; then
     remove_service_files
 fi
 
@@ -199,21 +199,21 @@ if confirm "reset system limits"; then
     reset_system_limits
 fi
 
-# Step 5: Remove ragnar Files
-if confirm "remove ragnar files (keeping ragnar user)"; then
-    remove_ragnar_files
+# Step 5: Remove optaris_defense Files
+if confirm "remove optaris_defense files (keeping optaris_defense user)"; then
+    remove_optaris_defense_files
 fi
 
 # Final summary
-echo -e "\n${GREEN}ragnar removal completed!${NC}"
+echo -e "\n${GREEN}optaris_defense removal completed!${NC}"
 echo -e "${BLUE}Summary of actions:${NC}"
 echo "1. Services stopped and disabled"
 echo "2. Service files removed"
 echo "3. USB configuration reset"
 echo "4. System limits reset"
-echo "5. ragnar files removed"
+echo "5. optaris_defense files removed"
 echo -e "\n${YELLOW}Preserved:${NC}"
-echo "- ragnar user account"
+echo "- optaris_defense user account"
 echo "- System packages"
 echo "- Python packages"
 echo "- SPI and I2C configurations"

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""wifiwatch.py — passive 802.11 attack monitor (Ragnar).
+"""wifiwatch.py — passive 802.11 attack monitor (OptarisDefense).
 
 Passive-only (RX-only) wireless IDS: it never transmits — no probes, no assoc,
 no deauth. It sniffs 802.11 management frames in monitor mode and flags four

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AI Service for Ragnar
+AI Service for OptarisDefense
 GPT-5 version using OpenAI SDK 2.x
 Provides intelligent network analysis, summaries, and insights.
 """
@@ -265,7 +265,7 @@ class AIService:
             return cached
 
         system = (
-            "You are Ragnar, a witty cybersecurity Viking AI. "
+            "You are OptarisDefense, a witty cybersecurity Viking AI. "
             "Provide concise, aggressive but clear summaries."
         )
 
@@ -304,7 +304,7 @@ Give a 2–3 sentence Viking-style summary.
         data_json = json.dumps(limited, indent=2)
 
         system = (
-            "You are Ragnar, an elite vulnerability hunter. "
+            "You are OptarisDefense, an elite vulnerability hunter. "
             "Structure your analysis clearly with sections and bullet points. "
             "Use markdown-style formatting for readability."
         )
@@ -437,7 +437,7 @@ one capture/filter that would confirm it."""
         sample = json.dumps(findings[:5], indent=2)
 
         system = (
-            "You are Ragnar, a penetration strategist. "
+            "You are OptarisDefense, a penetration strategist. "
             "Structure attack vector analysis clearly with numbered attack paths. "
             "Use markdown formatting for readability."
         )

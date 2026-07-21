@@ -1,6 +1,6 @@
 #!/bin/bash
 # install_wifi_management.sh
-# Quick installation script for ragnar Wi-Fi Management System
+# Quick installation script for optaris_defense Wi-Fi Management System
 # Author: GitHub Copilot Assistant
 
 set -e
@@ -15,7 +15,7 @@ NC='\033[0m'
 print_header() {
     echo -e "${BLUE}"
     echo "╔════════════════════════════════════════════════════════════════╗"
-    echo "║                    ragnar WI-FI MANAGEMENT                      ║"
+    echo "║                    optaris_defense WI-FI MANAGEMENT                      ║"
     echo "║                    Installation Script                        ║"
     echo "╚════════════════════════════════════════════════════════════════╝"
     echo -e "${NC}"
@@ -118,17 +118,17 @@ setup_permissions() {
     print_status "Setting up permissions..."
     
     # Make scripts executable
-    chmod +x ragnar_wifi_setup.sh
+    chmod +x optaris_defense_wifi_setup.sh
     chmod +x wifi_manager_service.sh
     
-    # Create ragnar user if it doesn't exist
-    if ! id "ragnar" &>/dev/null; then
-        print_status "Creating ragnar user..."
-        useradd -m -s /bin/bash ragnar
-        usermod -a -G sudo,netdev ragnar
+    # Create optaris_defense user if it doesn't exist
+    if ! id "optaris_defense" &>/dev/null; then
+        print_status "Creating optaris_defense user..."
+        useradd -m -s /bin/bash optaris_defense
+        usermod -a -G sudo,netdev optaris_defense
     else
-        print_status "Adding ragnar user to required groups..."
-        usermod -a -G sudo,netdev ragnar
+        print_status "Adding optaris_defense user to required groups..."
+        usermod -a -G sudo,netdev optaris_defense
     fi
     
     print_success "Permissions configured"
@@ -152,26 +152,26 @@ create_systemd_service() {
     print_status "Creating systemd service..."
     
     # Get the current directory
-    ragnar_DIR=$(pwd)
+    optaris_defense_DIR=$(pwd)
     
     # Create systemd service file
-    cat > /etc/systemd/system/ragnar.service << EOF
+    cat > /etc/systemd/system/optaris-defense.service << EOF
 [Unit]
-Description=ragnar IoT Security Tool with Wi-Fi Management
+Description=optaris_defense IoT Security Tool with Wi-Fi Management
 After=network.target
 Wants=network.target
 
 [Service]
 Type=simple
-User=ragnar
-Group=ragnar
-WorkingDirectory=$ragnar_DIR
-ExecStart=/usr/bin/python3 ragnar.py
+User=optaris_defense
+Group=optaris_defense
+WorkingDirectory=$optaris_defense_DIR
+ExecStart=/usr/bin/python3 optaris_defense.py
 Restart=always
 RestartSec=10
 TimeoutStopSec=10
 KillMode=mixed
-Environment=PYTHONPATH=$ragnar_DIR
+Environment=PYTHONPATH=$optaris_defense_DIR
 
 [Install]
 WantedBy=multi-user.target
@@ -197,8 +197,8 @@ configure_network() {
     systemctl start NetworkManager
     
     # Create configuration directory
-    mkdir -p /etc/ragnar
-    chown ragnar:ragnar /etc/ragnar
+    mkdir -p /etc/optaris_defense
+    chown optaris_defense:optaris_defense /etc/optaris_defense
     
     print_success "Network services configured"
 }
@@ -220,27 +220,27 @@ setup_web_interface() {
 final_setup() {
     print_status "Performing final setup..."
     
-    # Set ownership of ragnar directory
-    chown -R ragnar:ragnar .
+    # Set ownership of optaris_defense directory
+    chown -R optaris_defense:optaris_defense .
     
     # Create log directory
     mkdir -p data/logs
-    chown -R ragnar:ragnar data
+    chown -R optaris_defense:optaris_defense data
     
-    # Set up sudo permissions for ragnar user to manage networking
-    echo "ragnar ALL=(ALL) NOPASSWD: /usr/bin/systemctl start hostapd" >> /etc/sudoers.d/ragnar-wifi
-    echo "ragnar ALL=(ALL) NOPASSWD: /usr/bin/systemctl stop hostapd" >> /etc/sudoers.d/ragnar-wifi
-    echo "ragnar ALL=(ALL) NOPASSWD: /usr/bin/systemctl start dnsmasq" >> /etc/sudoers.d/ragnar-wifi
-    echo "ragnar ALL=(ALL) NOPASSWD: /usr/bin/systemctl stop dnsmasq" >> /etc/sudoers.d/ragnar-wifi
-    echo "ragnar ALL=(ALL) NOPASSWD: /usr/bin/hostapd" >> /etc/sudoers.d/ragnar-wifi
-    echo "ragnar ALL=(ALL) NOPASSWD: /usr/bin/dnsmasq" >> /etc/sudoers.d/ragnar-wifi
-    echo "ragnar ALL=(ALL) NOPASSWD: /usr/bin/pkill hostapd" >> /etc/sudoers.d/ragnar-wifi
-    echo "ragnar ALL=(ALL) NOPASSWD: /usr/bin/pkill dnsmasq" >> /etc/sudoers.d/ragnar-wifi
-    echo "ragnar ALL=(ALL) NOPASSWD: /usr/bin/ip" >> /etc/sudoers.d/ragnar-wifi
-    echo "ragnar ALL=(ALL) NOPASSWD: /usr/bin/iptables" >> /etc/sudoers.d/ragnar-wifi
-    echo "ragnar ALL=(ALL) NOPASSWD: /usr/bin/nmcli" >> /etc/sudoers.d/ragnar-wifi
+    # Set up sudo permissions for optaris_defense user to manage networking
+    echo "optaris_defense ALL=(ALL) NOPASSWD: /usr/bin/systemctl start hostapd" >> /etc/sudoers.d/optaris-defense-wifi
+    echo "optaris_defense ALL=(ALL) NOPASSWD: /usr/bin/systemctl stop hostapd" >> /etc/sudoers.d/optaris-defense-wifi
+    echo "optaris_defense ALL=(ALL) NOPASSWD: /usr/bin/systemctl start dnsmasq" >> /etc/sudoers.d/optaris-defense-wifi
+    echo "optaris_defense ALL=(ALL) NOPASSWD: /usr/bin/systemctl stop dnsmasq" >> /etc/sudoers.d/optaris-defense-wifi
+    echo "optaris_defense ALL=(ALL) NOPASSWD: /usr/bin/hostapd" >> /etc/sudoers.d/optaris-defense-wifi
+    echo "optaris_defense ALL=(ALL) NOPASSWD: /usr/bin/dnsmasq" >> /etc/sudoers.d/optaris-defense-wifi
+    echo "optaris_defense ALL=(ALL) NOPASSWD: /usr/bin/pkill hostapd" >> /etc/sudoers.d/optaris-defense-wifi
+    echo "optaris_defense ALL=(ALL) NOPASSWD: /usr/bin/pkill dnsmasq" >> /etc/sudoers.d/optaris-defense-wifi
+    echo "optaris_defense ALL=(ALL) NOPASSWD: /usr/bin/ip" >> /etc/sudoers.d/optaris-defense-wifi
+    echo "optaris_defense ALL=(ALL) NOPASSWD: /usr/bin/iptables" >> /etc/sudoers.d/optaris-defense-wifi
+    echo "optaris_defense ALL=(ALL) NOPASSWD: /usr/bin/nmcli" >> /etc/sudoers.d/optaris-defense-wifi
     
-    chmod 0440 /etc/sudoers.d/ragnar-wifi
+    chmod 0440 /etc/sudoers.d/optaris-defense-wifi
     
     print_success "Final setup completed"
 }
@@ -251,22 +251,22 @@ show_completion_message() {
     echo -e "║                     INSTALLATION COMPLETE!                    ║"
     echo -e "╚════════════════════════════════════════════════════════════════╝${NC}"
     echo
-    print_success "ragnar Wi-Fi Management System has been installed successfully!"
+    print_success "optaris_defense Wi-Fi Management System has been installed successfully!"
     echo
     echo -e "${BLUE}Next Steps:${NC}"
-    echo "1. Enable and start the ragnar service:"
-    echo "   sudo systemctl enable ragnar"
-    echo "   sudo systemctl start ragnar"
+    echo "1. Enable and start the optaris_defense service:"
+    echo "   sudo systemctl enable optaris_defense"
+    echo "   sudo systemctl start optaris_defense"
     echo
     echo "2. Check service status:"
-    echo "   sudo systemctl status ragnar"
+    echo "   sudo systemctl status optaris_defense"
     echo
     echo "3. Access the web interface:"
     echo "   http://localhost:5000 (if connected to Wi-Fi)"
     echo "   http://192.168.4.1:5000 (if in AP mode)"
     echo
     echo "4. Monitor logs:"
-    echo "   sudo journalctl -u ragnar -f"
+    echo "   sudo journalctl -u optaris_defense -f"
     echo
     echo -e "${BLUE}Wi-Fi Management Features:${NC}"
     echo "• Automatic connection to known networks"
@@ -281,7 +281,7 @@ show_completion_message() {
     echo
     echo -e "${YELLOW}⚠️  Important Notes:${NC}"
     echo "• Reboot recommended to ensure all changes take effect"
-    echo "• Default AP credentials: SSID=ragnar-Setup, Password=ragnarpassword"
+    echo "• Default AP credentials: SSID=optaris-defense-Setup, Password=optaris_defensepassword"
     echo "• Change default passwords in web interface for security"
     echo "• Review WIFI_MANAGEMENT_GUIDE.md for detailed documentation"
     echo
@@ -297,7 +297,7 @@ fi
 main() {
     print_header
     
-    print_status "Starting ragnar Wi-Fi Management installation..."
+    print_status "Starting optaris_defense Wi-Fi Management installation..."
     
     check_requirements
     install_system_packages

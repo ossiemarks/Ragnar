@@ -1,6 +1,6 @@
 # auth_manager.py
 """
-Authentication and Database Encryption Manager for Ragnar.
+Authentication and Database Encryption Manager for OptarisDefense.
 
 Provides:
 - Hardware-bound authentication (login locked to specific device)
@@ -9,8 +9,8 @@ Provides:
 - Session management via Flask signed cookies
 
 Architecture:
-- ragnar_auth.db: Small unencrypted DB with password hashes, HW fingerprint, wrapped keys
-- ragnar.db.enc: Main DB encrypted with Fernet, decrypted only while authenticated
+- optaris_defense_auth.db: Small unencrypted DB with password hashes, HW fingerprint, wrapped keys
+- optaris_defense.db.enc: Main DB encrypted with Fernet, decrypted only while authenticated
 - Fernet key wrapped per-password and per-recovery-code, never stored in plaintext
 """
 
@@ -51,9 +51,9 @@ class AuthManager:
         self.shared_data = shared_data
         self.datadir = getattr(shared_data, 'datadir', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'))
         self._db_ready = not self._check_has_encrypted_db()  # True if no decryption needed
-        self.auth_db_path = os.path.join(self.datadir, 'ragnar_auth.db')
-        self.main_db_path = os.path.join(self.datadir, 'ragnar.db')
-        self.encrypted_db_path = os.path.join(self.datadir, 'ragnar.db.enc')
+        self.auth_db_path = os.path.join(self.datadir, 'optaris_defense_auth.db')
+        self.main_db_path = os.path.join(self.datadir, 'optaris_defense.db')
+        self.encrypted_db_path = os.path.join(self.datadir, 'optaris_defense.db.enc')
         self._lock = threading.RLock()
         self._fernet_key = None  # Cached in memory after login
         self._secret_key = None
@@ -65,7 +65,7 @@ class AuthManager:
     def _check_has_encrypted_db(self):
         """Check if an encrypted DB file exists (needs decryption on login)."""
         datadir = getattr(self, 'datadir', '')
-        return os.path.exists(os.path.join(datadir, 'ragnar.db.enc'))
+        return os.path.exists(os.path.join(datadir, 'optaris_defense.db.enc'))
 
     @property
     def db_ready(self):
@@ -400,7 +400,7 @@ class AuthManager:
             self._fernet_key = fernet_key
 
             # Create the initial encrypted snapshot (keep plaintext for the running session).
-            # This ensures ragnar.db.enc exists immediately so the next startup
+            # This ensures optaris_defense.db.enc exists immediately so the next startup
             # knows decryption is needed. Shutdown/logout will re-encrypt with latest data.
             if os.path.exists(self.main_db_path):
                 try:
@@ -453,7 +453,7 @@ class AuthManager:
                     logger.warning("Hardware fingerprint mismatch during login!")
                     return {
                         'success': False,
-                        'error': 'Hardware mismatch - this Ragnar instance is bound to different hardware',
+                        'error': 'Hardware mismatch - this OptarisDefense instance is bound to different hardware',
                         'hw_mismatch': True
                     }
 
@@ -729,7 +729,7 @@ class AuthManager:
     # =========================================================================
 
     def encrypt_database(self):
-        """Encrypt ragnar.db to ragnar.db.enc and remove the plaintext copy."""
+        """Encrypt optaris_defense.db to optaris_defense.db.enc and remove the plaintext copy."""
         if not self._fernet_key:
             raise RuntimeError("No Fernet key available for encryption")
 
@@ -773,7 +773,7 @@ class AuthManager:
                 raise
 
     def decrypt_database(self):
-        """Decrypt ragnar.db.enc to ragnar.db. Keeps encrypted copy as backup."""
+        """Decrypt optaris_defense.db.enc to optaris_defense.db. Keeps encrypted copy as backup."""
         if not self._fernet_key:
             raise RuntimeError("No Fernet key available for decryption")
 
@@ -833,7 +833,7 @@ class AuthManager:
         """Handle leftover plaintext DB from a crash.
 
         On normal restart after auth is configured, get_db() will have already
-        created an empty placeholder ragnar.db before this method runs.  That is
+        created an empty placeholder optaris_defense.db before this method runs.  That is
         harmless -- decrypt_database() removes it before writing the real data.
         We only log a notice here; no deletion is needed.
         """
@@ -843,7 +843,7 @@ class AuthManager:
         if os.path.exists(self.main_db_path) and os.path.exists(self.encrypted_db_path):
             # Both exist.  Likely either a crash leftover or the empty placeholder
             # created by get_db() at startup.  Either way the encrypted copy is the
-            # authoritative version; decrypt_database() will replace ragnar.db on login.
+            # authoritative version; decrypt_database() will replace optaris_defense.db on login.
             logger.info("Encrypted DB found alongside plaintext. "
                         "Encrypted copy is authoritative; will replace on login.")
 

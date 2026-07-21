@@ -20,8 +20,8 @@ def manager():
     shared = MagicMock()
     shared.config = {
         'wifi_ssid_change_debounce_seconds': 30,
-        'wifi_ap_ssid': 'Ragnar',
-        'wifi_ap_password': 'ragnarconnect',
+        'wifi_ap_ssid': 'OptarisDefense',
+        'wifi_ap_password': 'optaris_defenseconnect',
         'wifi_default_interface': 'auto',
     }
     shared.active_network_ssid = None

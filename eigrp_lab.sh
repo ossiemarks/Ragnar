@@ -55,7 +55,7 @@ EOF
         if [ "$auth" = auth ]; then
             echo "key chain LAB"
             echo " key 1"
-            echo "  key-string ragnarlab"
+            echo "  key-string optaris_defenselab"
             echo "!"
         fi
         echo "interface ${r}-eth0"

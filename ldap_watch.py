@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: MIT
-"""Passive LDAP / Active Directory watch for the Ragnar suite.
+"""Passive LDAP / Active Directory watch for the OptarisDefense suite.
 
 PASSIVE ONLY. This module never transmits. It sniffs LDAP (TCP/389, GC/3268,
 LDAPS/636, GC-S/3269) and connectionless LDAP (UDP/389) off the wire, reassembles
@@ -9,7 +9,7 @@ hand-rolled definite-length decoder, and raises findings for insecure transport,
 weak/absent authentication, STARTTLS stripping, directory enumeration, filter
 injection, brute force, and CLDAP reflection/amplification.
 
-Design conventions (shared across the Ragnar suite):
+Design conventions (shared across the OptarisDefense suite):
   * Passive-only Scapy capture. No sockets are opened for transmit; no packet is
     ever built or sent. The self-test greps this source for transmit primitives.
   * Custom raw-byte parser. No library dissectors - BER is decoded here directly.

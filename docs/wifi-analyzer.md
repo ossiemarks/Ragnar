@@ -1,6 +1,6 @@
 # 📊 WiFi Spectrum Analyzer
 
-A passive, tri-band Wi-Fi RF troubleshooter built into Ragnar's web UI —
+A passive, tri-band Wi-Fi RF troubleshooter built into OptarisDefense's web UI —
 **Network → WiFi Analyzer** (the sub-tab after *Interfaces*). Think of it as a
 software [Ekahau Sidekick 2](https://www.ekahau.com/products/sidekick/): the
 same survey-and-heatmap workflow a wireless engineer expects, on a Raspberry Pi
@@ -258,7 +258,7 @@ any `nl80211`/`cfg80211` radio `iw` can drive (it also works on the Pi's onboard
 `brcmfmac`). 6 GHz and DFS/radar channels require **passive** scanning by
 regulation — which is exactly what this tool does.
 
-Requires the `iw` package (installed by `install_ragnar.sh` /
+Requires the `iw` package (installed by `install_optaris_defense.sh` /
 `install_packages.sh`).
 
 ---

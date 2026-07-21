@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-wifi_defense.py — Passive 802.11 frame monitor / Wireless IDS for Ragnar.
+wifi_defense.py — Passive 802.11 frame monitor / Wireless IDS for OptarisDefense.
 
 Listens on a **monitor-mode** adapter for 802.11 management frames and flags the
 classic wireless attacks a defender cares about:
@@ -46,7 +46,7 @@ _STATE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                            "data", "wifi_defense.json")
 
 # Build marker — bump on every monitor-lifecycle change and mirror the value in
-# the web UI (WIFIDEF_BUILD in ragnar_modern.js). The UI compares them and warns
+# the web UI (WIFIDEF_BUILD in optaris_defense_modern.js). The UI compares them and warns
 # if the running (long-lived) webapp still has an OLD wifi_defense module loaded,
 # i.e. the service wasn't restarted after a git pull. Kills stale-service guesswork.
 _BUILD = "20260713-dedicated"
@@ -974,7 +974,7 @@ def _refresh_scapy_ifaces():
     delete+recreate the monitor vif — a disable→re-enable, or an ENODEV rebuild —
     ragmon0 comes back with a NEW ifindex, but scapy keeps the stale cached one
     and every sniff() then fails with ENODEV. A fresh process rebuilds this cache,
-    which is exactly why 'systemctl restart ragnar' heals it while a runtime
+    which is exactly why 'systemctl restart optaris_defense' heals it while a runtime
     re-enable does not. Reload it ourselves so the running service self-heals too
     (scapy's own resolve_iface() does the same reload as its miss fallback)."""
     try:

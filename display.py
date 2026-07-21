@@ -1,6 +1,6 @@
 #display.py
 # Description:
-# This file, display.py, is responsible for managing the e-ink display of the Ragnar project, updating it with relevant data and statuses.
+# This file, display.py, is responsible for managing the e-ink display of the OptarisDefense project, updating it with relevant data and statuses.
 # It initializes the display, manages multiple threads for updating shared data and vulnerability counts, and handles the rendering of information
 # and images on the display.
 #
@@ -101,7 +101,7 @@ class Display:
         """Initialize the display and start the main image and shared data update threads."""
         self.shared_data = shared_data
         self.config = self.shared_data.config
-        self.shared_data.ragnarstatustext2 = "Awakening..."
+        self.shared_data.optaris_defensestatustext2 = "Awakening..."
         self.commentaire_ia = Commentaireia()
         self.semaphore = threading.Semaphore(10)
         self.screen_reversed = self.shared_data.screen_reversed
@@ -399,7 +399,7 @@ class Display:
                 
                 # Update Wi-Fi/AP status text for display
                 wifi_status_text = self.get_wifi_status_text()
-                self.shared_data.ragnarstatustext2 = wifi_status_text
+                self.shared_data.optaris_defensestatustext2 = wifi_status_text
                 logger.info(f"[DISPLAY] WiFi status text: '{wifi_status_text}'")
                 
                 self.get_open_files()
@@ -410,11 +410,11 @@ class Display:
                 logger.error(f"Error updating shared data: {e}")
 
     def display_comment(self, status):
-        """Display the comment based on the status of the ragnarorch."""
+        """Display the comment based on the status of the optaris_defenseorch."""
         comment = self.commentaire_ia.get_commentaire(status)
         if comment:
-            self.shared_data.ragnarsays = comment
-            self.shared_data.ragnarstatustext = self.shared_data.ragnarorch_status
+            self.shared_data.optaris_defensesays = comment
+            self.shared_data.optaris_defensestatustext = self.shared_data.optaris_defenseorch_status
         else:
             pass
 
@@ -634,11 +634,11 @@ class Display:
         """Get the number of clients connected to AP mode."""
         try:
             # Try to get from WiFi manager first
-            if (hasattr(self.shared_data, 'ragnar_instance') and 
-                self.shared_data.ragnar_instance and 
-                hasattr(self.shared_data.ragnar_instance, 'wifi_manager')):
+            if (hasattr(self.shared_data, 'optaris_defense_instance') and 
+                self.shared_data.optaris_defense_instance and 
+                hasattr(self.shared_data.optaris_defense_instance, 'wifi_manager')):
                 
-                wifi_mgr = self.shared_data.ragnar_instance.wifi_manager
+                wifi_mgr = self.shared_data.optaris_defense_instance.wifi_manager
                 if hasattr(wifi_mgr, 'ap_clients_count'):
                     return wifi_mgr.ap_clients_count
             
@@ -692,11 +692,11 @@ class Display:
                 pass
             
             # SECONDARY: Try to get status from WiFi manager (if available in same process)
-            if (hasattr(self.shared_data, 'ragnar_instance') and 
-                self.shared_data.ragnar_instance and 
-                hasattr(self.shared_data.ragnar_instance, 'wifi_manager')):
+            if (hasattr(self.shared_data, 'optaris_defense_instance') and 
+                self.shared_data.optaris_defense_instance and 
+                hasattr(self.shared_data.optaris_defense_instance, 'wifi_manager')):
                 
-                wifi_mgr = self.shared_data.ragnar_instance.wifi_manager
+                wifi_mgr = self.shared_data.optaris_defense_instance.wifi_manager
                 
                 # Check AP mode status first
                 if hasattr(wifi_mgr, 'ap_mode_active') and wifi_mgr.ap_mode_active:
@@ -747,7 +747,7 @@ class Display:
             return "WiFi: Unknown"
 
     def is_manual_mode(self):
-        """Check if the ragnarorch is in manual mode."""
+        """Check if the optaris_defenseorch is in manual mode."""
         return self.shared_data.manual_mode
 
     def is_interface_connected(self, interface):
@@ -1632,7 +1632,7 @@ class Display:
         # Battery %, top-right (PiSugar)
         bat_w = 0
         try:
-            _ri = getattr(sd, 'ragnar_instance', None)
+            _ri = getattr(sd, 'optaris_defense_instance', None)
             _ps = getattr(_ri, 'pisugar_listener', None) if _ri else None
             if _ps and _ps.available:
                 bl = _ps.get_battery_level()
@@ -1646,9 +1646,9 @@ class Display:
         left_pad = max(18, left_used + 2)
         right_pad = max(18, bat_w)
         avail = W - left_pad - right_pad
-        title_font = self._fit_font('Viking.TTF', sd.font_viking, "RAGNAR", avail)
-        tw = title_font.getlength("RAGNAR")
-        draw.text((left_pad + (avail - tw) / 2, 1), "RAGNAR", font=title_font, fill=0)
+        title_font = self._fit_font('Viking.TTF', sd.font_viking, "OPTARIS_DEFENSE", avail)
+        tw = title_font.getlength("OPTARIS_DEFENSE")
+        draw.text((left_pad + (avail - tw) / 2, 1), "OPTARIS_DEFENSE", font=title_font, fill=0)
         draw.line((1, 16, W - 1, 16), fill=0)
 
         # --- two icon+count stat rows (icons ~30% smaller so they fit) ---
@@ -1692,11 +1692,11 @@ class Display:
 
         # --- mood / status lines ---
         try:
-            sd.update_ragnarstatus()
+            sd.update_optaris_defensestatus()
         except Exception:
             pass
-        draw.text((3, 56), str(getattr(sd, 'ragnarstatustext', '') or '')[:24], font=font, fill=0)
-        draw.text((3, 66), str(getattr(sd, 'ragnarstatustext2', '') or '')[:24], font=font, fill=0)
+        draw.text((3, 56), str(getattr(sd, 'optaris_defensestatustext', '') or '')[:24], font=font, fill=0)
+        draw.text((3, 66), str(getattr(sd, 'optaris_defensestatustext2', '') or '')[:24], font=font, fill=0)
 
         # --- character sprite, shrunk into the bottom-right corner ---
         vk_w = 0
@@ -1713,7 +1713,7 @@ class Display:
                 vk_w = 0
 
         # --- speech, wrapped into the space left of the sprite ---
-        says = str(getattr(sd, 'ragnarsays', '') or '')
+        says = str(getattr(sd, 'optaris_defensesays', '') or '')
         if says:
             avail_w = W - vk_w - 6
             try:
@@ -1898,7 +1898,7 @@ class Display:
                 ("Hosts alive", f"{data['alive']}/{data['total']}"),
                 ("Open ports", str(data['ports'])),
                 ("Credentials", str(getattr(sd, 'crednbr', 0))),
-                ("Status", str(getattr(sd, 'ragnarorch_status', 'IDLE'))),
+                ("Status", str(getattr(sd, 'optaris_defenseorch_status', 'IDLE'))),
             ]
             y = self._draw_stat_rows(draw, y, stats)
 
@@ -1926,7 +1926,7 @@ class Display:
                 ("Open ports", str(getattr(sd, 'portnbr', 0))),
                 ("Credentials", str(getattr(sd, 'crednbr', 0))),
                 ("Network KB", str(getattr(sd, 'networkkbnbr', 0))),
-                ("Status", str(getattr(sd, 'ragnarorch_status', 'IDLE'))),
+                ("Status", str(getattr(sd, 'optaris_defenseorch_status', 'IDLE'))),
             ]
             self._draw_stat_rows(draw, y, stats)
 
@@ -2084,7 +2084,7 @@ class Display:
             stats = [
                 ("Scanner", "Not available"),
                 ("Vulns found", str(getattr(self.shared_data, 'vulnnbr', 0))),
-                ("Status", str(getattr(self.shared_data, 'ragnarstatustext', 'IDLE'))),
+                ("Status", str(getattr(self.shared_data, 'optaris_defensestatustext', 'IDLE'))),
             ]
             self._draw_stat_rows(draw, y, stats)
 
@@ -2127,7 +2127,7 @@ class Display:
             stats = [
                 ("Traffic", "Not available"),
                 ("WiFi", "On" if self.shared_data.wifi_connected else "Off"),
-                ("Status", str(getattr(self.shared_data, 'ragnarorch_status', 'IDLE'))),
+                ("Status", str(getattr(self.shared_data, 'optaris_defenseorch_status', 'IDLE'))),
             ]
             self._draw_stat_rows(draw, y, stats)
 
@@ -2177,7 +2177,7 @@ class Display:
         st = wd.get('stats', {})
         gps = wd.get('gps', {})
 
-        # WiFi connection status line (same as regular Ragnar EPD).
+        # WiFi connection status line (same as regular OptarisDefense EPD).
         # Only shown when actually connected — "Connected WiFi" is the renamed
         # row and is treated as a non-static field per the e-paper spec.
         wifi_connected = self.is_wifi_connected()
@@ -2402,11 +2402,11 @@ class Display:
 
         Animates the existing e-paper BMP frame sequences (resources/images/status/)
         in full colour on the round display, cycling at ~1 fps.  Each status has
-        its own tint colour so the mascot visually reflects what Ragnar is doing.
+        its own tint colour so the mascot visually reflects what OptarisDefense is doing.
 
         Layout (240×240 circle):
           ┌──────────────────────┐
-          │     RAGNAR  (title)  │  y≈8  – white, Viking font
+          │     OPTARIS_DEFENSE  (title)  │  y≈8  – white, Viking font
           │   ┌──────────────┐   │
           │   │  mascot anim │   │  y≈30–175 – tinted BMP frames, animated
           │   └──────────────┘   │
@@ -2536,12 +2536,12 @@ class Display:
         # ── state helpers ─────────────────────────────────────────────────
         def _text_state():
             sd = self.shared_data
-            net_text = getattr(sd, "ragnarstatustext2", "") or ""
+            net_text = getattr(sd, "optaris_defensestatustext2", "") or ""
             return (
                 getattr(sd, "wifi_connected",   False),
                 net_text,
                 getattr(sd, "ap_mode_active",   False),
-                getattr(sd, "ragnarstatustext", "IDLE"),
+                getattr(sd, "optaris_defensestatustext", "IDLE"),
             )
 
         def _ring_col(wifi_on, ap_on, status):
@@ -2574,7 +2574,7 @@ class Display:
                          outline=_ring_col(wifi_on, ap_on, status_text), width=RING_W)
 
             # Title
-            title = "RAGNAR"
+            title = "OPTARIS_DEFENSE"
             try:
                 tb = font_title.getbbox(title)
                 tx = (SIZE - (tb[2] - tb[0])) // 2
@@ -2807,8 +2807,8 @@ class Display:
         while not self.shared_data.display_should_exit:
             try:
                 wifi_on, ssid, ap_on, status_text = _text_state()
-                orch_status = getattr(self.shared_data, "ragnarorch_status", "IDLE") or "IDLE"
-                self.shared_data.update_ragnarstatus()
+                orch_status = getattr(self.shared_data, "optaris_defenseorch_status", "IDLE") or "IDLE"
+                self.shared_data.update_optaris_defensestatus()
 
                 # Wardriving display override for GC9A01
                 wd_check = self._get_wardriving_data()
@@ -2880,7 +2880,7 @@ class Display:
         Top row (15 s each):
           Slot 0 — WiFi SSID          e.g. "Tango Down 5G  "
           Slot 1 — IP address         e.g. "192.168.1.100  "
-          Slot 2 — Ragnar status      e.g. "NetworkScanner "
+          Slot 2 — OptarisDefense status      e.g. "NetworkScanner "
 
         Bottom row (5 s each, 3 slots):
           Slot 0 — "Targets: 42     "
@@ -2925,7 +2925,7 @@ class Display:
             return "No IP"
 
         def _get_status():
-            status = getattr(self.shared_data, "ragnarstatustext", None) or "IDLE"
+            status = getattr(self.shared_data, "optaris_defensestatustext", None) or "IDLE"
             return str(status)
 
         def _render_lcd_preview(row0: str, row1: str):
@@ -3151,13 +3151,13 @@ class Display:
         _png_counter  = 0
         _scroll_pos   = 0   # pixel offset for header scroll
 
-        # Width (px) available in the header beside "RAGNAR " prefix
-        _RAGNAR_LABEL = "RAGNAR "
+        # Width (px) available in the header beside "OPTARIS_DEFENSE " prefix
+        _OPTARIS_DEFENSE_LABEL = "OPTARIS_DEFENSE "
         try:
-            _ragnar_w = font_hdr.getbbox(_RAGNAR_LABEL)[2]
+            _optaris_defense_w = font_hdr.getbbox(_OPTARIS_DEFENSE_LABEL)[2]
         except Exception:
-            _ragnar_w = len(_RAGNAR_LABEL) * 6
-        _HDR_STATUS_W = W - _ragnar_w - 2   # pixels available for scrolling status
+            _optaris_defense_w = len(_OPTARIS_DEFENSE_LABEL) * 6
+        _HDR_STATUS_W = W - _optaris_defense_w - 2   # pixels available for scrolling status
 
         # ── WiFi helper (same method used by gc9a01) ─────────────────────
         def _get_wifi():
@@ -3183,7 +3183,7 @@ class Display:
             sd = self.shared_data
 
             # --- collect data --------------------------------------------------
-            orch_status = (getattr(sd, "ragnarorch_status", "IDLE") or "IDLE").upper()
+            orch_status = (getattr(sd, "optaris_defenseorch_status", "IDLE") or "IDLE").upper()
             wifi_on, ssid, ip = _get_wifi()
 
             targets = getattr(sd, "total_targetnbr", 0) or 0
@@ -3204,7 +3204,7 @@ class Display:
 
             # Header bar: white filled rectangle
             draw.rectangle((0, 0, W - 1, 12), fill=255)
-            draw.text((2, 1), _RAGNAR_LABEL, font=font_hdr, fill=0)
+            draw.text((2, 1), _OPTARIS_DEFENSE_LABEL, font=font_hdr, fill=0)
 
             # Scrolling status text clipped to right portion of header
             # Build scroll string with padding so it wraps smoothly
@@ -3220,7 +3220,7 @@ class Display:
             tdraw.text((full_w, 1),   scroll_str, font=font_hdr, fill=0)
             offset = scroll_px % full_w
             crop   = tmp.crop((offset, 0, offset + _HDR_STATUS_W, 12))
-            img.paste(crop, (_ragnar_w, 0))
+            img.paste(crop, (_optaris_defense_w, 0))
 
             # Thin divider line at y=13
             draw.line((0, 13, W - 1, 13), fill=255)
@@ -3281,7 +3281,7 @@ class Display:
         # ── Main loop ───────────────────────────────────────────────────
         while not self.shared_data.display_should_exit:
             try:
-                self.shared_data.update_ragnarstatus()
+                self.shared_data.update_optaris_defensestatus()
 
                 # Wardriving display override
                 wd_data = self._get_wardriving_data()
@@ -3434,7 +3434,7 @@ class Display:
 
         def _get_status():
             try:
-                status = getattr(self.shared_data, 'ragnarstatustext', '') or \
+                status = getattr(self.shared_data, 'optaris_defensestatustext', '') or \
                          getattr(self.shared_data, 'current_action', '') or ''
                 return status.upper()[:30] if status else "STATUS: IDLE"
             except Exception:
@@ -3462,7 +3462,7 @@ class Display:
                     f"SCANS: {wd_max.get('scans_completed', 0)}",
                 ]
             return [
-                "* RAGNAR *",
+                "* OPTARIS_DEFENSE *",
                 _get_targets(),
                 _get_credentials(),
                 _get_vulns(),
@@ -3541,7 +3541,7 @@ class Display:
                 # Pull latest orientation settings so web toggles take effect without restarting the service.
                 self.screen_reversed = self.shared_data.screen_reversed
                 self.web_screen_reversed = self.shared_data.web_screen_reversed
-                self.display_comment(self.shared_data.ragnarorch_status)
+                self.display_comment(self.shared_data.optaris_defenseorch_status)
 
                 # Compute render dimensions — portrait for 90°/270°
                 render_w, render_h = _render_dimensions(
@@ -3682,7 +3682,7 @@ class Display:
                     self._sleep_interruptible(current_page)
                     continue
 
-                # === PAGE_MAIN: Default Ragnar display ===
+                # === PAGE_MAIN: Default OptarisDefense display ===
                 # Scale factors spread positions across the full physical canvas
                 # For 90°/270° we render in portrait so W < H.
                 W = render_w
@@ -3718,15 +3718,15 @@ class Display:
                 # Check PiSugar once per frame for title sizing + battery text
                 _pisugar_available = False
                 try:
-                    _ri = getattr(self.shared_data, 'ragnar_instance', None)
+                    _ri = getattr(self.shared_data, 'optaris_defense_instance', None)
                     _ps = getattr(_ri, 'pisugar_listener', None) if _ri else None
                     _pisugar_available = _ps and _ps.available
                 except Exception:
                     pass
                 if _pisugar_available:
-                    draw.text((int(40 * sx), int(6 * sy)), "RAGNAR", font=self.shared_data.font_viking_sm, fill=0)
+                    draw.text((int(40 * sx), int(6 * sy)), "OPTARIS_DEFENSE", font=self.shared_data.font_viking_sm, fill=0)
                 else:
-                    draw.text((int(37 * sx), int(5 * sy)), "RAGNAR", font=self.shared_data.font_viking, fill=0)
+                    draw.text((int(37 * sx), int(5 * sy)), "OPTARIS_DEFENSE", font=self.shared_data.font_viking, fill=0)
                 draw.text((int(110 * sx), int(170 * sy)), self.manual_mode_txt, font=self.shared_data.font_arial14, fill=0)
                 
                 # Show AP status or WiFi status in the top-left corner
@@ -3777,10 +3777,10 @@ class Display:
                     image.paste(img, img_pos)
                     draw.text(text_pos, text, font=self.shared_data.font_arial9, fill=0)
 
-                self.shared_data.update_ragnarstatus()
-                image.paste(self.shared_data.ragnarstatusimage, (int(3 * sx), int(60 * sy)))
-                draw.text((int(35 * sx), int(65 * sy)), self.shared_data.ragnarstatustext, font=self.shared_data.font_arial9, fill=0)
-                draw.text((int(35 * sx), int(75 * sy)), self.shared_data.ragnarstatustext2, font=self.shared_data.font_arial9, fill=0)
+                self.shared_data.update_optaris_defensestatus()
+                image.paste(self.shared_data.optaris_defensestatusimage, (int(3 * sx), int(60 * sy)))
+                draw.text((int(35 * sx), int(65 * sy)), self.shared_data.optaris_defensestatustext, font=self.shared_data.font_arial9, fill=0)
+                draw.text((int(35 * sx), int(75 * sy)), self.shared_data.optaris_defensestatustext2, font=self.shared_data.font_arial9, fill=0)
 
                 # Frise ribbon
                 if self.shared_data.frise is not None:
@@ -3795,7 +3795,7 @@ class Display:
                 draw.line((1, int(59 * sy), W - 1, int(59 * sy)), fill=0)
                 draw.line((1, int(87 * sy), W - 1, int(87 * sy)), fill=0)
 
-                lines = self.shared_data.wrap_text(self.shared_data.ragnarsays, self.shared_data.font_arialbold, W - 4)
+                lines = self.shared_data.wrap_text(self.shared_data.optaris_defensesays, self.shared_data.font_arialbold, W - 4)
                 y_text = int(90 * sy)
 
                 # Character image — centred on the full canvas

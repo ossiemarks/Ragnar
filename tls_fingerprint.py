@@ -1,5 +1,5 @@
 """
-TLS / JA3 fingerprint collector for Ragnar (server mode).
+TLS / JA3 fingerprint collector for OptarisDefense (server mode).
 
 Architecture
 ------------
@@ -23,7 +23,7 @@ The tshark command (only spawned when `start()` is called):
         -e tls.handshake.extensions_server_name
 
 This module degrades gracefully: if `tshark` is missing, `start()` returns
-False and the rest of Ragnar is unaffected.
+False and the rest of OptarisDefense is unaffected.
 """
 
 from __future__ import annotations

@@ -1,6 +1,6 @@
 # orchestrator.py
 # Description:
-# This file, orchestrator.py, is the heuristic Ragnar brain, and it is responsible for coordinating and executing various network scanning and offensive security actions 
+# This file, orchestrator.py, is the heuristic OptarisDefense brain, and it is responsible for coordinating and executing various network scanning and offensive security actions 
 # It manages the loading and execution of actions, handles retries for failed and successful actions, 
 # and updates the status of the orchestrator.
 #
@@ -343,7 +343,7 @@ class Orchestrator:
                         if self.execute_action(action, ip, ports, row, action_key, current_data):
                             action_executed_status = action_key
                             any_action_executed = True
-                            self.shared_data.ragnarorch_status = action_executed_status
+                            self.shared_data.optaris_defenseorch_status = action_executed_status
                             
                             # After parent succeeds, immediately try child actions on same host
                             # Note: Already within semaphore context, no need to re-acquire
@@ -351,7 +351,7 @@ class Orchestrator:
                                 if child_action.b_parent_action == action_key:
                                     if self.execute_action(child_action, ip, ports, row, child_action.action_name, current_data):
                                         action_executed_status = child_action.action_name
-                                        self.shared_data.ragnarorch_status = action_executed_status
+                                        self.shared_data.optaris_defenseorch_status = action_executed_status
                     
                     # Continue processing remaining hosts for this action
 
@@ -388,7 +388,7 @@ class Orchestrator:
                         if self.execute_action(child_action, ip, ports, row, action_key, current_data):
                             action_executed_status = child_action.action_name
                             any_action_executed = True
-                            self.shared_data.ragnarorch_status = action_executed_status
+                            self.shared_data.optaris_defenseorch_status = action_executed_status
                     
                     # Continue processing remaining hosts for this child action
         
@@ -426,20 +426,20 @@ class Orchestrator:
                 context_ssid = getattr(job, 'ssid', None)
                 label = context_ssid or 'unknown'
                 with self.shared_data.context_registry.activate(context_ssid):
-                    self.shared_data.ragnarstatustext2 = f"{reason}: {label}"
+                    self.shared_data.optaris_defensestatustext2 = f"{reason}: {label}"
                     logger.info(f"→ Running network scan on {job.interface} ({label})")
                     self.network_scanner.scan(job=job)
-            self.shared_data.ragnarstatustext2 = ""
+            self.shared_data.optaris_defensestatustext2 = ""
             return
 
         focus_job = multi_state.get_focus_job()
         if focus_job:
             focus_label = focus_job.ssid or focus_job.interface
             with self.shared_data.context_registry.activate(focus_job.ssid):
-                self.shared_data.ragnarstatustext2 = f"{reason}: {focus_label}"
+                self.shared_data.optaris_defensestatustext2 = f"{reason}: {focus_label}"
                 logger.info(f"→ Running focused scan on {focus_job.interface} ({focus_label})")
                 self.network_scanner.scan(job=focus_job)
-            self.shared_data.ragnarstatustext2 = ""
+            self.shared_data.optaris_defensestatustext2 = ""
             return
 
         # Check if ethernet should be the default scan interface
@@ -539,7 +539,7 @@ class Orchestrator:
 
         try:
             logger.info(f"Executing action {action.action_name} for {ip}:{action.port}")
-            self.shared_data.ragnarstatustext2 = ip
+            self.shared_data.optaris_defensestatustext2 = ip
             
             # Execute action with timeout protection
             action_callable = lambda: action.execute(ip, str(action.port), row, action_key)
@@ -837,10 +837,10 @@ class Orchestrator:
         logger.info("=" * 70)
         
         if self.network_scanner:
-            self.shared_data.ragnarorch_status = "NetworkScanner"
-            self.shared_data.ragnarstatustext2 = "Initial scan..."
+            self.shared_data.optaris_defenseorch_status = "NetworkScanner"
+            self.shared_data.optaris_defensestatustext2 = "Initial scan..."
             self._execute_network_scans(reason="startup")
-            self.shared_data.ragnarstatustext2 = ""
+            self.shared_data.optaris_defensestatustext2 = ""
             logger.info("✓ Phase 1 complete: Network hosts and ports discovered")
         else:
             logger.error("Network scanner not initialized. Cannot start orchestrator.")
@@ -856,7 +856,7 @@ class Orchestrator:
         if scan_vuln_running and self.nmap_vuln_scanner:
             logger.info("Running initial vulnerability scan on all discovered hosts...")
             # Set orchestrator status to show vulnerability scanning in web UI
-            self.shared_data.ragnarorch_status = "NmapVulnScanner"
+            self.shared_data.optaris_defenseorch_status = "NmapVulnScanner"
             self.run_vulnerability_scans(force=True)  # Force scan at startup
             logger.info("✓ Phase 2 complete: Vulnerability scan finished")
         else:
@@ -923,7 +923,7 @@ class Orchestrator:
             if current_time - last_network_scan_time >= scan_interval:
                 logger.info(f"→ Cycle Phase 1: ARP + Port Scan (interval: {scan_interval}s)")
                 if self.network_scanner:
-                    self.shared_data.ragnarorch_status = "NetworkScanner"
+                    self.shared_data.optaris_defenseorch_status = "NetworkScanner"
                     
                     # Get current IPs before scan
                     pre_scan_data = self.shared_data.read_data()
@@ -974,7 +974,7 @@ class Orchestrator:
                         logger.info(f"→ Cycle Phase 2: Vulnerability Scan (NEW IP trigger - {len(new_ips)} new hosts)")
                     
                     # Set orchestrator status to show vulnerability scanning in web UI
-                    self.shared_data.ragnarorch_status = "NmapVulnScanner"
+                    self.shared_data.optaris_defenseorch_status = "NmapVulnScanner"
                     self.run_vulnerability_scans(force=True)  # Force scan on schedule/new IPs
                     last_vuln_scan_check = time.time()
                     vuln_scan_triggered = True
@@ -1040,14 +1040,14 @@ class Orchestrator:
                 else:
                     logger.debug("⊘ Attack actions skipped (disabled)")
                     
-                self.shared_data.ragnarorch_status = "IDLE"
-                self.shared_data.ragnarstatustext2 = ""
+                self.shared_data.optaris_defenseorch_status = "IDLE"
+                self.shared_data.optaris_defensestatustext2 = ""
                 
                 # Check if we should run a network scan
                 if current_time - last_network_scan_time >= scan_interval:
                     logger.info("No targets available - running network scan...")
                     if self.network_scanner:
-                        self.shared_data.ragnarorch_status = "NetworkScanner"
+                        self.shared_data.optaris_defenseorch_status = "NetworkScanner"
                         self._execute_network_scans(reason="idle-refresh")
                         last_network_scan_time = time.time()
                         # Get fresh results from memory (scanner hands them off immediately)
@@ -1075,8 +1075,8 @@ class Orchestrator:
                         if self.shared_data.orchestrator_should_exit:
                             break
                         remaining_time = (idle_end_time - datetime.now()).seconds
-                        self.shared_data.ragnarorch_status = "IDLE"
-                        self.shared_data.ragnarstatustext2 = ""
+                        self.shared_data.optaris_defenseorch_status = "IDLE"
+                        self.shared_data.optaris_defensestatustext2 = ""
                         sys.stdout.write('\x1b[1A\x1b[2K')
                         logger.warning(f"Idle - Next cycle in: {remaining_time} seconds")
                         time.sleep(1)

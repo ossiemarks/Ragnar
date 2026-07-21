@@ -1,4 +1,4 @@
-"""Regression tests for ZAP/Ragnar-Fuzz SQL false positive filtering."""
+"""Regression tests for ZAP/OptarisDefense-Fuzz SQL false positive filtering."""
 
 from advanced_vuln_scanner import AdvancedVulnScanner, VulnSeverity
 

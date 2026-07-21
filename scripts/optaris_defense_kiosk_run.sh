@@ -1,25 +1,25 @@
 #!/bin/bash
-# Ragnar kiosk wrapper — auto-detects environment:
+# OptarisDefense kiosk wrapper — auto-detects environment:
 #   * Already inside a Wayland/X session (autostart mode): just launch
 #     chromium in --kiosk pointed at the configured URL.
 #   * No session present (systemd service mode on Pi OS Lite): spawn our
 #     own Xorg on vt7, xauth cookie, openbox WM, then chromium.
 #
-# Reads live config from the running Ragnar instance via /api/config so
+# Reads live config from the running OptarisDefense instance via /api/config so
 # rotation / URL changes only require re-running the wrapper.
 
 set -euo pipefail
 
-REPO_ROOT="${RAGNAR_REPO:-$(cd "$(dirname "$0")/.." && pwd -P 2>/dev/null || echo /opt/ragnar)}"
+REPO_ROOT="${OPTARIS_DEFENSE_REPO:-$(cd "$(dirname "$0")/.." && pwd -P 2>/dev/null || echo /opt/optaris_defense)}"
 CONFIG_API="http://127.0.0.1:8000/api/config"
-BROWSER="${RAGNAR_BROWSER:-chromium-browser}"
+BROWSER="${OPTARIS_DEFENSE_BROWSER:-chromium-browser}"
 if ! command -v "$BROWSER" >/dev/null 2>&1; then
     for bin in chromium-browser chromium firefox-esr; do
         if command -v "$bin" >/dev/null 2>&1; then BROWSER="$bin"; break; fi
     done
 fi
 
-LOG_DIR="${RAGNAR_KIOSK_LOG_DIR:-/var/log/ragnar}"
+LOG_DIR="${OPTARIS_DEFENSE_KIOSK_LOG_DIR:-/var/log/optaris_defense}"
 mkdir -p "$LOG_DIR" 2>/dev/null || true
 WRAPPER_LOG="$LOG_DIR/kiosk-wrapper.log"
 if : > >(tee -a "$WRAPPER_LOG" 2>/dev/null) 2>/dev/null; then
@@ -69,7 +69,7 @@ fi
 echo "[kiosk-run] target URL: $FINAL_URL"
 
 # Per-kiosk chromium profile so we don't trip "restore tabs" prompts.
-PROFILE_DIR="$HOME/.config/ragnar-kiosk-chromium"
+PROFILE_DIR="$HOME/.config/optaris-defense-kiosk-chromium"
 mkdir -p "$PROFILE_DIR" 2>/dev/null || true
 
 # After a power-cut the Pi never shuts Chromium down cleanly, so it shows the
@@ -123,10 +123,10 @@ fi
 # screen OR a keyboardless setup — a mouse-only HDMI kiosk still needs a way to
 # type (login, terminal, WiFi passphrase), clicked with the mouse. Touch DOM
 # events are only forced when an actual touchscreen is present.
-#   RAGNAR_KIOSK_TOUCH=on|off|auto  overrides touch detection (default auto)
-#   RAGNAR_KIOSK_OSK=on|off|auto    overrides the on-screen keyboard (default auto)
-TOUCH_MODE="${RAGNAR_KIOSK_TOUCH:-auto}"
-OSK_MODE="${RAGNAR_KIOSK_OSK:-auto}"
+#   OPTARIS_DEFENSE_KIOSK_TOUCH=on|off|auto  overrides touch detection (default auto)
+#   OPTARIS_DEFENSE_KIOSK_OSK=on|off|auto    overrides the on-screen keyboard (default auto)
+TOUCH_MODE="${OPTARIS_DEFENSE_KIOSK_TOUCH:-auto}"
+OSK_MODE="${OPTARIS_DEFENSE_KIOSK_OSK:-auto}"
 TOUCH_PRESENT=0
 KBD_PRESENT=0
 if command -v udevadm >/dev/null 2>&1; then
@@ -178,7 +178,7 @@ launch_osk() {
     fi
 }
 
-# Wait for Ragnar's web server to actually answer (max 60s).
+# Wait for OptarisDefense's web server to actually answer (max 60s).
 for i in $(seq 1 60); do
     if curl -fsS --max-time 2 "$KIOSK_URL" >/dev/null 2>&1; then break; fi
     sleep 1
@@ -260,7 +260,7 @@ if command -v xauth >/dev/null 2>&1; then
     fi
 fi
 
-SESSION_SCRIPT="$(mktemp --tmpdir ragnar-kiosk-XXXXXX.sh)"
+SESSION_SCRIPT="$(mktemp --tmpdir optaris-defense-kiosk-XXXXXX.sh)"
 trap 'rm -f "$SESSION_SCRIPT"' EXIT
 cat > "$SESSION_SCRIPT" <<EOF
 #!/bin/bash

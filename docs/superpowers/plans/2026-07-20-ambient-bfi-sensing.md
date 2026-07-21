@@ -4,7 +4,7 @@
 
 **Goal:** Passively sniff beamforming-feedback (BFI) from ambient 802.11ac/ax devices with a dedicated USB monitor adapter (+ GL-MT3000 monitor mode), feed it to a separate `sensing-server --source bfi` instance, and surface an independent "ambient activity" layer — without touching the production dedicated-node pipeline.
 
-**Architecture:** Isolated additive layer (Approach 1 in `decisionTree.md`). Monitor-mode capture → bfi instance on `:8081`/`:8766` → ambient presence/motion. Production stack (fan-out `:5005` → OptarisSense `:5105` + Ragnar `:5006`) is untouched.
+**Architecture:** Isolated additive layer (Approach 1 in `decisionTree.md`). Monitor-mode capture → bfi instance on `:8081`/`:8766` → ambient presence/motion. Production stack (fan-out `:5005` → OptarisSense `:5105` + OptarisDefense `:5006`) is untouched.
 
 **Tech Stack:** Linux monitor mode (`iw`/`airmon`-style, reuse `wifiwatch-setup-mon.sh`), `tcpdump`/`tshark` capture, the vendored `sensing-server` (`--source bfi --bfi-pcap`), systemd, Python 3.12 (stdlib) only if a BFI decoder proves necessary (gated by Task 1).
 
@@ -21,7 +21,7 @@
 ## Prerequisites (must hold before Task 1)
 
 - [ ] **USB monitor adapter present** on the Pi (a dual-band `mt76` adapter, e.g. Alfa AWUS036ACM). Confirm: `iw dev` lists it and `iw phy` shows `monitor` in supported interface modes. **This is user-acquired hardware — the plan cannot proceed without it.**
-- [ ] **Pi stable** (power sorted; not mid-reboot). The Ragnar deployment (separate work) should have settled.
+- [ ] **Pi stable** (power sorted; not mid-reboot). The OptarisDefense deployment (separate work) should have settled.
 
 ---
 
@@ -84,7 +84,7 @@ A systemd-managed capture that keeps a monitor adapter parked on a channel and m
 
 **Files:**
 - Create: `scripts/ambient/ambient_monitor_capture.sh`
-- Create: `config/systemd/ragnar-ambient-capture@.service` (templated per-adapter)
+- Create: `config/systemd/optaris-defense-ambient-capture@.service` (templated per-adapter)
 
 - [ ] **Step 1: Write the capture script**
 
@@ -92,10 +92,10 @@ A systemd-managed capture that keeps a monitor adapter parked on a channel and m
 # scripts/ambient/ambient_monitor_capture.sh
 #!/usr/bin/env bash
 # Park an adapter in monitor mode on a channel and roll a size-bounded pcap of action frames.
-# Usage: IFACE=wlan1 CHANNEL=36 OUTDIR=/var/lib/ragnar/ambient MAXFILES=4 MAXSIZE=64 ./ambient_monitor_capture.sh
+# Usage: IFACE=wlan1 CHANNEL=36 OUTDIR=/var/lib/optaris_defense/ambient MAXFILES=4 MAXSIZE=64 ./ambient_monitor_capture.sh
 set -euo pipefail
 IFACE="${IFACE:?set IFACE}"; CHANNEL="${CHANNEL:?set CHANNEL}"
-OUTDIR="${OUTDIR:-/var/lib/ragnar/ambient}"; MAXFILES="${MAXFILES:-4}"; MAXSIZE="${MAXSIZE:-64}"  # MB per file
+OUTDIR="${OUTDIR:-/var/lib/optaris_defense/ambient}"; MAXFILES="${MAXFILES:-4}"; MAXSIZE="${MAXSIZE:-64}"  # MB per file
 mkdir -p "$OUTDIR"
 # ensure monitor mode via the repo's existing helper (idempotent)
 SCRIPT_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -111,13 +111,13 @@ exec sudo tcpdump -i "$IFACE" -w "$OUTDIR/bfi-%Y%m%d-%H%M%S.pcap" \
 - [ ] **Step 2: Write the templated systemd unit**
 
 ```ini
-# config/systemd/ragnar-ambient-capture@.service   (instance = IFACE:CHANNEL, e.g. wlan1:36)
+# config/systemd/optaris-defense-ambient-capture@.service   (instance = IFACE:CHANNEL, e.g. wlan1:36)
 [Unit]
-Description=Ragnar ambient BFI monitor capture (%i)
+Description=OptarisDefense ambient BFI monitor capture (%i)
 After=network-online.target
 [Service]
-Environment=OUTDIR=/var/lib/ragnar/ambient
-ExecStart=/bin/sh -c 'IFACE=$(echo %i | cut -d: -f1) CHANNEL=$(echo %i | cut -d: -f2) /home/pi/ragnar-app/scripts/ambient/ambient_monitor_capture.sh'
+Environment=OUTDIR=/var/lib/optaris_defense/ambient
+ExecStart=/bin/sh -c 'IFACE=$(echo %i | cut -d: -f1) CHANNEL=$(echo %i | cut -d: -f2) /home/pi/optaris-defense-app/scripts/ambient/ambient_monitor_capture.sh'
 Restart=on-failure
 RestartSec=5
 [Install]
@@ -127,15 +127,15 @@ WantedBy=multi-user.target
 - [ ] **Step 3: Deploy + start on the Pi and verify frames accumulate**
 
 ```bash
-rsync -az -e "ssh -i ~/.ssh/id_ed25519" scripts/ambient/ pi@192.168.8.149:/home/pi/ragnar-app/scripts/ambient/
-ssh -i ~/.ssh/id_ed25519 pi@192.168.8.149 "sudo install -m0644 /home/pi/ragnar-app/config/systemd/ragnar-ambient-capture@.service /etc/systemd/system/ && sudo systemctl daemon-reload && sudo systemctl start 'ragnar-ambient-capture@wlan1:36'; sleep 20; ls -la /var/lib/ragnar/ambient/; sudo tcpdump -r \$(ls -t /var/lib/ragnar/ambient/*.pcap | head -1) 2>/dev/null | wc -l"
+rsync -az -e "ssh -i ~/.ssh/id_ed25519" scripts/ambient/ pi@192.168.8.149:/home/pi/optaris-defense-app/scripts/ambient/
+ssh -i ~/.ssh/id_ed25519 pi@192.168.8.149 "sudo install -m0644 /home/pi/optaris-defense-app/config/systemd/optaris-defense-ambient-capture@.service /etc/systemd/system/ && sudo systemctl daemon-reload && sudo systemctl start 'optaris-defense-ambient-capture@wlan1:36'; sleep 20; ls -la /var/lib/optaris_defense/ambient/; sudo tcpdump -r \$(ls -t /var/lib/optaris_defense/ambient/*.pcap | head -1) 2>/dev/null | wc -l"
 ```
 Expected: a growing pcap with a non-zero frame count, capped at `MAXFILES`×`MAXSIZE` MB.
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add scripts/ambient/ambient_monitor_capture.sh config/systemd/ragnar-ambient-capture@.service
+git add scripts/ambient/ambient_monitor_capture.sh config/systemd/optaris-defense-ambient-capture@.service
 git commit -m "ambient: rolling bounded monitor-capture service for BFI"
 ```
 
@@ -167,20 +167,20 @@ Decode the VHT/HE compressed beamforming report (φ/ψ angles + metadata) from e
 Run the bfi instance on ambient ports, consuming the capture (raw pcap if O1=A, or the decoder's output if O1=B), as a systemd service independent of the production stack.
 
 **Files:**
-- Create: `config/systemd/ragnar-ambient-sensing.service`
+- Create: `config/systemd/optaris-defense-ambient-sensing.service`
 - Create: `scripts/ambient/install_ambient.sh`
 
 - [ ] **Step 1: Write the ambient sensing unit**
 
 ```ini
-# config/systemd/ragnar-ambient-sensing.service
+# config/systemd/optaris-defense-ambient-sensing.service
 [Unit]
-Description=Ragnar ambient BFI sensing-server (:8081)
-After=network-online.target ragnar-ambient-capture@wlan1:36.service
+Description=OptarisDefense ambient BFI sensing-server (:8081)
+After=network-online.target optaris-defense-ambient-capture@wlan1:36.service
 [Service]
 # BFI_INPUT is the rolling pcap dir/file (O1=A) or the decoder feed (O1=B). Set at install.
 ExecStart=/usr/local/bin/sensing-server --source bfi --bfi-pcap ${BFI_INPUT} --http-port 8081 --ws-port 8766 --bind-addr 127.0.0.1
-Environment=BFI_INPUT=/var/lib/ragnar/ambient/latest.pcap
+Environment=BFI_INPUT=/var/lib/optaris_defense/ambient/latest.pcap
 Restart=on-failure
 RestartSec=5
 [Install]
@@ -191,7 +191,7 @@ WantedBy=multi-user.target
 - [ ] **Step 3: Deploy + start; verify the ambient instance is healthy on :8081 and NOT touching production ports**
 
 ```bash
-ssh -i ~/.ssh/id_ed25519 pi@192.168.8.149 "sudo bash /home/pi/ragnar-app/scripts/ambient/install_ambient.sh && sleep 6; curl -s http://127.0.0.1:8081/api/v1/health; echo; sudo ss -ulnp | grep -E ':8081|:5005|:5105' | sed 's/users.*//'"
+ssh -i ~/.ssh/id_ed25519 pi@192.168.8.149 "sudo bash /home/pi/optaris-defense-app/scripts/ambient/install_ambient.sh && sleep 6; curl -s http://127.0.0.1:8081/api/v1/health; echo; sudo ss -ulnp | grep -E ':8081|:5005|:5105' | sed 's/users.*//'"
 ```
 Expected: `:8081` healthy; `:5005/:5105` still owned by the production fan-out/OptarisSense (untouched).
 
@@ -205,7 +205,7 @@ Expected: `:8081` healthy; `:5005/:5105` still owned by the production fan-out/O
 - Create: `tests/ambient/README.md`
 
 - [ ] **Step 1:** With capture + ambient instance running, confirm the ambient layer reacts to real activity: query `http://127.0.0.1:8081/api/v1/*` (presence/motion) while someone moves through the ambient-covered area; capture before/after.
-- [ ] **Step 2:** Confirm the **production stack is unaffected** — OptarisSense `:8080` nodes still active, Ragnar `:3000` still active, fan-out `:5005` intact.
+- [ ] **Step 2:** Confirm the **production stack is unaffected** — OptarisSense `:8080` nodes still active, OptarisDefense `:3000` still active, fan-out `:5005` intact.
 - [ ] **Step 3:** Write `tests/ambient/README.md` — the capture/ingest/verify commands, expected outputs, the per-radio channel assignment, and the O1 outcome (A or B). Commit (`docs(ambient): verification runbook`).
 
 ---

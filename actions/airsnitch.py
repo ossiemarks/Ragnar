@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AirSnitch Wi-Fi Client Isolation Testing Module for Ragnar
+AirSnitch Wi-Fi Client Isolation Testing Module for OptarisDefense
 
 Tests whether a Wi-Fi network properly enforces client isolation using three attack vectors:
   - GTK Abuse: checks if clients share a group transient key
@@ -21,7 +21,7 @@ import time
 from pathlib import Path
 from typing import Optional
 
-# Required attributes for Ragnar action framework
+# Required attributes for OptarisDefense action framework
 b_class = "AirSnitch"
 b_module = "airsnitch"
 b_status = "airsnitch_scan"
@@ -299,12 +299,12 @@ class AirSnitchRunner:
 
 
 # ==============================================================================
-# Ragnar action wrapper
+# OptarisDefense action wrapper
 # ==============================================================================
 
 class AirSnitch:
     """
-    Ragnar action wrapper for AirSnitch Wi-Fi client isolation testing.
+    OptarisDefense action wrapper for AirSnitch Wi-Fi client isolation testing.
 
     Configuration (read from shared_data.config):
         airsnitch_iface_victim   – wireless interface acting as victim   (default: wlan1)
@@ -323,11 +323,11 @@ class AirSnitch:
         self.logger = logging.getLogger(__name__)
 
         install_dir = os.path.join(
-            getattr(shared_data, "currentdir", "/opt/ragnar"),
+            getattr(shared_data, "currentdir", "/opt/optaris_defense"),
             "tools", "airsnitch",
         )
         self.results_dir = Path(
-            getattr(shared_data, "logsdir", "/tmp/ragnar_logs"), "airsnitch"
+            getattr(shared_data, "logsdir", "/tmp/optaris_defense_logs"), "airsnitch"
         )
         self.results_dir.mkdir(parents=True, exist_ok=True)
         self.install_log_path = self.results_dir / "install.log"
@@ -349,7 +349,7 @@ class AirSnitch:
         return path
 
     # ------------------------------------------------------------------
-    # Entry point called by Ragnar orchestrator
+    # Entry point called by OptarisDefense orchestrator
     # ------------------------------------------------------------------
 
     def execute(self, ip=None, port=None, row=None, status_key=None):

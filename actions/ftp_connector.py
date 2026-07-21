@@ -54,7 +54,7 @@ class FTPBruteforce:
             else:
                 logger.warning(f"Existing credentials for {ip} no longer valid, will re-bruteforce")
         
-        self.shared_data.ragnarorch_status = "FTPBruteforce"
+        self.shared_data.optaris_defenseorch_status = "FTPBruteforce"
         # Wait a bit because it's too fast to see the status change
         time.sleep(5)
         logger.info(f"Brute forcing FTP on {ip}:{port}...")

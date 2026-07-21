@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""certwatch.py — passive TLS certificate triage for the Ragnar suite.
+"""certwatch.py — passive TLS certificate triage for the OptarisDefense suite.
 
 Watches TLS handshakes crossing a tap / SPAN / bridge and triages every X.509
 certificate it can *observe* for expiry and validity problems. Detection only —

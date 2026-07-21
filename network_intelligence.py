@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Network-Based Intelligence System for Ragnar
+Network-Based Intelligence System for OptarisDefense
 Tracks vulnerabilities and credentials based on WiFi network context
 Maintains active vs resolved states for smart persistence
 
@@ -146,10 +146,10 @@ class NetworkIntelligence:
         """Get current network identifier"""
         try:
             # Try to get SSID from WiFi manager
-            if (hasattr(self.shared_data, 'ragnar_instance') and 
-                hasattr(self.shared_data.ragnar_instance, 'wifi_manager')):
+            if (hasattr(self.shared_data, 'optaris_defense_instance') and 
+                hasattr(self.shared_data.optaris_defense_instance, 'wifi_manager')):
                 
-                wifi_mgr = self.shared_data.ragnar_instance.wifi_manager
+                wifi_mgr = self.shared_data.optaris_defense_instance.wifi_manager
                 if hasattr(wifi_mgr, 'current_ssid') and wifi_mgr.current_ssid:
                     return self.create_network_id(wifi_mgr.current_ssid)
                 

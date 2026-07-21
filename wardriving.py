@@ -1,5 +1,5 @@
 # wardriving.py
-# High-performance wardriving engine for Ragnar.
+# High-performance wardriving engine for OptarisDefense.
 # Captures WiFi networks with GPS coordinates using external antennas.
 # Supports multiple WiFi adapters, exports to WiGLE CSV and KML.
 
@@ -981,15 +981,15 @@ class WardrivingSession:
                 logger.error(f"GPS backfill error: {e}")
         return result
 
-    def export_wigle_csv(self, device_name='Ragnar'):
+    def export_wigle_csv(self, device_name='OptarisDefense'):
         """Export session to WiGLE CSV format string including WiFi, BT, and cell.
 
         Rows whose position was estimated via backfill_gps_from_track
         (gps_backfilled = 1) are excluded — they are interpolated coordinates,
         not real observations, and must not be submitted to WiGLE."""
         lines = []
-        dn = device_name or 'Ragnar'
-        lines.append(f'WigleWifi-1.4,appRelease=Ragnar,model=RaspberryPi,release=1.0,device={dn},display=EPD,board=RPi,brand=Ragnar')
+        dn = device_name or 'OptarisDefense'
+        lines.append(f'WigleWifi-1.4,appRelease=OptarisDefense,model=RaspberryPi,release=1.0,device={dn},display=EPD,board=RPi,brand=OptarisDefense')
         lines.append(','.join(WIGLE_HEADER))
 
         with self._lock:
@@ -1073,7 +1073,7 @@ class WardrivingSession:
             '<?xml version="1.0" encoding="UTF-8"?>',
             '<kml xmlns="http://www.opengis.net/kml/2.2">',
             '<Document>',
-            f'<name>Ragnar Wardriving - {self.session_id}</name>',
+            f'<name>OptarisDefense Wardriving - {self.session_id}</name>',
             '<Style id="open"><IconStyle><color>ff00ff00</color><scale>0.8</scale></IconStyle></Style>',
             '<Style id="wep"><IconStyle><color>ff00ffff</color><scale>0.8</scale></IconStyle></Style>',
             '<Style id="wpa"><IconStyle><color>ff0000ff</color><scale>0.8</scale></IconStyle></Style>',
@@ -1623,7 +1623,7 @@ class WardrivingEngine:
         }
 
     def _ensure_hat_buttons(self):
-        """Reclaim the 2.7" e-paper HAT buttons for Ragnar when wardriving
+        """Reclaim the 2.7" e-paper HAT buttons for OptarisDefense when wardriving
         starts, in case another app (airprint.service) holds the GPIO pins."""
         try:
             display = getattr(self.shared_data, 'display_instance', None)
@@ -1686,9 +1686,9 @@ class WardrivingEngine:
         try:
             if getattr(self.shared_data, 'wifi_connected', False):
                 return  # Already on WiFi — nothing to do
-            ragnar = getattr(self.shared_data, 'ragnar_instance', None)
-            if ragnar and hasattr(ragnar, 'wifi_manager'):
-                wm = ragnar.wifi_manager
+            optaris_defense = getattr(self.shared_data, 'optaris_defense_instance', None)
+            if optaris_defense and hasattr(optaris_defense, 'wifi_manager'):
+                wm = optaris_defense.wifi_manager
                 if getattr(wm, 'ap_mode_active', False):
                     return  # Don't disrupt an active AP session
                 logger.info(
@@ -2024,7 +2024,7 @@ class WardrivingEngine:
 
         udev-attribute first (no port open). Only truly ambiguous generic
         bridges (CP210x/CH340/FTDI) get a short, bounded NMEA probe — and a
-        device with no GPS/ESP/bridge markers is left alone so Ragnar never
+        device with no GPS/ESP/bridge markers is left alone so OptarisDefense never
         hijacks an unrelated USB-serial gadget.
         """
         vid, _pid, desc = self._usb_props(node)
@@ -2766,7 +2766,7 @@ class WardrivingEngine:
         flip an adapter back to monitor.
 
         DELIBERATE: wardriving and AP mode are MUTUALLY EXCLUSIVE by design.
-        If Ragnar enters AP mode (wlan0 type='ap' via hostapd) while wardriving
+        If OptarisDefense enters AP mode (wlan0 type='ap' via hostapd) while wardriving
         is active, this method will force wlan0 back to 'managed' and the AP
         will collapse. That is intentional — wardriving needs every radio in
         scannable state. If you want AP mode, stop wardriving first (or never
@@ -3359,7 +3359,7 @@ class WardrivingEngine:
             (b"pineap\r\n", 10, "pineap"),
         ]
 
-        # poll-based reader so we never hit pyserial's select() path. Ragnar.py
+        # poll-based reader so we never hit pyserial's select() path. optaris_defense.py
         # routinely runs with >700 open FDs (ZAP + threads), and pyserial uses
         # `select.select()` on its abort-pipe — which raises
         # `ValueError('filedescriptor out of range in select()')` once any FD
@@ -3407,7 +3407,7 @@ class WardrivingEngine:
                 # Huginn takes ~1.5-2s to boot; read the banner window first.
                 # Banner signatures:
                 #   HuginnESP          → {"device":"HuginnESP",...} or [BOOT] HuginnESP
-                #   Piglet Coordinator → {"device":"RagnarCoord",...}
+                #   Piglet Coordinator → {"device":"OptarisDefenseCoord",...}
                 #   Piglet Core        → {"device":"PigletCore",...} or [CORE] messages
                 #   Piglet (standard)  → WigleWifi-x.y banner or brand=Piglet
                 companion.name = ''
@@ -3428,7 +3428,7 @@ class WardrivingEngine:
                                 boot_buf += chunk.decode('utf-8', errors='replace')
                             except Exception:
                                 pass
-                            if ('HuginnESP' in boot_buf or 'RagnarCoord' in boot_buf
+                            if ('HuginnESP' in boot_buf or 'OptarisDefenseCoord' in boot_buf
                                     or 'PigletCore' in boot_buf or '[CORE]' in boot_buf
                                     or 'Piglet' in boot_buf or 'WigleWifi-' in boot_buf):
                                 break
@@ -3436,7 +3436,7 @@ class WardrivingEngine:
 
                     if 'HuginnESP' in boot_buf or 'huginn' in boot_buf.lower():
                         companion.name = 'Huginn'
-                    elif 'RagnarCoord' in boot_buf:
+                    elif 'OptarisDefenseCoord' in boot_buf:
                         companion.name = 'Piglet Coordinator'
                     elif 'PigletCore' in boot_buf:
                         companion.name = 'Piglet Core'
@@ -3464,7 +3464,7 @@ class WardrivingEngine:
                             probe = ''
                         if '{"mode"' in probe or 'HuginnESP' in probe or 'huginn' in probe.lower():
                             companion.name = 'Huginn'
-                        elif 'RagnarCoord' in probe:
+                        elif 'OptarisDefenseCoord' in probe:
                             companion.name = 'Piglet Coordinator'
                         elif 'PigletCore' in probe:
                             companion.name = 'Piglet Core'
@@ -3613,13 +3613,13 @@ class WardrivingEngine:
         Companions (notably Huginn, which often runs without its own GPS) may
         emit records with no lat/lon, a JSON null, or the 0/0 "no fix"
         sentinel. When the companion's position is missing or invalid and
-        Ragnar has its own fix, we stamp Ragnar's GPS onto the record so the
+        OptarisDefense has its own fix, we stamp OptarisDefense's GPS onto the record so the
         data still lands on the map.
 
         Returns ``(lat, lon, alt, from_companion)`` where ``from_companion`` is
         True only when the companion supplied a real position — letting the
         caller decide whether to forward it to the GPS manager as an external
-        fix (we must not feed Ragnar's own GPS back as a companion fix).
+        fix (we must not feed OptarisDefense's own GPS back as a companion fix).
         """
         def _f(v):
             try:
@@ -3811,7 +3811,7 @@ class WardrivingEngine:
 
                 # Device announce rows — update companion identity
                 dev = data.get('device', '')
-                if dev == 'RagnarCoord':
+                if dev == 'OptarisDefenseCoord':
                     companion.name = 'Piglet Coordinator'
                     companion.coordinator_board = data.get('board', '')
                     companion.coordinator_fw    = data.get('fw', '')
@@ -3872,7 +3872,7 @@ class WardrivingEngine:
                 auth = data.get('auth', data.get('security', data.get('encryption', '')))
                 record_type = data.get('type', 'WIFI').upper()
 
-                # Huginn frequently has no GPS of its own — stamp Ragnar's fix
+                # Huginn frequently has no GPS of its own — stamp OptarisDefense's fix
                 # when the record lacks a valid position.
                 lat, lon, alt, from_companion = self._resolve_coords(
                     data.get('lat', data.get('latitude')),

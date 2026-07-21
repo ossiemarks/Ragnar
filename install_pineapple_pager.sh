@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# install_pineapple_pager.sh - Deploy Ragnar to a WiFi Pineapple Pager
+# install_pineapple_pager.sh - Deploy OptarisDefense to a WiFi Pineapple Pager
 #
-# This script packages Ragnar as a Pager payload and copies it to the device.
+# This script packages OptarisDefense as a Pager payload and copies it to the device.
 # The Pager must be accessible via SSH (default: root@172.16.42.1).
 #
 # Usage:
@@ -32,8 +32,8 @@ else
     PAGER_IP="$1"
 fi
 PAGER_USER="root"
-PAGER_PAYLOAD_DIR="/root/payloads/user/reconnaissance/pager_ragnar"
-RAGNAR_DIR="$(cd "$(dirname "$0")" && pwd)"
+PAGER_PAYLOAD_DIR="/root/payloads/user/reconnaissance/pager_optaris_defense"
+OPTARIS_DEFENSE_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 log() {
     local level=$1; shift
@@ -48,9 +48,9 @@ log() {
 
 echo -e "${CYAN}"
 echo "  ╔═══════════════════════════════════════════════════════╗"
-echo "  ║     Ragnar - WiFi Pineapple Pager Installer          ║"
+echo "  ║     OptarisDefense - WiFi Pineapple Pager Installer          ║"
 echo "  ║                                                       ║"
-echo "  ║  Deploy Ragnar as a Pager payload for autonomous      ║"
+echo "  ║  Deploy OptarisDefense as a Pager payload for autonomous      ║"
 echo "  ║  network reconnaissance on the go.                    ║"
 echo "  ╚═══════════════════════════════════════════════════════╝"
 echo -e "${NC}"
@@ -133,13 +133,13 @@ fi
 
 log "INFO" "Checking for libpagerctl.so..."
 
-# Check if we have it bundled in Ragnar itself
-RAGNAR_PAGERCTL="${RAGNAR_DIR}/libpagerctl.so"
-BJORN_PAGERCTL_CHECK="${RAGNAR_DIR}/../pineapple_pager_bjorn/payloads/user/reconnaissance/pager_bjorn/libpagerctl.so"
+# Check if we have it bundled in OptarisDefense itself
+OPTARIS_DEFENSE_PAGERCTL="${OPTARIS_DEFENSE_DIR}/libpagerctl.so"
+BJORN_PAGERCTL_CHECK="${OPTARIS_DEFENSE_DIR}/../pineapple_pager_bjorn/payloads/user/reconnaissance/pager_bjorn/libpagerctl.so"
 
-if [ -f "$RAGNAR_PAGERCTL" ]; then
-    log "SUCCESS" "Found libpagerctl.so in Ragnar (will be bundled)"
-    PAGERCTL_SOURCE="ragnar"
+if [ -f "$OPTARIS_DEFENSE_PAGERCTL" ]; then
+    log "SUCCESS" "Found libpagerctl.so in OptarisDefense (will be bundled)"
+    PAGERCTL_SOURCE="optaris_defense"
 elif [ -f "$BJORN_PAGERCTL_CHECK" ]; then
     log "SUCCESS" "Found libpagerctl.so in pineapple_pager_bjorn (will be bundled)"
     PAGERCTL_SOURCE="bjorn"
@@ -186,12 +186,12 @@ fi
 log "INFO" "Preparing payload package..."
 
 STAGING_DIR=$(mktemp -d)
-PAYLOAD_STAGE="${STAGING_DIR}/pager_ragnar"
+PAYLOAD_STAGE="${STAGING_DIR}/pager_optaris_defense"
 mkdir -p "${PAYLOAD_STAGE}"
 
 # Pager-specific files (live in pager/ subdirectory of the repo, deployed flat)
 PAGER_FILES=(
-    "PagerRagnar.py"
+    "Pageroptaris_defense.py"
     "pager_display.py"
     "pager_menu.py"
     "pager_payload.sh"
@@ -200,9 +200,9 @@ PAGER_FILES=(
 )
 
 for f in "${PAGER_FILES[@]}"; do
-    src="${RAGNAR_DIR}/pager/${f}"
+    src="${OPTARIS_DEFENSE_DIR}/pager/${f}"
     # Fallback: root of repo (in case someone hasn't reorganised yet)
-    [ -f "$src" ] || src="${RAGNAR_DIR}/${f}"
+    [ -f "$src" ] || src="${OPTARIS_DEFENSE_DIR}/${f}"
     if [ -f "$src" ]; then
         cp "$src" "${PAYLOAD_STAGE}/"
     else
@@ -256,10 +256,10 @@ CORE_FILES=(
 )
 
 for f in "${CORE_FILES[@]}"; do
-    if [ -f "${RAGNAR_DIR}/${f}" ]; then
-        cp "${RAGNAR_DIR}/${f}" "${PAYLOAD_STAGE}/"
-    elif [ -f "${RAGNAR_DIR}/python/${f}" ]; then
-        cp "${RAGNAR_DIR}/python/${f}" "${PAYLOAD_STAGE}/"
+    if [ -f "${OPTARIS_DEFENSE_DIR}/${f}" ]; then
+        cp "${OPTARIS_DEFENSE_DIR}/${f}" "${PAYLOAD_STAGE}/"
+    elif [ -f "${OPTARIS_DEFENSE_DIR}/python/${f}" ]; then
+        cp "${OPTARIS_DEFENSE_DIR}/python/${f}" "${PAYLOAD_STAGE}/"
     else
         log "WARNING" "File not found: ${f} (skipping)"
     fi
@@ -274,32 +274,32 @@ if [ -f "${PAYLOAD_STAGE}/pager_payload.sh" ]; then
 fi
 
 # Copy actions directory
-if [ -d "${RAGNAR_DIR}/actions" ]; then
-    cp -r "${RAGNAR_DIR}/actions" "${PAYLOAD_STAGE}/actions"
+if [ -d "${OPTARIS_DEFENSE_DIR}/actions" ]; then
+    cp -r "${OPTARIS_DEFENSE_DIR}/actions" "${PAYLOAD_STAGE}/actions"
     log "SUCCESS" "Copied actions directory"
 fi
 
 # Copy config directory
-if [ -d "${RAGNAR_DIR}/config" ]; then
-    cp -r "${RAGNAR_DIR}/config" "${PAYLOAD_STAGE}/config"
+if [ -d "${OPTARIS_DEFENSE_DIR}/config" ]; then
+    cp -r "${OPTARIS_DEFENSE_DIR}/config" "${PAYLOAD_STAGE}/config"
     log "SUCCESS" "Copied config directory"
 fi
 
 # Copy only required resources (skip e-paper driver and large PSD source files)
 mkdir -p "${PAYLOAD_STAGE}/resources"
-[ -d "${RAGNAR_DIR}/resources/fonts" ]   && cp -r "${RAGNAR_DIR}/resources/fonts"   "${PAYLOAD_STAGE}/resources/"
-[ -d "${RAGNAR_DIR}/resources/comments" ] && cp -r "${RAGNAR_DIR}/resources/comments" "${PAYLOAD_STAGE}/resources/"
-if [ -d "${RAGNAR_DIR}/resources/images" ]; then
+[ -d "${OPTARIS_DEFENSE_DIR}/resources/fonts" ]   && cp -r "${OPTARIS_DEFENSE_DIR}/resources/fonts"   "${PAYLOAD_STAGE}/resources/"
+[ -d "${OPTARIS_DEFENSE_DIR}/resources/comments" ] && cp -r "${OPTARIS_DEFENSE_DIR}/resources/comments" "${PAYLOAD_STAGE}/resources/"
+if [ -d "${OPTARIS_DEFENSE_DIR}/resources/images" ]; then
     mkdir -p "${PAYLOAD_STAGE}/resources/images"
-    [ -d "${RAGNAR_DIR}/resources/images/static" ] && cp -r "${RAGNAR_DIR}/resources/images/static" "${PAYLOAD_STAGE}/resources/images/"
-    [ -d "${RAGNAR_DIR}/resources/images/status" ] && cp -r "${RAGNAR_DIR}/resources/images/status" "${PAYLOAD_STAGE}/resources/images/"
+    [ -d "${OPTARIS_DEFENSE_DIR}/resources/images/static" ] && cp -r "${OPTARIS_DEFENSE_DIR}/resources/images/static" "${PAYLOAD_STAGE}/resources/images/"
+    [ -d "${OPTARIS_DEFENSE_DIR}/resources/images/status" ] && cp -r "${OPTARIS_DEFENSE_DIR}/resources/images/status" "${PAYLOAD_STAGE}/resources/images/"
     # Skip *.psd source files (~21MB) and waveshare_epd (e-paper driver not used on pager)
 fi
 log "SUCCESS" "Copied pager resources (fonts, icons, status images)"
 
 # Copy web directory (for web UI)
-if [ -d "${RAGNAR_DIR}/web" ]; then
-    cp -r "${RAGNAR_DIR}/web" "${PAYLOAD_STAGE}/web"
+if [ -d "${OPTARIS_DEFENSE_DIR}/web" ]; then
+    cp -r "${OPTARIS_DEFENSE_DIR}/web" "${PAYLOAD_STAGE}/web"
     log "SUCCESS" "Copied web directory"
 fi
 
@@ -313,11 +313,11 @@ mkdir -p "${PAYLOAD_STAGE}/data/output/zombies"
 mkdir -p "${PAYLOAD_STAGE}/data/input/dictionary"
 
 # Copy dictionary files if they exist
-if [ -f "${RAGNAR_DIR}/data/input/dictionary/users.txt" ]; then
-    cp "${RAGNAR_DIR}/data/input/dictionary/users.txt" "${PAYLOAD_STAGE}/data/input/dictionary/"
+if [ -f "${OPTARIS_DEFENSE_DIR}/data/input/dictionary/users.txt" ]; then
+    cp "${OPTARIS_DEFENSE_DIR}/data/input/dictionary/users.txt" "${PAYLOAD_STAGE}/data/input/dictionary/"
 fi
-if [ -f "${RAGNAR_DIR}/data/input/dictionary/passwords.txt" ]; then
-    cp "${RAGNAR_DIR}/data/input/dictionary/passwords.txt" "${PAYLOAD_STAGE}/data/input/dictionary/"
+if [ -f "${OPTARIS_DEFENSE_DIR}/data/input/dictionary/passwords.txt" ]; then
+    cp "${OPTARIS_DEFENSE_DIR}/data/input/dictionary/passwords.txt" "${PAYLOAD_STAGE}/data/input/dictionary/"
 fi
 
 # Create default dictionary files if not present
@@ -354,13 +354,13 @@ log "INFO" "Bundling Python dependencies..."
 LIB_DIR="${PAYLOAD_STAGE}/lib"
 mkdir -p "${LIB_DIR}"
 
-# Check for bundled libraries - first in Ragnar/pager_lib, then in pineapple_pager_bjorn
-RAGNAR_LIB_DIR="${RAGNAR_DIR}/pager_lib"
-BJORN_LIB_DIR="${RAGNAR_DIR}/../pineapple_pager_bjorn/payloads/user/reconnaissance/pager_bjorn/lib"
+# Check for bundled libraries - first in OptarisDefense/pager_lib, then in pineapple_pager_bjorn
+OPTARIS_DEFENSE_LIB_DIR="${OPTARIS_DEFENSE_DIR}/pager_lib"
+BJORN_LIB_DIR="${OPTARIS_DEFENSE_DIR}/../pineapple_pager_bjorn/payloads/user/reconnaissance/pager_bjorn/lib"
 
-if [ -d "$RAGNAR_LIB_DIR" ]; then
-    log "INFO" "Found bundled libraries in Ragnar/pager_lib, copying..."
-    cp -r "${RAGNAR_LIB_DIR}/"* "${LIB_DIR}/" 2>/dev/null || true
+if [ -d "$OPTARIS_DEFENSE_LIB_DIR" ]; then
+    log "INFO" "Found bundled libraries in OptarisDefense/pager_lib, copying..."
+    cp -r "${OPTARIS_DEFENSE_LIB_DIR}/"* "${LIB_DIR}/" 2>/dev/null || true
     log "SUCCESS" "Copied bundled Python libraries"
 elif [ -d "$BJORN_LIB_DIR" ]; then
     log "INFO" "Found bundled libraries from pineapple_pager_bjorn, copying..."
@@ -375,7 +375,7 @@ else
         echo "  The Pager requires bundled Python libraries (paramiko, nmap, pymysql, etc.)"
         echo "  These should be MIPS-compiled versions."
         echo ""
-        echo "  Ragnar may have limited functionality without them."
+        echo "  OptarisDefense may have limited functionality without them."
         echo ""
         read -p "  Continue without bundled libraries? (y/n): " choice
         if [[ ! "$choice" =~ ^[Yy]$ ]]; then
@@ -389,13 +389,13 @@ fi
 # Step 5: Copy binary dependencies (sfreerdp, etc.)
 # ============================================================
 
-RAGNAR_BIN_DIR="${RAGNAR_DIR}/pager_bin"
-BJORN_BIN_DIR="${RAGNAR_DIR}/../pineapple_pager_bjorn/payloads/user/reconnaissance/pager_bjorn/bin"
+OPTARIS_DEFENSE_BIN_DIR="${OPTARIS_DEFENSE_DIR}/pager_bin"
+BJORN_BIN_DIR="${OPTARIS_DEFENSE_DIR}/../pineapple_pager_bjorn/payloads/user/reconnaissance/pager_bjorn/bin"
 
-if [ -d "$RAGNAR_BIN_DIR" ]; then
-    log "INFO" "Copying binary dependencies from Ragnar/pager_bin..."
+if [ -d "$OPTARIS_DEFENSE_BIN_DIR" ]; then
+    log "INFO" "Copying binary dependencies from optaris_defense/pager_bin..."
     mkdir -p "${PAYLOAD_STAGE}/bin"
-    cp -r "${RAGNAR_BIN_DIR}/"* "${PAYLOAD_STAGE}/bin/" 2>/dev/null || true
+    cp -r "${OPTARIS_DEFENSE_BIN_DIR}/"* "${PAYLOAD_STAGE}/bin/" 2>/dev/null || true
     log "SUCCESS" "Copied binary dependencies"
 elif [ -d "$BJORN_BIN_DIR" ]; then
     log "INFO" "Copying binary dependencies from pineapple_pager_bjorn..."
@@ -408,8 +408,8 @@ fi
 # Step 5b: Copy libpagerctl.so for Pager display support
 # ============================================================
 
-RAGNAR_PAGERCTL="${RAGNAR_DIR}/libpagerctl.so"
-BJORN_PAGERCTL="${RAGNAR_DIR}/../pineapple_pager_bjorn/payloads/user/reconnaissance/pager_bjorn/libpagerctl.so"
+OPTARIS_DEFENSE_PAGERCTL="${OPTARIS_DEFENSE_DIR}/libpagerctl.so"
+BJORN_PAGERCTL="${OPTARIS_DEFENSE_DIR}/../pineapple_pager_bjorn/payloads/user/reconnaissance/pager_bjorn/libpagerctl.so"
 
 copy_pagerctl() {
     local src="$1"
@@ -419,9 +419,9 @@ copy_pagerctl() {
     cp "${src}" "${PAYLOAD_STAGE}/lib/" 2>/dev/null || true
 }
 
-if [ -f "$RAGNAR_PAGERCTL" ]; then
-    log "INFO" "Copying libpagerctl.so from Ragnar..."
-    copy_pagerctl "${RAGNAR_PAGERCTL}"
+if [ -f "$OPTARIS_DEFENSE_PAGERCTL" ]; then
+    log "INFO" "Copying libpagerctl.so from optaris_defense..."
+    copy_pagerctl "${OPTARIS_DEFENSE_PAGERCTL}"
     log "SUCCESS" "Copied libpagerctl.so (Pager display library)"
 elif [ -f "$BJORN_PAGERCTL" ]; then
     log "INFO" "Copying libpagerctl.so from pineapple_pager_bjorn..."
@@ -437,7 +437,7 @@ elif [ "$PAGERCTL_SOURCE" = "pager" ]; then
         log "SUCCESS" "Copied libpagerctl.so from Pager"
     fi
 else
-    log "WARNING" "No libpagerctl.so available - Ragnar will run in headless mode"
+    log "WARNING" "No libpagerctl.so available - OptarisDefense will run in headless mode"
 fi
 
 # ============================================================
@@ -446,7 +446,7 @@ fi
 
 log "INFO" "Bundling nmap NSE scripts..."
 
-NSE_SRC_DIR="${RAGNAR_DIR}/pager_lib/nmap_scripts"
+NSE_SRC_DIR="${OPTARIS_DEFENSE_DIR}/pager_lib/nmap_scripts"
 if [ -d "$NSE_SRC_DIR" ] && [ -n "$(ls -A "$NSE_SRC_DIR" 2>/dev/null)" ]; then
     mkdir -p "${PAYLOAD_STAGE}/nmap_scripts"
     cp "${NSE_SRC_DIR}/"*.nse "${PAYLOAD_STAGE}/nmap_scripts/" 2>/dev/null || true
@@ -460,7 +460,7 @@ fi
 # Step 6: Deploy to Pager
 # ============================================================
 
-log "INFO" "Deploying Ragnar payload to Pager..."
+log "INFO" "Deploying OptarisDefense payload to Pager..."
 
 # Create payload directory on Pager
 ssh $SSH_OPTS "${PAGER_USER}@${PAGER_IP}" "mkdir -p ${PAGER_PAYLOAD_DIR}"
@@ -568,7 +568,7 @@ if echo "$PYTHON3_INSTALLED" | grep -q "MISSING"; then
     OPENWRT_VER="3.11.14-r1"
     IPK_DIR=$(mktemp -d)
 
-    # Core Python3 packages + modules needed by Ragnar
+    # Core Python3 packages + modules needed by OptarisDefense
     PYTHON3_PKGS=(
         "libpython3-3.11_${OPENWRT_VER}_mipsel_24kc.ipk"
         "python3-base_${OPENWRT_VER}_mipsel_24kc.ipk"
@@ -609,7 +609,7 @@ if echo "$PYTHON3_INSTALLED" | grep -q "MISSING"; then
 
     if [ "$DL_FAILED" = true ]; then
         log "WARNING" "Some Python3 packages failed to download."
-        log "WARNING" "Ragnar may have limited functionality if Python3 is not installed."
+        log "WARNING" "OptarisDefense may have limited functionality if Python3 is not installed."
         echo ""
         read -p "  Continue anyway? (y/n): " choice
         if [[ ! "$choice" =~ ^[Yy]$ ]]; then
@@ -875,25 +875,25 @@ print(f\"Generated actions.json with {len(actions_config)} actions\")
 log "SUCCESS" "actions.json configured"
 
 # ============================================================
-# Step 10: Create convenience symlink at /root/Ragnar
+# Step 10: Create convenience symlink at /root/OptarisDefense
 # ============================================================
 
-log "INFO" "Creating /root/Ragnar symlink for compatibility..."
+log "INFO" "Creating /root/OptarisDefense symlink for compatibility..."
 
 ssh $SSH_OPTS "${PAGER_USER}@${PAGER_IP}" "
     # Remove old symlink if exists
-    [ -L /root/Ragnar ] && rm -f /root/Ragnar
+    [ -L /root/OptarisDefense ] && rm -f /root/OptarisDefense
     
-    # Create symlink if /root/Ragnar doesn't exist as directory
-    if [ ! -d /root/Ragnar ]; then
-        ln -sf ${PAGER_PAYLOAD_DIR} /root/Ragnar
-        echo 'Symlink created: /root/Ragnar -> ${PAGER_PAYLOAD_DIR}'
+    # Create symlink if /root/OptarisDefense doesn't exist as directory
+    if [ ! -d /root/OptarisDefense ]; then
+        ln -sf ${PAGER_PAYLOAD_DIR} /root/OptarisDefense
+        echo 'Symlink created: /root/OptarisDefense -> ${PAGER_PAYLOAD_DIR}'
     else
-        echo '/root/Ragnar already exists as directory'
+        echo '/root/OptarisDefense already exists as directory'
     fi
 "
 
-log "SUCCESS" "Ragnar accessible at /root/Ragnar"
+log "SUCCESS" "OptarisDefense accessible at /root/OptarisDefense"
 
 # ============================================================
 # Cleanup and finish
@@ -903,12 +903,12 @@ rm -rf "${STAGING_DIR}"
 
 echo ""
 echo -e "${GREEN}  ╔═══════════════════════════════════════════════════════╗"
-echo -e "  ║     Ragnar successfully deployed to Pineapple Pager!  ║"
+echo -e "  ║     OptarisDefense successfully deployed to Pineapple Pager!  ║"
 echo -e "  ╚═══════════════════════════════════════════════════════╝${NC}"
 echo ""
-echo "  To launch Ragnar on the Pager:"
+echo "  To launch OptarisDefense on the Pager:"
 echo "    1. Open the Pager's payload menu"
-echo "    2. Navigate to: Reconnaissance > PagerRagnar"
+echo "    2. Navigate to: Reconnaissance > PagerOptarisDefense"
 echo "    3. Press GREEN to start"
 echo ""
 echo "  Web interface (when enabled): http://${PAGER_IP}:8000"

@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """
-Pwnagotchi-side button listener for swapping back to Ragnar.
+Pwnagotchi-side button listener for swapping back to OptarisDefense.
 
-This script runs alongside Pwnagotchi (started by ragnar-swap-button.service).
+This script runs alongside Pwnagotchi (started by optaris-defense-swap-button.service).
 It listens on TWO input sources:
   1. PiSugar button (double-tap or long-press) — if pisugar-server is available
   2. 2.7" EPD HAT KEY1 (GPIO 5) — if gpiozero is available
 
-Either trigger stops Pwnagotchi/bettercap and starts Ragnar using systemd-run
+Either trigger stops Pwnagotchi/bettercap and starts OptarisDefense using systemd-run
 so the command survives pwnagotchi's cgroup teardown.
 
-Installed to /usr/local/bin/ragnar-swap-button by the pwnagotchi installer.
-Managed by ragnar-swap-button.service.
+Installed to /usr/local/bin/optaris-defense-swap-button by the pwnagotchi installer.
+Managed by optaris-defense-swap-button.service.
 """
 
 import subprocess
@@ -19,7 +19,7 @@ import time
 import sys
 import logging
 
-logging.basicConfig(level=logging.INFO, format='[ragnar-swap] %(message)s')
+logging.basicConfig(level=logging.INFO, format='[optaris-defense-swap] %(message)s')
 log = logging.getLogger()
 
 COOLDOWN = 10  # seconds between swap attempts
@@ -28,8 +28,8 @@ KEY1_PIN = 5   # GPIO pin for 2.7" EPD HAT KEY1
 last_swap = 0
 
 
-def swap_to_ragnar():
-    """Stop Pwnagotchi/bettercap and start Ragnar via systemd-run.
+def swap_to_optaris_defense():
+    """Stop Pwnagotchi/bettercap and start OptarisDefense via systemd-run.
 
     systemd-run creates a transient cgroup so the stop/start sequence
     survives even if this process gets killed alongside pwnagotchi.
@@ -41,21 +41,21 @@ def swap_to_ragnar():
         return
     last_swap = now
 
-    log.info("Button triggered: swapping to Ragnar...")
+    log.info("Button triggered: swapping to OptarisDefense...")
     try:
         subprocess.Popen(
             ['systemd-run', '--no-block', '--collect',
-             '--unit=pwnagotchi-to-ragnar-swap',
+             '--unit=pwnagotchi-to-optaris-defense-swap',
              'bash', '-c',
              'sleep 1 && systemctl stop pwnagotchi.service'
              ' && systemctl stop bettercap.service'
-             ' && systemctl stop ragnar-swap-button.service'
+             ' && systemctl stop optaris-defense-swap-button.service'
              ' && sleep 2'
-             ' && systemctl start ragnar.service'],
+             ' && systemctl start optaris-defense.service'],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
-        log.info("Scheduled systemd-run swap: stop pwnagotchi -> start ragnar")
+        log.info("Scheduled systemd-run swap: stop pwnagotchi -> start optaris_defense")
     except Exception as e:
         log.error(f"Swap failed: {e}")
 
@@ -70,7 +70,7 @@ def start_gpio_listener():
 
     try:
         btn = Button(KEY1_PIN, pull_up=True, bounce_time=0.3)
-        btn.when_pressed = lambda: swap_to_ragnar()
+        btn.when_pressed = lambda: swap_to_optaris_defense()
         # prevent garbage collection
         start_gpio_listener._btn = btn
         log.info(f"GPIO KEY1 (pin {KEY1_PIN}) listener started")
@@ -104,8 +104,8 @@ def start_pisugar_listener():
         log.info("PiSugar not detected after 5 attempts - PiSugar listener disabled")
         return False
 
-    server.register_double_tap_handler(swap_to_ragnar)
-    server.register_long_tap_handler(swap_to_ragnar)
+    server.register_double_tap_handler(swap_to_optaris_defense)
+    server.register_long_tap_handler(swap_to_optaris_defense)
     log.info("PiSugar button handlers registered (double tap / long press = swap)")
     return True
 

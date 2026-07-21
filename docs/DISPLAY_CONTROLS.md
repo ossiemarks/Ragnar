@@ -1,9 +1,9 @@
 # Display Buttons & Joystick Reference
 
-Ragnar's HATs carry hardware controls that change what they do depending on the
+OptarisDefense's HATs carry hardware controls that change what they do depending on the
 **mode** the display is in:
 
-- **Default** — the normal Ragnar dashboard (the everyday screens).
+- **Default** — the normal OptarisDefense dashboard (the everyday screens).
 - **Wardriving** — while the wardriving engine is running.
 - **Network Diagnostic** — while `network_diagnostic_mode` is on (a standalone
   field tester; documented in full in the [Network Tools Guide](nettools.md#-on-screen-network-diagnostic-mode)).
@@ -28,8 +28,8 @@ In Default and Wardriving layers the keys act **on press**.
 |-----|--------|
 | **KEY1** | Swap to/from **Pwnagotchi** (10 s cooldown) |
 | **KEY2** | **Rotate / flip** the screen (0° → 90° → 180° → 270°) |
-| **KEY3** | **Next page** — cycle through the Ragnar screens |
-| **KEY4** | **Restart** the Ragnar service |
+| **KEY3** | **Next page** — cycle through the OptarisDefense screens |
+| **KEY4** | **Restart** the OptarisDefense service |
 
 ### Wardriving mode (engine running)
 
@@ -53,7 +53,7 @@ GPIO pins (BCM), fixed by the HAT: `KEY1=21`, `KEY2=20`, `KEY3=16`; joystick
 `Up=6 Down=19 Left=5 Right=26 Press=13`.
 
 > **Joystick orientation:** the joystick is physically mounted 90° clockwise of
-> the panel's text, so Ragnar remaps every push into the frame **you read on the
+> the panel's text, so OptarisDefense remaps every push into the frame **you read on the
 > screen** — and re‑aligns automatically when **KEY2** rotates the display.
 > The directions in the tables below are always relative to the upright text.
 
@@ -66,7 +66,7 @@ GPIO pins (BCM), fixed by the HAT: `KEY1=21`, `KEY2=20`, `KEY3=16`; joystick
 | **Joystick press** | **Start / stop page autoscroll** — auto-cycle the pages every 5 s |
 | **KEY1** | **Toggle On‑Screen Network Diagnostic Mode** |
 | **KEY2** | **Rotate** the screen (0° → 90° → 180° → 270°) |
-| **KEY3** short / hold | **Next page** / **restart** the Ragnar service |
+| **KEY3** short / hold | **Next page** / **restart** the OptarisDefense service |
 
 > The e‑paper HAT uses KEY1 for the Pwnagotchi swap; on the LCD HAT KEY1 is the
 > field‑tester switch instead — it flips Network Diagnostic Mode on and off.
@@ -82,7 +82,7 @@ Navigated as **cards**: `LINK · IP · SWITCH · DHCP · WIFI · SIGNAL · SPECT
 | **Joystick ← / →** | Previous / next **card** |
 | **Joystick ↑ / ↓** | Cycle the highlighted **function** inside the card |
 | **Joystick press** | **OK / select** — run the highlighted function (or dismiss a result) |
-| **KEY1** | **Switch to Ragnar** — toggle the mode off |
+| **KEY1** | **Switch to OptarisDefense** — toggle the mode off |
 | **KEY2** | **Card-selection menu** (press again to leave) |
 | **KEY3** | **Pause / start auto-switch** — auto-cycle the cards every 5 s |
 

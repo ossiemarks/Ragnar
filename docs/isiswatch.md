@@ -70,8 +70,8 @@ sudo python3 python/isiswatch.py -i eth0 -v
 # With an operator baseline + web-UI snapshot feed + a final report
 sudo python3 python/isiswatch.py -i eth0 \
     --baseline baseline.example.json \
-    --web-json /run/ragnar/isiswatch.json \
-    --json-out /var/log/ragnar/isis-report.json
+    --web-json /run/optaris_defense/isiswatch.json \
+    --json-out /var/log/optaris_defense/isis-report.json
 
 # Auto-learn systems for the first 120s, then alert on anything new
 # (set "learn_window": 120 in the baseline)
@@ -127,12 +127,12 @@ either way.
 
 `scripts/isiswatch.service` runs least-privilege (`CAP_NET_RAW`/`CAP_NET_ADMIN`,
 `NoNewPrivileges`, `ProtectSystem=strict`, `MemoryMax=128M`) and writes a live
-snapshot to `/run/ragnar/isiswatch.json` for the web UI.
+snapshot to `/run/optaris_defense/isiswatch.json` for the web UI.
 
 ```bash
-sudo install -Dm644 baseline.example.json /etc/ragnar/isis-baseline.json
+sudo install -Dm644 baseline.example.json /etc/optaris_defense/isis-baseline.json
 sudo cp scripts/isiswatch.service /etc/systemd/system/isiswatch.service
-sudoedit /etc/ragnar/isiswatch.env         # set ISISWATCH_IFACE=eth0
+sudoedit /etc/optaris_defense/isiswatch.env         # set ISISWATCH_IFACE=eth0
 sudo systemctl daemon-reload && sudo systemctl enable --now isiswatch
 ```
 
@@ -163,5 +163,5 @@ auth modes / overload / area IDs to walk each detector.
 
 ## OSI coverage
 
-IS-IS closes the L2/L3 boundary case in Ragnar's routing-protocol coverage:
+IS-IS closes the L2/L3 boundary case in OptarisDefense's routing-protocol coverage:
 OSPF (L3/IP), EIGRP (L3/IP), and IS-IS (L2-borne L3 control plane).

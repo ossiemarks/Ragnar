@@ -2,7 +2,7 @@
 #
 # provision_network_tools.sh
 #
-# Idempotent system provisioning shared by the CLI updater (update_ragnar.sh)
+# Idempotent system provisioning shared by the CLI updater (update_optaris_defense.sh)
 # and the in-app "Update" button (webapp_modern.py -> _execute_git_update).
 # Historically only the CLI updater installed these, so updating from the
 # Settings tab left a device without traceroute/mtr/lldpd/arp-scan etc. and
@@ -41,13 +41,13 @@ echo -e "Ensuring radios are unblocked (rfkill)..."
 if command -v rfkill >/dev/null 2>&1; then
     rfkill unblock all
     RFKILL_BIN="$(command -v rfkill)"
-    cat > /etc/udev/rules.d/99-ragnar-rfkill.rules << RFEOF
-# Ragnar: auto-unblock every radio when it appears (boot + hot-plug).
+    cat > /etc/udev/rules.d/99-optaris-defense-rfkill.rules << RFEOF
+# OptarisDefense: auto-unblock every radio when it appears (boot + hot-plug).
 # USB Bluetooth and monitor-mode/injection WiFi dongles are soft-blocked by
 # default and stay dead until unblocked.
 SUBSYSTEM=="rfkill", ACTION=="add", RUN+="$RFKILL_BIN unblock all"
 RFEOF
-    chmod 644 /etc/udev/rules.d/99-ragnar-rfkill.rules
+    chmod 644 /etc/udev/rules.d/99-optaris-defense-rfkill.rules
     if command -v udevadm >/dev/null 2>&1; then
         udevadm control --reload-rules 2>/dev/null || true
         udevadm trigger --subsystem-match=rfkill 2>/dev/null || true
@@ -61,7 +61,7 @@ fi
 # 2. Network diagnostic tools
 # ---------------------------------------------------------------------------
 # Tools for the Network > Diagnostics / Switch & L2 / Interfaces tabs.
-# Package names (and their fallbacks) mirror install_ragnar.sh so distros that
+# Package names (and their fallbacks) mirror install_optaris_defense.sh so distros that
 # name a package differently -- mtr vs mtr-tiny, whois vs jwhois, the
 # speedtest-cli python variants -- still resolve instead of silently failing.
 echo -e "Ensuring network diagnostic tools..."
@@ -130,7 +130,7 @@ fi
 if command -v lldpd >/dev/null 2>&1 || command -v lldpctl >/dev/null 2>&1; then
     mkdir -p /etc/default
     cat > /etc/default/lldpd << 'LLDPEOF'
-# Ragnar: decode CDPv1/v2 (Cisco), EDP (Extreme), FDP (Foundry), SONMP (Nortel)
+# OptarisDefense: decode CDPv1/v2 (Cisco), EDP (Extreme), FDP (Foundry), SONMP (Nortel)
 # neighbours in addition to LLDP, so switch discovery covers non-LLDP gear.
 DAEMON_ARGS="-c -e -f -s"
 LLDPEOF

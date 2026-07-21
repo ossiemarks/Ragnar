@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ragnar - Login</title>
-    <link rel="icon" href="/images/ragnar.ico" type="image/x-icon">
+    <title>OptarisDefense - Login</title>
+    <link rel="icon" href="/images/optaris_defense.ico" type="image/x-icon">
     <link rel="stylesheet" href="/css/tailwind.css">
     <style>
         body {
@@ -55,8 +55,8 @@
     <div class="w-full max-w-md relative z-10">
         <!-- Logo & Title -->
         <div class="text-center mb-8 relative">
-            <img id="viking-img" src="/images/ragnar.png" alt="Ragnar" class="w-24 h-32 mx-auto mb-4 object-contain">
-            <h1 class="text-3xl font-bold text-white">Ragnar</h1>
+            <img id="viking-img" src="/images/optaris_defense.png" alt="OptarisDefense" class="w-24 h-32 mx-auto mb-4 object-contain">
+            <h1 class="text-3xl font-bold text-white">OptarisDefense</h1>
             <p class="text-gray-400 mt-1">Cyberviking Security Scanner</p>
         </div>
 
@@ -65,7 +65,7 @@
             <!-- Hardware Mismatch Warning (hidden by default) -->
             <div id="hw-mismatch-warning" class="hidden mb-4 p-3 rounded-lg bg-red-900/30 border border-red-700">
                 <p class="text-sm text-red-300">
-                    Hardware mismatch detected. This Ragnar instance is bound to different hardware.
+                    Hardware mismatch detected. This OptarisDefense instance is bound to different hardware.
                 </p>
             </div>
 
@@ -147,7 +147,7 @@
         </div>
 
         <!-- Footer -->
-        <p class="text-center text-gray-500 text-xs mt-6">Ragnar Cyberviking &mdash; Hardware-bound authentication</p>
+        <p class="text-center text-gray-500 text-xs mt-6">OptarisDefense Cyberviking &mdash; Hardware-bound authentication</p>
     </div>
 
     <script>
@@ -172,7 +172,7 @@
             { text: 'Preparing the raid...', color: '#f87171' },
             { text: 'Waking the Valkyries...', color: '#c084fc' },
             { text: 'Decoding ancient protocols...', color: '#2dd4bf' },
-            { text: 'Initializing Ragnar...', color: '#4ade80' },
+            { text: 'Initializing OptarisDefense...', color: '#4ade80' },
             { text: 'Hashing with PBKDF2...', color: '#38bdf8' },
             { text: 'Invoking Odin\'s wisdom...', color: '#fbbf24' },
             { text: 'Spinning up the war drums...', color: '#f87171' },
@@ -353,7 +353,7 @@
                     waitForServerAndShowRefresh();
                 } else {
                     stopWhispers();
-                    showStatus('login-status', 'Connection error. Is Ragnar running?', 'error');
+                    showStatus('login-status', 'Connection error. Is OptarisDefense running?', 'error');
                     btn.disabled = false;
                     btn.textContent = 'Login';
                 }
@@ -393,7 +393,7 @@
 
             // Hide the login form fields, show a status message
             document.getElementById('login-form').querySelectorAll('div, label').forEach(el => el.style.display = 'none');
-            showStatus('login-status', 'Ragnar is ready. Refresh to continue.', 'success');
+            showStatus('login-status', 'OptarisDefense is ready. Refresh to continue.', 'success');
         }
 
         // ====================================================================

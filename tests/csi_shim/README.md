@@ -15,13 +15,13 @@ testing.
 ## 1. Deploy
 
 ```bash
-rsync -az -e "ssh -i ~/.ssh/id_ed25519" python/csi_shim/ pi@192.168.8.149:/home/pi/Ragnar/python/csi_shim/
-rsync -az -e "ssh -i ~/.ssh/id_ed25519" config/systemd/ pi@192.168.8.149:/home/pi/Ragnar/config/systemd/
-rsync -az -e "ssh -i ~/.ssh/id_ed25519" scripts/ pi@192.168.8.149:/home/pi/Ragnar/scripts/
-ssh -i ~/.ssh/id_ed25519 pi@192.168.8.149 "cd /home/pi/Ragnar && bash scripts/install_csi_shim.sh"
+rsync -az -e "ssh -i ~/.ssh/id_ed25519" python/csi_shim/ pi@192.168.8.149:/home/pi/OptarisDefense/python/csi_shim/
+rsync -az -e "ssh -i ~/.ssh/id_ed25519" config/systemd/ pi@192.168.8.149:/home/pi/OptarisDefense/config/systemd/
+rsync -az -e "ssh -i ~/.ssh/id_ed25519" scripts/ pi@192.168.8.149:/home/pi/OptarisDefense/scripts/
+ssh -i ~/.ssh/id_ed25519 pi@192.168.8.149 "cd /home/pi/OptarisDefense && bash scripts/install_csi_shim.sh"
 ```
 
-Expected: `Installed.` The installer copies the three `ragnar-csi-*.service`
+Expected: `Installed.` The installer copies the three `optaris-defense-csi-*.service`
 units to `/etc/systemd/system/` and runs `systemctl daemon-reload`; it does
 **not** enable or start anything (enable per source, deliberately, per below).
 
@@ -39,9 +39,9 @@ all `"status": "active"`.
 | Source | node_id | Unit | Bring-up | Status this pass |
 |---|---|---|---|---|
 | ESP32 (native) | 1, 3, 5 | n/a (built into sensing-server) | always on | LIVE (baseline) |
-| feitcsi (Intel AX210) | 210 | `ragnar-csi-intel` | see 3a | **LIVE** (verified this session) |
-| nexmon (Broadcom bcm43455c0) | 200 | `ragnar-csi-nexmon` | see 3b | DEFERRED |
-| mt76 (GL-iNet router) | 176 | `ragnar-csi-mt76` | see 3c | PARKED |
+| feitcsi (Intel AX210) | 210 | `optaris-defense-csi-intel` | see 3a | **LIVE** (verified this session) |
+| nexmon (Broadcom bcm43455c0) | 200 | `optaris-defense-csi-nexmon` | see 3b | DEFERRED |
+| mt76 (GL-iNet router) | 176 | `optaris-defense-csi-mt76` | see 3c | PARKED |
 
 ### 3a. feitcsi / Intel AX210 -> node 210 (LIVE)
 
@@ -76,7 +76,7 @@ sudo timeout -s INT 6 feitcsi -i measure -f 2462 -r NOHT -w 20 -o /tmp/feit_burs
 cat /tmp/feit_burst.dat >> /tmp/feit_sample.dat
 # (repeat the two lines above to keep node 210 "active" rather than "stale")
 
-cd /home/pi/Ragnar && python3 -m python.csi_shim feitcsi   # tails /tmp/feit_sample.dat -> :5005
+cd /home/pi/OptarisDefense && python3 -m python.csi_shim feitcsi   # tails /tmp/feit_sample.dat -> :5005
 ```
 
 `-f 2462 -r NOHT -w 20` is channel 11 / 20MHz legacy-OFDM -- the capture
@@ -96,19 +96,19 @@ leave the feitcsi shim running unattended on this hardware without a temp
 watchdog; a follow-up should add a short `time.sleep()` on empty reads in
 `feitcsi_reader.run()`'s tail loop.
 
-The `ragnar-csi-intel.service` unit runs `python3 -m python.csi_shim feitcsi`
+The `optaris-defense-csi-intel.service` unit runs `python3 -m python.csi_shim feitcsi`
 directly, which has this same limitation -- it depends on something external
 (cron/timer/companion script) continuously feeding `/tmp/feit_sample.dat`.
 That companion piece was **not** built this pass (out of scope: this pass
 proves the reader/decoder/sink path against real captured data, not a
 production-grade continuous-capture daemon for FeitCSI). Do not
-`systemctl enable --now ragnar-csi-intel` unattended until that gap is
+`systemctl enable --now optaris-defense-csi-intel` unattended until that gap is
 closed, for the same thermal reason above.
 
 ### 3b. nexmon / Broadcom bcm43455c0 -> node 200 (DEFERRED)
 
 ```bash
-sudo systemctl enable --now ragnar-csi-nexmon
+sudo systemctl enable --now optaris-defense-csi-nexmon
 ```
 
 **Do not run this yet.** `nexmon_reader.run()` hardcodes
@@ -133,7 +133,7 @@ null-subcarrier set `maps.NEXMON_BCM43455C0_HT20 = {0,1,2,3,32,61,62,63}`
 ### 3c. mt76 / GL-iNet router -> node 176 (PARKED)
 
 ```bash
-sudo systemctl enable --now ragnar-csi-mt76
+sudo systemctl enable --now optaris-defense-csi-mt76
 ```
 
 **Do not run this.** `python/csi_shim/mt76_reader.py` does not exist in this

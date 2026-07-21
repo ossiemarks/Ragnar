@@ -257,7 +257,7 @@ def test_passive_sync_does_not_touch_non_lan_hosts(analyzer):
     assert '8.8.8.8' not in upserted_ips
 
 
-def test_passive_sync_skips_ragnar_own_ip(analyzer):
+def test_passive_sync_skips_optaris_defense_own_ip(analyzer):
     db = _build_db()
     analyzer.shared_data = MagicMock(db=db)
 

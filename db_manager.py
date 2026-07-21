@@ -1,9 +1,9 @@
 # db_manager.py
-# SQLite Database Manager for Ragnar - Replaces netkb.csv
+# SQLite Database Manager for OptarisDefense - Replaces netkb.csv
 #
 # ARCHITECTURE:
 # ============
-# This module provides the single source of truth for all host/network data in Ragnar.
+# This module provides the single source of truth for all host/network data in OptarisDefense.
 # It replaces the CSV-based netkb.csv with a robust SQLite database that supports:
 # - Thread-safe concurrent read/write operations
 # - Complex queries and filtering
@@ -55,7 +55,7 @@ logger = Logger(name="db_manager.py", level=logging.INFO)
 
 class DatabaseManager:
     """
-    Thread-safe SQLite database manager for Ragnar host/network data.
+    Thread-safe SQLite database manager for OptarisDefense host/network data.
     ACTION_STATUS_COLUMNS = {
         'ssh_connector',
         'rdp_connector',
@@ -86,15 +86,15 @@ class DatabaseManager:
         Initialize the database manager.
         
         Args:
-            db_path: Path to SQLite database file (default: data/ragnar.db)
-            currentdir: Root directory of Ragnar installation
+            db_path: Path to SQLite database file (default: data/optaris_defense.db)
+            currentdir: Root directory of OptarisDefense installation
         """
         self.currentdir = currentdir or os.path.dirname(os.path.abspath(__file__))
         self.datadir = data_root or os.path.join(self.currentdir, 'data')
 
         # Database file location
         if db_path is None:
-            db_path = os.path.join(self.datadir, 'ragnar.db')
+            db_path = os.path.join(self.datadir, 'optaris_defense.db')
         
         self.db_path = db_path
         self.lock = threading.RLock()  # Reentrant lock for nested calls
@@ -2744,7 +2744,7 @@ def get_db(currentdir: str = None) -> DatabaseManager:
     Thread-safe lazy initialization.
 
     Args:
-        currentdir: Root directory of Ragnar installation
+        currentdir: Root directory of OptarisDefense installation
 
     Returns:
         DatabaseManager instance

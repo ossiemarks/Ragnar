@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Bluetooth Low Energy (BLE) and Classic Bluetooth Management Module for Ragnar
+Bluetooth Low Energy (BLE) and Classic Bluetooth Management Module for OptarisDefense
 Handles all Bluetooth operations including scanning, pairing, and device management
 """
 
@@ -14,7 +14,7 @@ import os
 import platform
 import sys
 
-# Required attributes for Ragnar action framework
+# Required attributes for OptarisDefense action framework
 b_class = "BLE"
 b_status = "bluetooth_scan"
 b_port = None
@@ -22,7 +22,7 @@ b_parent = None
 
 class BluetoothManager:
     """
-    Comprehensive Bluetooth management class for Ragnar
+    Comprehensive Bluetooth management class for OptarisDefense
     Supports both Classic Bluetooth and BLE operations
     Works on both Linux (bluetoothctl) and Windows (PowerShell)
     """
@@ -1520,7 +1520,7 @@ def get_bluetooth_info(logger=None) -> Dict[str, Any]:
 
 class BLE:
     """
-    Ragnar action wrapper for Bluetooth scanning
+    OptarisDefense action wrapper for Bluetooth scanning
     This is a standalone action (port=0) that scans for Bluetooth devices
     """
     

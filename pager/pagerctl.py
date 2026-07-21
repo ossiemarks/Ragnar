@@ -49,7 +49,7 @@ _lib_paths = [
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "lib", "libpagerctl.so"),
     "./libpagerctl.so",
     "/root/lib/libpagerctl.so",
-    "/root/payloads/user/reconnaissance/pager_ragnar/libpagerctl.so",
+    "/root/payloads/user/reconnaissance/pager_optaris_defense/libpagerctl.so",
     "/root/payloads/user/utilities/PAGERCTL/libpagerctl.so",
 ]
 

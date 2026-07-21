@@ -6,7 +6,7 @@
 
 ## Goals
 
-Expand Ragnar's offensive toolset with three reconnaissance capabilities that every web pentest engagement needs, and wire them as a pre-flight phase before the existing OWASP ZAP scan. The operator gates which discovered assets get fed into ZAP, preserving engagement scope.
+Expand OptarisDefense's offensive toolset with three reconnaissance capabilities that every web pentest engagement needs, and wire them as a pre-flight phase before the existing OWASP ZAP scan. The operator gates which discovered assets get fed into ZAP, preserving engagement scope.
 
 ## Non-goals
 
@@ -121,7 +121,7 @@ All endpoints reuse the existing `@check_authentication` guard.
 
 ## UI integration
 
-One new card in the vuln-scan view (`web/index_modern.html` + `web/scripts/ragnar_modern.js`), placed above the existing "Start ZAP scan" button.
+One new card in the vuln-scan view (`web/index_modern.html` + `web/scripts/optaris_defense_modern.js`), placed above the existing "Start ZAP scan" button.
 
 **State 1 — pre-recon:** three checkboxes (TLS audit, DNS passive, content discovery), all on by default. "Run recon" button.
 
@@ -153,11 +153,11 @@ No new fixtures for ffuf integration tests (ffuf binary on CI is brittle); cover
 
 ## Install changes
 
-`install_ragnar.sh` additions:
+`install_optaris_defense.sh` additions:
 
 - `pip install sslyze dnspython` (both pure Python, no native deps)
 - `apt install ffuf` (or download binary release for the target arch)
-- Clone SecLists `Discovery/Web-Content/` subset to `/opt/ragnar/wordlists/`
+- Clone SecLists `Discovery/Web-Content/` subset to `/opt/optaris_defense/wordlists/`
 
 No Pager (MIPS) changes — server-mode only.
 

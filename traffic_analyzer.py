@@ -1,6 +1,6 @@
 # traffic_analyzer.py
 """
-Traffic Analysis Module for Ragnar Server Mode
+Traffic Analysis Module for OptarisDefense Server Mode
 
 This module provides real-time network traffic analysis capabilities
 that are only available when running on a capable server (8GB+ RAM).
@@ -154,7 +154,7 @@ class HostTrafficStats:
 
 class TrafficAnalyzer:
     """
-    Real-time traffic analyzer for Ragnar server mode.
+    Real-time traffic analyzer for OptarisDefense server mode.
     
     Uses tcpdump for packet capture and provides:
     - Live connection tracking
@@ -288,7 +288,7 @@ class TrafficAnalyzer:
         self._packet_queue: queue.Queue = queue.Queue(maxsize=10000)
         self._lock = threading.Lock()
         
-        # Local IP addresses to exclude from alerts (Ragnar's own IPs)
+        # Local IP addresses to exclude from alerts (OptarisDefense's own IPs)
         self._local_ips: set = self._detect_local_ips()
 
         # Default gateway IPs: exempt from port-scan heuristic.
@@ -382,7 +382,7 @@ class TrafficAnalyzer:
         return 'any'
     
     def _detect_local_ips(self) -> set:
-        """Detect all local IP addresses (Ragnar's own IPs to exclude from alerts)"""
+        """Detect all local IP addresses (OptarisDefense's own IPs to exclude from alerts)"""
         local_ips = {'127.0.0.1', '::1', 'localhost'}
 
         # Method 1: Try Linux 'ip' command
@@ -438,13 +438,13 @@ class TrafficAnalyzer:
             except Exception:
                 pass
 
-        # Add common local network ranges that might be Ragnar
+        # Add common local network ranges that might be OptarisDefense
         # These are private IP patterns that are likely to be the host
         try:
             for ip in list(local_ips):
                 if ip.startswith('192.168.') or ip.startswith('10.') or ip.startswith('172.'):
                     # This is a private IP, likely the actual machine IP
-                    logger.info(f"Ragnar local IP detected: {ip}")
+                    logger.info(f"OptarisDefense local IP detected: {ip}")
         except Exception:
             pass
 
@@ -1056,8 +1056,8 @@ class TrafficAnalyzer:
     def _check_suspicious_patterns(self, src_ip: str, dst_ip: str,
                                    src_port: int, dst_port: int, protocol: str):
         """Check for suspicious traffic patterns"""
-        # Skip alerts for traffic from OR to Ragnar itself (local IPs)
-        # This prevents false positives from Ragnar's own scanning/network activity
+        # Skip alerts for traffic from OR to OptarisDefense itself (local IPs)
+        # This prevents false positives from optaris_defense's own scanning/network activity
         if src_ip in self._local_ips or dst_ip in self._local_ips:
             return
 

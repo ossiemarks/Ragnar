@@ -1,18 +1,18 @@
-/* ===== Ragnar — RuSense CSI Node Flasher · matches Ragnar web palette ===== */
+/* ===== OptarisDefense — RuSense CSI Node Flasher · matches OptarisDefense web palette ===== */
 /* Brand color is Tailwind sky-500 / sky-400 / sky-600 (see tailwind.config.js
    in the main repo); background mirrors the slate-900→slate-800 gradient used
    by index_modern.html. Glass cards mirror the .glass utility (rgba slate-900
    with backdrop-blur). The Viking trim (boar logo, "Forge" copy, rune strip)
-   is recoloured in Ragnar blue rather than gold. */
+   is recoloured in OptarisDefense blue rather than gold. */
 :root {
   color-scheme: dark;
   --bg:          #0f172a;   /* slate-900 */
   --bg-dark:     #020617;   /* slate-950 */
-  --surface:     rgba(15, 23, 42, 0.7);    /* matches .glass on Ragnar web */
+  --surface:     rgba(15, 23, 42, 0.7);    /* matches .glass on OptarisDefense web */
   --surface-solid: #1e293b; /* slate-800 — for solid panels */
   --border:      rgba(255, 255, 255, 0.10);
   --border-accent: rgba(56, 189, 248, 0.30);
-  --accent:      #0ea5e9;   /* sky-500 — Ragnar primary */
+  --accent:      #0ea5e9;   /* sky-500 — OptarisDefense primary */
   --accent-light:#38bdf8;   /* sky-400 */
   --accent-dim:  #0284c7;   /* sky-600 */
   --accent-glow: rgba(14, 165, 233, 0.25);
@@ -31,7 +31,7 @@ html, body { margin: 0; padding: 0; }
 
 body {
   min-height: 100vh;
-  /* Same gradient as Ragnar's index_modern.html body */
+  /* Same gradient as OptarisDefense's index_modern.html body */
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
   color: var(--white);
   font-family: "Inter", system-ui, sans-serif;
@@ -56,7 +56,7 @@ body::before {
   z-index: 1;
 }
 
-/* Top rune strip — thin band of futhark across the top, in Ragnar blue */
+/* Top rune strip — thin band of futhark across the top, in OptarisDefense blue */
 .rune-strip {
   position: relative;
   z-index: 3;
@@ -115,7 +115,7 @@ body::before {
 .site-header .brand {
   font-family: "Russo One", system-ui, sans-serif;
   font-size: 1.2rem;
-  /* Match Ragnar's gradient brand text (from-Ragnar-400 to-Ragnar-600) */
+  /* Match OptarisDefense's gradient brand text (from-OptarisDefense-400 to-OptarisDefense-600) */
   background: linear-gradient(90deg, var(--accent-light), var(--accent-dim));
   -webkit-background-clip: text;
   background-clip: text;
@@ -167,7 +167,7 @@ body::before {
   margin: 0 auto;
 }
 
-/* ── flash panel (glass card, matches Ragnar's .glass) ── */
+/* ── flash panel (glass card, matches OptarisDefense's .glass) ── */
 .flash-panel {
   background: var(--surface);
   backdrop-filter: blur(10px);

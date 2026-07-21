@@ -39,7 +39,7 @@ dedicated nodes.
   layer; combined with the dedicated-node output at the UI / `mirror` layer. Keeps the clean
   fixed-node fusion pristine; purely additive.
 - ↔ **Approach 2 — Inject passive sources as ADR-018 nodes into the existing fan-out**
-  (`:5005` → OptarisSense + Ragnar). Single unified engine/dashboard, BUT positionless,
+  (`:5005` → OptarisSense + OptarisDefense). Single unified engine/dashboard, BUT positionless,
   flapping ambient nodes would degrade the fixed-node fusion (people-count/localization)
   unless heavily gated. *Noted; not chosen — risks the accuracy just achieved.*
 - ↔ **Approach 3 — Hybrid.** Only the *strong, stable* passive-CSI links get injected as

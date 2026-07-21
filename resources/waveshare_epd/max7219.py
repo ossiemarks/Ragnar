@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MAX7219 LED Matrix driver for Ragnar.
+MAX7219 LED Matrix driver for OptarisDefense.
 
 Supports 4-panel (32×8) and 8-panel (64×8) cascaded MAX7219 modules.
 

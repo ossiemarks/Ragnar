@@ -1,6 +1,6 @@
 # 🛡️ WiFi Defense — 802.11 Frame Monitor / WIDS
 
-A passive **wireless intrusion-detection system** built into Ragnar's web UI —
+A passive **wireless intrusion-detection system** built into OptarisDefense's web UI —
 its own top-level **WiFi Defense** tab (next to *Network*). It listens on a
 **monitor-mode** adapter for 802.11 management frames and flags the classic
 Wi-Fi attacks a defender cares about.
@@ -75,16 +75,16 @@ sudo scripts/wifidef_dedicate.sh wlan1 US 2437 0
 #      <iface> <regdomain> <init-freq-MHz> <six_ghz:0|1>
 
 # 2. Make it persistent across reboots:
-sudo cp scripts/ragnar-wifidef-monitor.service /etc/systemd/system/
-sudo mkdir -p /etc/ragnar
-sudo cp scripts/wifidef-monitor.env.example /etc/ragnar/wifidef-monitor.env
-sudoedit /etc/ragnar/wifidef-monitor.env        # set WIFIDEF_IFACE=wlan1 etc.
+sudo cp scripts/optaris-defense-wifidef-monitor.service /etc/systemd/system/
+sudo mkdir -p /etc/optaris_defense
+sudo cp scripts/wifidef-monitor.env.example /etc/optaris_defense/wifidef-monitor.env
+sudoedit /etc/optaris_defense/wifidef-monitor.env        # set WIFIDEF_IFACE=wlan1 etc.
 sudo systemctl daemon-reload
-sudo systemctl enable --now ragnar-wifidef-monitor
+sudo systemctl enable --now optaris-defense-wifidef-monitor
 ```
 
-The unit runs **before** `ragnar.service` and, on stop/disable, hands the adapter
-back to NetworkManager. Config lives in `/etc/ragnar/wifidef-monitor.env`:
+The unit runs **before** `optaris-defense.service` and, on stop/disable, hands the adapter
+back to NetworkManager. Config lives in `/etc/optaris_defense/wifidef-monitor.env`:
 
 | Var | Meaning |
 |-----|---------|
@@ -198,7 +198,7 @@ mesh-cross-node client-isolation traffic), writes them to a pcap, then runs
 the full parse → analyse pipeline and asserts each detection fires (and that
 clean traffic stays **CLEAR**) — all offline.
 
-Requires `iw` and **Scapy** (both installed by `install_ragnar.sh` /
+Requires `iw` and **Scapy** (both installed by `install_optaris_defense.sh` /
 `requirements.txt`).
 
 ---
@@ -223,9 +223,9 @@ thresholds are preserved across all monitor bookkeeping.
 `ragmon0` (a disable→re-enable) gives it a **new kernel ifindex**, but the packet
 library (scapy) caches the interface's old ifindex for the life of the process
 and keeps binding the capture socket to the dead index → ENODEV on every scan —
-until the process restarts and rebuilds that cache. Ragnar now **refreshes that
+until the process restarts and rebuilds that cache. OptarisDefense now **refreshes that
 cache before every capture**, so a runtime re-enable heals just like a restart
-(no `sudo systemctl restart ragnar` needed).
+(no `sudo systemctl restart optaris_defense` needed).
 
 **Diagnosing a stubborn adapter — `scripts/wifidef_doctor.sh`.** When monitor
 comes up but captures nothing (or a specific dongle misbehaves), run the doctor:
@@ -237,9 +237,9 @@ sudo ./scripts/wifidef_doctor.sh wlan1      # or name it explicitly
 
 It records the environment (kernel, driver, `rfkill`, radio modes, code version
 and **when the service last restarted** — a common gotcha after `git pull`),
-then enables monitor through Ragnar's own code and compares an **OS-level
-capture (`tcpdump`)** against Ragnar's capture on a channel that has traffic. The
-contrast is the diagnosis: if `tcpdump` hears frames but Ragnar reports `frames=0`
+then enables monitor through OptarisDefense's own code and compares an **OS-level
+capture (`tcpdump`)** against OptarisDefense's capture on a channel that has traffic. The
+contrast is the diagnosis: if `tcpdump` hears frames but OptarisDefense reports `frames=0`
 the bug is in the capture path; if neither hears anything while `iw dev ragmon0
 info` shows a real monitor channel, it's the driver/firmware. It also does a
 disable→re-enable cycle and a manual vif rebuild, and dumps `dmesg`. Everything

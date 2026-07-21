@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# uninstall_sensing.sh — Stop and remove Ragnar's bundled sensing backend.
+# uninstall_sensing.sh — Stop and remove OptarisDefense's bundled sensing backend.
 # Leaves the vendored bin/sensing-server in the repo so it can be reinstalled.
 set -euo pipefail
 
-UNIT_NAME="ragnar-sensing.service"
+UNIT_NAME="optaris-defense-sensing.service"
 UNIT_PATH="/etc/systemd/system/$UNIT_NAME"
-INSTALL_BIN="/usr/local/bin/ragnar-sensing-server"
+INSTALL_BIN="/usr/local/bin/optaris-defense-sensing-server"
 
 as_root() { if [ "$(id -u)" -eq 0 ]; then "$@"; else sudo "$@"; fi; }
 

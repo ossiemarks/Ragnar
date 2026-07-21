@@ -2,7 +2,7 @@
 # Driver for the 0.96" SSD1306 128x64 monochrome OLED display (I2C).
 #
 # Exposes the same interface as Waveshare e-Paper drivers so it integrates
-# transparently with EPDHelper and the rest of Ragnar:
+# transparently with EPDHelper and the rest of OptarisDefense:
 #   width, height, init(), Clear(), getbuffer(image), display(buf),
 #   displayPartial(buf), sleep()
 #

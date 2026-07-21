@@ -1,10 +1,10 @@
 # nmap_vuln_scanner.py
-# Vulnerability Scanner for Ragnar - Uses Nmap with vulners.nse script
+# Vulnerability Scanner for OptarisDefense - Uses Nmap with vulners.nse script
 #
 # DATA ARCHITECTURE - SINGLE SOURCE OF TRUTH:
 # ============================================
 # This scanner feeds vulnerability data to Network Intelligence, which is the 
-# AUTHORITATIVE SOURCE for all vulnerability information in Ragnar.
+# AUTHORITATIVE SOURCE for all vulnerability information in OptarisDefense.
 #
 # Data Flow:
 # 1. Nmap scans hosts → parses vulnerability output
@@ -452,7 +452,7 @@ class NmapVulnScanner:
         Executes the vulnerability scan for a given IP and row data.
         Returns: 'success' if scan was performed, 'skipped' if already scanned, 'failed' on error
         """
-        self.shared_data.ragnarorch_status = "NmapVulnScanner"
+        self.shared_data.optaris_defenseorch_status = "NmapVulnScanner"
         ports = row.get("Ports", "")
         scan_result = self.scan_vulnerabilities(ip, row["Hostnames"], row["MAC Address"], ports)
 

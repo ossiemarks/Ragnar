@@ -1,23 +1,23 @@
-# Ragnar — Comparative Grade
+# OptarisDefense — Comparative Grade
 
 _Assessment date: 2026-05-31 · Based on direct review of the codebase, not marketing claims._
 
 ## Overview
 
-Ragnar is best understood as a **hybrid portable security platform** — offensive
+OptarisDefense is best understood as a **hybrid portable security platform** — offensive
 recon + vulnerability management + web app scanning + lightweight network
 monitoring + threat intelligence + wardriving — packaged on a self-hardened
 Raspberry Pi appliance. It is not a pure attack tool, nor a drop-in replacement
 for any single enterprise platform.
 
-This document grades Ragnar against established software/enterprise security
+This document grades OptarisDefense against established software/enterprise security
 platforms plus the Kali-on-Pi drop box.
 
 ## Capability Comparison
 
 Legend: `✅✅` strong · `✅` yes · `⚠️` partial · `❌` no
 
-| Capability | Ragnar | Nmap | OpenVAS | Nessus | ZAP | Burp | Zeek | Wazuh | Kali-Pi |
+| Capability | OptarisDefense | Nmap | OpenVAS | Nessus | ZAP | Burp | Zeek | Wazuh | Kali-Pi |
 |---|---|---|---|---|---|---|---|---|---|
 | Portable HW appliance | ✅✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 | Autonomous unattended loop | ✅✅ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ❌ | ✅ | ✅✅ | ⚠️ |
@@ -38,16 +38,16 @@ Legend: `✅✅` strong · `✅` yes · `⚠️` partial · `❌` no
 | Tool hardening (encrypted DB/auth) | ✅✅ | — | ✅ | ✅✅ | ✅ | ✅ | ✅ | ✅ | ⚠️ |
 | Approx. cost | $60–120 | Free | Free | ~$4k/yr | Free | ~$450/yr | Free | Free | ~$60 |
 | Community / ecosystem | ❌ solo | ✅✅ | ✅✅ | ✅✅ | ✅✅ | ✅✅ | ✅✅ | ✅✅ | ✅✅ |
-| **Ragnar's grade vs it** | **8/10** | 7 | 6 | 6 | 7 | 6 | 4 | 3 | 7 |
+| **OptarisDefense's grade vs it** | **8/10** | 7 | 6 | 6 | 7 | 6 | 4 | 3 | 7 |
 
 ## Per-Lane Grades
 
 | Tool | Lane | What separates them | Grade |
 |---|---|---|---|
-| Nmap | Network discovery | Gold-standard scanner; Ragnar uses it under the hood + adds CVE mapping & autonomy | 7/10 |
+| Nmap | Network discovery | Gold-standard scanner; OptarisDefense uses it under the hood + adds CVE mapping & autonomy | 7/10 |
 | OpenVAS / Greenbone | Vuln scanning | Curated NVT feed, credentialed scans, FP QA | 6/10 |
 | Nessus | Vuln scanning (commercial) | Huge QA'd plugin DB, low FP, compliance audits | 6/10 |
-| OWASP ZAP | Web app scanning | Ragnar *is* ZAP + a custom context-aware fuzzer → automation parity-plus | 7/10 |
+| OWASP ZAP | Web app scanning | OptarisDefense *is* ZAP + a custom context-aware fuzzer → automation parity-plus | 7/10 |
 | Burp Suite | Web app pentest | Burp Pro's manual proxy/Repeater/Intruder + Collaborator OOB still ahead | 6/10 |
 | Zeek | NSM (passive/defensive) | `traffic_analyzer` does C2/DNS-tunnel/port-scan detection — same categories, heuristic depth, 8GB-gated | 4/10 |
 | Wazuh | SIEM/XDR/HIDS | `threat_intelligence` (MISP/VT/Shodan/OpenCTI) gives enrichment — but no agents, FIM, compliance, fleet scale | 3/10 |
@@ -55,7 +55,7 @@ Legend: `✅✅` strong · `✅` yes · `⚠️` partial · `❌` no
 
 ## Final Grade: 8 / 10
 
-Ragnar's edge is **breadth + portability + self-hardening in a single box**: it
+OptarisDefense's edge is **breadth + portability + self-hardening in a single box**: it
 covers recon, CVE + web vuln scanning, credential attacks, lightweight NSM,
 threat-intel enrichment, and wardriving — with an encrypted-at-rest DB and a real
 auth layer that most hobby tools lack.
@@ -77,7 +77,7 @@ auth layer that most hobby tools lack.
   mapping and incremental per-MAC port scanning (efficient on constrained HW).
 - `advanced_vuln_scanner.py` — full ZAP orchestration (spider, AJAX spider,
   active scan, custom policies, 7 auth types, OpenAPI import, crash recovery) plus
-  a custom `ragnar-fuzz` engine with a 19-category payload library and
+  a custom `optaris-defense-fuzz` engine with a 19-category payload library and
   context-aware reflection triage. Also wires Nuclei, Nikto, SQLMap, WhatWeb.
 - `traffic_analyzer.py` — tcpdump capture, C2 beacon detection, DNS tunneling and
   port-scan detection (server-mode / 8GB+).

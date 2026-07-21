@@ -6,7 +6,7 @@
 #   KEY1: Swap to Pwnagotchi (with 10s cooldown)
 #   KEY2: Flip screen upside down (toggle)
 #   KEY3: Next page - rotate through all pages
-#   KEY4: Restart Ragnar service
+#   KEY4: Restart OptarisDefense service
 #
 # While wardriving is active the keys switch to a wardriving layer:
 #   KEY1: Toggle a phone-access AP serving the minimal wardriving page
@@ -42,8 +42,8 @@ KEY3_PIN = 13
 KEY4_PIN = 19
 
 # Other apps that drive the same 2.7" HAT and grab these exact GPIO buttons.
-# If one is running it claims the pins first and Ragnar's listener fails with
-# 'GPIO busy'. Stopped on demand when wardriving starts so Ragnar can own the
+# If one is running it claims the pins first and OptarisDefense's listener fails with
+# 'GPIO busy'. Stopped on demand when wardriving starts so OptarisDefense can own the
 # keys (see EPDButtonListener.ensure_available). Override via config key
 # 'wardriving_button_reclaim_services'.
 CONFLICTING_BUTTON_SERVICES = ['airprint.service']
@@ -79,7 +79,7 @@ NETDIAG_CARD_FUNCS = {
 NETDIAG_HOLD_TIME = 0.6
 
 # Display pages
-PAGE_MAIN = 0         # Default Ragnar display
+PAGE_MAIN = 0         # Default OptarisDefense display
 PAGE_NETWORK = 1      # Network scanner stats
 PAGE_VULN = 2         # Vulnerability scanner stats
 PAGE_DISCOVERED = 3   # Discovered hosts
@@ -142,7 +142,7 @@ class EPDButtonListener:
         self._buttons = []
 
     def ensure_available(self):
-        """Make sure Ragnar owns the HAT buttons, reclaiming them if needed.
+        """Make sure OptarisDefense owns the HAT buttons, reclaiming them if needed.
 
         Called when wardriving starts. If the listener never got the GPIO
         lines because another app grabbed them first (e.g. airprint.service —
@@ -182,8 +182,8 @@ class EPDButtonListener:
     def _is_wardriving_active(self):
         """Return True if the wardriving engine is currently running."""
         try:
-            ragnar = getattr(self.shared_data, 'ragnar_instance', None)
-            engine = getattr(ragnar, '_wd_engine', None) if ragnar else None
+            optaris_defense = getattr(self.shared_data, 'optaris_defense_instance', None)
+            engine = getattr(optaris_defense, '_wd_engine', None) if optaris_defense else None
             if engine is not None:
                 return bool(getattr(engine, '_running', False))
         except Exception:
@@ -192,8 +192,8 @@ class EPDButtonListener:
 
     def _wifi_manager(self):
         """Return the WiFiManager instance, or None if not reachable."""
-        ragnar = getattr(self.shared_data, 'ragnar_instance', None)
-        return getattr(ragnar, 'wifi_manager', None) if ragnar else None
+        optaris_defense = getattr(self.shared_data, 'optaris_defense_instance', None)
+        return getattr(optaris_defense, 'wifi_manager', None) if optaris_defense else None
 
     def _netdiag_active(self):
         """True when Network Diagnostic mode owns the keys (config toggle)."""
@@ -244,8 +244,8 @@ class EPDButtonListener:
             return
 
         try:
-            current_mode = self.shared_data.config.get('pwnagotchi_mode', 'ragnar')
-            target = 'pwnagotchi' if current_mode != 'pwnagotchi' else 'ragnar'
+            current_mode = self.shared_data.config.get('pwnagotchi_mode', 'optaris_defense')
+            target = 'pwnagotchi' if current_mode != 'pwnagotchi' else 'optaris_defense'
             logger.info(f"Button KEY1: swapping to {target}")
 
             from webapp_modern import _schedule_pwn_mode_switch, _write_pwn_status_file, _update_pwn_config, _emit_pwn_status_update
@@ -282,7 +282,7 @@ class EPDButtonListener:
             logger.info("Button KEY4: connecting to known WiFi (wardriving continues)...")
             threading.Thread(target=self._connect_known_wifi, daemon=True).start()
             return
-        logger.info("Button KEY4: Restarting Ragnar service...")
+        logger.info("Button KEY4: Restarting OptarisDefense service...")
         threading.Thread(target=self._do_restart, daemon=True).start()
 
     def _toggle_wardrive_ap(self):
@@ -308,9 +308,9 @@ class EPDButtonListener:
 
     @staticmethod
     def _do_restart():
-        """Restart the ragnar service after a short delay."""
+        """Restart the optaris_defense service after a short delay."""
         time.sleep(1)
-        subprocess.Popen(['systemctl', 'restart', 'ragnar.service'])
+        subprocess.Popen(['systemctl', 'restart', 'optaris-defense.service'])
 
     # ------------------------------------------------------------------
     # Network Diagnostic field-test pad (only while network_diagnostic_mode)

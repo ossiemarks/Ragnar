@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-16
 **Context:** Refines Phases 2–3 of the
-[optaris-edge deployment design](2026-07-16-ragnar-rusense-optaris-edge-design.md). Defines how
+[optaris-edge deployment design](2026-07-16-optaris-defense-rusense-optaris-edge-design.md). Defines how
 CSI from four heterogeneous sources is normalized into the single format the RuView
 sensing-server ingests, plus a later BFI path.
 
@@ -50,7 +50,7 @@ testable unit: input = one vendor's CSI, output = ADR-018 frames to `:5005`.
 
 ```
 ESP32 ─────native ADR-018──────────────────────▶ :5005 ┐
-Pi Broadcom ─Nexmon(raw wlan0)→ nexmon reader ──▶ :5005 ├─▶ sensing-server(esp32) ─▶ Ragnar :8000
+Pi Broadcom ─Nexmon(raw wlan0)→ nexmon reader ──▶ :5005 ├─▶ sensing-server(esp32) ─▶ OptarisDefense :8000
 GL-MT3000 ──mt76 UDP:5500 → mt76 reader ────────▶ :5005 ┤
 Intel AX210 ─FeitCSI → feitcsi reader ──────────▶ :5005 ┘
 (later) monitor radio ─BFI pcap→ sensing-server#2 (--source bfi) ─▶ aggregate
@@ -75,7 +75,7 @@ Intel AX210 ─FeitCSI → feitcsi reader ──────────▶ :500
 
 No `:5500` clash: Nexmon uses a raw AF_PACKET sniff (no UDP bind); the `mt76` reader owns the
 `:5500` UDP bind; FeitCSI is file/live (no port). Each reader runs as its own systemd unit
-(`ragnar-csi-nexmon.service`, `ragnar-csi-mt76.service`, `ragnar-csi-intel.service`) sharing the
+(`optaris-defense-csi-nexmon.service`, `optaris-defense-csi-mt76.service`, `optaris-defense-csi-intel.service`) sharing the
 `csi_shim` library.
 
 ### node-id scheme
@@ -107,12 +107,12 @@ nodes stay independent by default.
   Feed each reader a captured real vendor frame → assert the decoded/re-encoded ADR-018 output.
 - **Integration:** replay a recorded vendor UDP capture at `:5500` → confirm the node appears in
   `/api/v1/nodes` with climbing pps.
-- **E2E:** move in front of each radio → that node's presence/motion reacts in the Ragnar UI.
+- **E2E:** move in front of each radio → that node's presence/motion reacts in the OptarisDefense UI.
 
 ## Packaging & location
 
-`csi_shim/` Python package in the Ragnar repo (matches `nexmon_bridge.py`; the Rust `esp-csi`
-crate remains the reference parser), deployed to the Pi with Ragnar. Per-source systemd units,
+`csi_shim/` Python package in the OptarisDefense repo (matches `nexmon_bridge.py`; the Rust `esp-csi`
+crate remains the reference parser), deployed to the Pi with OptarisDefense. Per-source systemd units,
 one shared library.
 
 ## Toolchain bring-up (in scope for the implementation plan)

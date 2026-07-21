@@ -143,7 +143,7 @@ class Pager:
         if self._initialized:
             return 0
         pygame.init()
-        pygame.display.set_caption("Pager Mock - Ragnar")
+        pygame.display.set_caption("Pager Mock - OptarisDefense")
         self._start_ticks = pygame.time.get_ticks()
         self._create_window()
         self._initialized = True
@@ -599,17 +599,17 @@ if __name__ == "__main__":
 
         # Title
         font = None
-        ragnar_dir = os.path.join(os.path.dirname(__file__), "..", "OneDrive", "dokument", "GitHub", "Ragnar")
-        viking_font = os.path.join(ragnar_dir, "resources", "fonts", "Viking.TTF")
+        optaris_defense_dir = os.path.join(os.path.dirname(__file__), "..", "OneDrive", "dokument", "GitHub", "OptarisDefense")
+        viking_font = os.path.join(optaris_defense_dir, "resources", "fonts", "Viking.TTF")
         if not os.path.exists(viking_font):
             # Try relative to script
             viking_font = os.path.join(os.path.dirname(__file__), "resources", "fonts", "Viking.TTF")
 
         title_color = Pager.rgb(100, 200, 255)
         if os.path.exists(viking_font):
-            p.draw_ttf_centered(20, "Ragnar", title_color, viking_font, 48.0)
+            p.draw_ttf_centered(20, "OptarisDefense", title_color, viking_font, 48.0)
         else:
-            p.draw_text_centered(20, "Ragnar", title_color, 3)
+            p.draw_text_centered(20, "OptarisDefense", title_color, 3)
 
         # Instructions
         p.draw_text_centered(90, "Pager Mock Emulator", Pager.WHITE, 2)

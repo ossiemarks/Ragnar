@@ -2,7 +2,7 @@
 # Driver for the 1.28" GC9A01 240x240 round RGB TFT LCD.
 #
 # Exposes the same interface as Waveshare e-Paper drivers so it integrates
-# transparently with EPDHelper and the rest of Ragnar:
+# transparently with EPDHelper and the rest of OptarisDefense:
 #   width, height, init(), Clear(), getbuffer(image), display(buf),
 #   displayPartial(buf), sleep()
 #
@@ -80,7 +80,7 @@ class EPD:
     def getbuffer(self, image):
         """Convert a PIL image (any mode) to a packed RGB565 byte string.
 
-        Ragnar renders 1-bit ('1') PIL images internally.  This converts
+        OptarisDefense renders 1-bit ('1') PIL images internally.  This converts
         any PIL mode to 16-bit RGB565 for the TFT.  The image is centre-
         cropped to a square before conversion to match the round display.
         """

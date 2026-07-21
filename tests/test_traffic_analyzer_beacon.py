@@ -199,7 +199,7 @@ def test_sweep_skips_denylisted_ports_via_parser(analyzer):
 
 def test_parser_records_external_outbound_flow(analyzer):
     # 192.168.1.10 is in the analyzer's _local_ips and should be skipped
-    # (treated as Ragnar itself). 192.168.1.73 is internal-but-not-Ragnar
+    # (treated as OptarisDefense itself). 192.168.1.73 is internal-but-not-OptarisDefense
     # and should be recorded.
     line = ('2026-01-15 10:30:45.123456 IP 192.168.1.73.54321 '
             '> 203.0.113.10.6667: tcp 128')

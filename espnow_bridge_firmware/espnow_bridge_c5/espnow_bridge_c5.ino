@@ -1,5 +1,5 @@
 /*
- * espnow_bridge_c5.ino  —  Ragnar STANDALONE ESP-Now coordinator (Piglet Core)
+ * espnow_bridge_c5.ino  —  OptarisDefense STANDALONE ESP-Now coordinator (Piglet Core)
  *
  * Target hardware: Waveshare ESP32-C5-WIFI6-KIT (headless, dual-band Wi-Fi 6,
  * BLE 5, 16 MB flash / 4 MB PSRAM). No display. USB-Serial-JTAG (HWCDC) is
@@ -8,7 +8,7 @@
  *
  * This firmware is a fully standalone Piglet Core. It pairs with PigletNode
  * devices over ESP-Now and emits the received WiFi/BLE records on USB-Serial
- * in HuginnESP-style JSON (one object per line). Ragnar's wardriving listener
+ * in HuginnESP-style JSON (one object per line). OptarisDefense's wardriving listener
  * accepts JSON regardless of detected companion ID; pairing/heartbeats keep
  * running even if the Pi-side process restarts.
  *
@@ -28,9 +28,9 @@
  * Every TEXT-typed message is sent as the full 212-byte enow_text_msg_t
  * struct (matches JustCallMeKoko's ESP32DualBandWardriver reference).
  *
- * ── Serial output (consumed by Ragnar's parser) ──────────────────────────
- *   [CORE] Ragnar standalone coordinator booted (Piglet)
- *   {"device":"RagnarCoord","fw":"c5-1","board":"ESP32-C5","caps":[...]}
+ * ── Serial output (consumed by OptarisDefense's parser) ──────────────────────────
+ *   [CORE] OptarisDefense standalone coordinator booted (Piglet)
+ *   {"device":"OptarisDefenseCoord","fw":"c5-1","board":"ESP32-C5","caps":[...]}
  *   [CORE] New mesh node 0: AA:BB:CC:DD:EE:FF (JCMK)
  *   [CORE] Reassigned: 1 nodes
  *   {"type":"WIFI","mac":"AA:BB:CC:DD:EE:FF","ssid":"Home","rssi":-65,
@@ -520,7 +520,7 @@ static void alive_tick(void) {
                        (unsigned long)g_dropped_rows,
                        (unsigned long)g_queue_drops,
                        (unsigned long)(now / 1000));
-    // Per-node JSON dump so Ragnar can show MAC + contribution count.
+    // Per-node JSON dump so OptarisDefense can show MAC + contribution count.
     // One object per known node, each on its own line — fits the same
     // {"type":...} parse path the host already uses for WIFI/BLE rows.
     for (int i = 0; i < MAX_NODES; i++) {
@@ -537,7 +537,7 @@ static void alive_tick(void) {
 }
 
 // ── Host serial input ─────────────────────────────────────────────────────────
-// Ragnar's Piglet cycle writes "scanap\r\n", "blescan -f\r\n", etc. Standalone
+// OptarisDefense's Piglet cycle writes "scanap\r\n", "blescan -f\r\n", etc. Standalone
 // coordinator pumps data continuously regardless of mode — discard all input.
 static char  host_line[64];
 static int   host_pos = 0;
@@ -566,9 +566,9 @@ void setup() {
     Serial.begin(BAUD);
     delay(2000);
 
-    Serial.println("[CORE] Ragnar standalone coordinator booted (Piglet)");
+    Serial.println("[CORE] OptarisDefense standalone coordinator booted (Piglet)");
     Serial.println(
-        "{\"device\":\"RagnarCoord\",\"fw\":\"c5-1\","
+        "{\"device\":\"OptarisDefenseCoord\",\"fw\":\"c5-1\","
         "\"board\":\"ESP32-C5\",\"caps\":[\"espnow\",\"piglet-core\"]}");
 
     // ESP-Now — channel set AFTER esp_now_init (matches Piglet/JCMK).

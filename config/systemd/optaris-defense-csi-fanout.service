@@ -1,5 +1,5 @@
 [Unit]
-Description=Ragnar CSI UDP fan-out (:5005 -> OptarisSense :5105 + Ragnar :5006)
+Description=OptarisDefense CSI UDP fan-out (:5005 -> OptarisSense :5105 + OptarisDefense :5006)
 After=network-online.target
 [Service]
 ExecStart=/usr/bin/python3 /home/pi/csi_udp_fanout.py

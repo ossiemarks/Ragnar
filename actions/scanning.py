@@ -981,7 +981,7 @@ class NetworkScanner:
         can place the router at the center of the network map.
         """
         info = {"gateway_ip": None, "gateway_mac": None, "gateway_vendor": None,
-                "interface": None, "subnet": None, "ragnar_ip": None}
+                "interface": None, "subnet": None, "optaris_defense_ip": None}
         try:
             if netifaces is None:
                 return info
@@ -997,7 +997,7 @@ class NetworkScanner:
                 my_ip = iface_addrs[0]["addr"]
                 netmask = iface_addrs[0]["netmask"]
                 cidr = sum(bin(int(x)).count("1") for x in netmask.split("."))
-                info["ragnar_ip"] = my_ip
+                info["optaris_defense_ip"] = my_ip
                 info["subnet"] = str(ipaddress.IPv4Network(f"{my_ip}/{cidr}", strict=False))
 
             # Resolve gateway MAC from kernel ARP cache
@@ -1654,7 +1654,7 @@ class NetworkScanner:
         self._active_scan_network = network_hint
 
         try:
-            self.shared_data.ragnarorch_status = "NetworkScanner"
+            self.shared_data.optaris_defenseorch_status = "NetworkScanner"
             job_descriptor = ""
             if job and getattr(job, 'ssid', None):
                 job_descriptor = f" for {job.ssid} ({self.arp_scan_interface})"

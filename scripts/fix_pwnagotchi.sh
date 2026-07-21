@@ -19,8 +19,8 @@ doc['ui']['display']['type'] = 'waveshare_4'
 doc['ui']['display']['rotation'] = 180
 doc['ui']['display']['color'] = 'black'
 doc['ui']['web']['enabled'] = True
-doc['ui']['web']['username'] = 'ragnar'
-doc['ui']['web']['password'] = 'ragnar'
+doc['ui']['web']['username'] = 'optaris_defense'
+doc['ui']['web']['password'] = 'optaris_defense'
 doc['main']['plugins']['grid']['enabled'] = False
 with open('/etc/pwnagotchi/config.toml', 'w') as f:
     f.write(tomlkit.dumps(doc))
@@ -69,4 +69,4 @@ echo "[INFO] Pwnagotchi status:"
 systemctl is-active pwnagotchi || true
 journalctl -u pwnagotchi -n 10 --no-pager
 echo ""
-echo "[INFO] Done. Web UI should be at http://$(hostname -I | awk '{print $1}'):8080 (ragnar/ragnar)"
+echo "[INFO] Done. Web UI should be at http://$(hostname -I | awk '{print $1}'):8080 (optaris_defense/optaris_defense)"

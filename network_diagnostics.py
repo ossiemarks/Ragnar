@@ -1,4 +1,4 @@
-"""Network diagnostics endpoints for Ragnar.
+"""Network diagnostics endpoints for OptarisDefense.
 
 Registers a set of /api/net/* routes that wrap standard Linux networking
 tools (ping, traceroute, mtr, whois, speedtest, arp-scan, lldpctl, ethtool,
@@ -10,7 +10,7 @@ circular import: webapp_modern imports register_network_diagnostics() and calls
 it once with the Flask app. Auth is enforced globally by webapp_modern's
 before_request handler, so these routes inherit it automatically.
 
-The Ragnar service runs as root, so the wrapped tools are invoked directly
+The OptarisDefense service runs as root, so the wrapped tools are invoked directly
 (no sudo); they still work if the app is ever run as a normal user with the
 appropriate sudoers entries.
 """
@@ -84,7 +84,7 @@ def _run(cmd, timeout=30, env=None):
         return {'rc': r.returncode, 'out': r.stdout, 'err': r.stderr}
     except FileNotFoundError:
         return {'rc': 127, 'out': '',
-                'err': f"{cmd[0]}: not installed (run the Ragnar installer/update to add it)"}
+                'err': f"{cmd[0]}: not installed (run the OptarisDefense installer/update to add it)"}
     except subprocess.TimeoutExpired:
         return {'rc': 124, 'out': '', 'err': f"{cmd[0]}: timed out after {timeout}s"}
     except Exception as e:  # pragma: no cover - defensive
@@ -1058,7 +1058,7 @@ def do_mac_watch(scan=True, interface=None):
 # --------------------------------------------------------------------------
 # DHCP Guardian — DHCP-snooping-style monitor (detection-only).
 #
-# The DHCP layer is the one L2 service Ragnar hadn't covered, and it's arguably
+# The DHCP layer is the one L2 service OptarisDefense hadn't covered, and it's arguably
 # the second-highest-value one after DNS: whoever answers DHCP hands you your
 # gateway and DNS, so a rogue DHCP server is a turnkey man-in-the-middle. Two
 # jobs, both passive/harmless (it never runs a DHCP server or hands out leases):
@@ -2078,7 +2078,7 @@ def _capture_iface(preferred=None):
     scanners). Order: the caller's/configured preference, then a wired
     (non-wireless, non-virtual) interface with link up — preferring the
     default-route interface when it is itself wired — then the default-route
-    interface. The wired preference matters for the sensor deployment: Ragnar
+    interface. The wired preference matters for the sensor deployment: OptarisDefense
     plugged into a switch port to watch it (mirror/SPAN or isolated VLAN, no
     gateway on that leg) while managed over WiFi — the default route sits on
     wlan0, but STP/DTP/CDP/VTP/FHRP frames only exist on the cable."""
@@ -2125,7 +2125,7 @@ def _vpn_provider_match(*fields):
 # Known-VPN egress IP ranges (X4BNet lists_vpn, ASN-derived, rebuilt upstream
 # daily). This is the signal that catches a VPN running on the *router*: the
 # public egress IP is the VPN server's no matter where the tunnel terminates,
-# so an IP-range match works even when Ragnar's own NIC looks ordinary and
+# so an IP-range match works even when OptarisDefense's own NIC looks ordinary and
 # the ISP-name match misses (most VPN ASNs don't carry a brand name).
 # Synced to a local file and checked offline -- no per-lookup network call.
 # --------------------------------------------------------------------------
@@ -2220,7 +2220,7 @@ def _tor_exit_check(iface):
     exit node, by asking the Tor Project's own checker (which sees our exit IP).
 
     This is the only reliable way to catch Tor/VPN running on the *router*: in
-    that case Ragnar's own interface is an ordinary LAN NIC, so the interface
+    that case OptarisDefense's own interface is an ordinary LAN NIC, so the interface
     heuristics and the commercial-VPN ISP name match both miss it. Bound to the
     interface like the geo lookup. Returns True/False, or None if the check
     couldn't be performed (offline / curl missing)."""
@@ -2252,7 +2252,7 @@ def _reverse_dns(ip):
 
 
 def do_network_identity(interface=None):
-    """Best-effort identity of the network Ragnar is attached to: DNS search
+    """Best-effort identity of the network OptarisDefense is attached to: DNS search
     domain(s), nameservers, this host's name/FQDN, and the default gateway
     (with reverse-DNS). No single source is authoritative, so several are
     merged and the provenance is reported.
@@ -2404,7 +2404,7 @@ def _isp_lookup_iface(iface):
                          'egress cannot be probed here (check the gateway/DHCP '
                          'on this segment)', **vpn_fields}
 
-    # Is this egress a Tor exit? Catches Tor/VPN on the *router* (Ragnar's own
+    # Is this egress a Tor exit? Catches Tor/VPN on the *router* (OptarisDefense's own
     # NIC looks ordinary in that case, so the geo ISP-name match alone misses it).
     tor_exit = _tor_exit_check(iface)
     vpn_fields['tor_exit'] = bool(tor_exit)
@@ -3036,7 +3036,7 @@ def _burst_sequence(interface, count, on_ms, off_ms):
         # payload so the frames are identifiable on a capture, padded to the
         # 60-byte minimum Ethernet frame.
         frame = (b'\xff\xff\xff\xff\xff\xff' + src + b'\x88\xb5'
-                 + b'RAGNAR-LOCATE-PORT')
+                 + b'OPTARIS_DEFENSE-LOCATE-PORT')
         frame += b'\x00' * (60 - len(frame))
         try:
             sock = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
@@ -3073,7 +3073,7 @@ def do_locate_port(interface, count=6, on_ms=800, off_ms=800, force=False, metho
     Two methods, because switches differ in which LED they drive:
     - 'flap'  — links the port down/up so the **LINK** LED blinks (the link
                 drops for a moment each cycle). Refuses the default-route
-                interface unless force=True, since it briefly cuts Ragnar's own
+                interface unless force=True, since it briefly cuts OptarisDefense's own
                 connectivity.
     - 'burst' — floods traffic bursts so the **ACTIVITY** LED blinks while the
                 link stays up. Never drops connectivity, so no force is needed
@@ -3102,7 +3102,7 @@ def do_locate_port(interface, count=6, on_ms=800, off_ms=800, force=False, metho
     if method == 'flap' and not force and _default_route_iface() == interface:
         return {'success': False, 'needs_force': True, 'interface': interface,
                 'error': f'{interface} carries this device\'s default route — flapping '
-                         'it will briefly drop Ragnar\'s connectivity (the UI freezes '
+                         'it will briefly drop OptarisDefense\'s connectivity (the UI freezes '
                          'until the sequence finishes, then it auto-restores). Confirm '
                          'to proceed anyway — or use the Traffic-burst method, which '
                          'keeps the link up.'}
@@ -4707,7 +4707,7 @@ def _ndp_selftest():
 #     only safe with upstream switch RA-Guard, which we surface as advice.
 # Hardening writes the two safe sysctls live and persists them so they survive a
 # reboot; accept_ra is deliberately untouched.
-_RAGUARD_SYSCTL_FILE = '/etc/sysctl.d/99-ragnar-raguard.conf'
+_RAGUARD_SYSCTL_FILE = '/etc/sysctl.d/99-optaris-defense-raguard.conf'
 _RAGUARD_KEYS = ('accept_ra', 'accept_ra_defrtr', 'accept_ra_rtr_pref',
                  'accept_ra_pinfo', 'accept_redirects', 'autoconf', 'forwarding',
                  'disable_ipv6', 'use_tempaddr')
@@ -4864,9 +4864,9 @@ def _raguard_apply():
             else:
                 errors.append(f"{name}: {(res.get('err') or 'failed').strip()[:80]}")
     # Persist (all/default cover interfaces created later; explicit per-if too).
-    body = ["# Ragnar IPv6 RA-Guard hardening — closes the ICMPv6-redirect and rogue",
+    body = ["# OptarisDefense IPv6 RA-Guard hardening — closes the ICMPv6-redirect and rogue",
             "# RA-preference holes. accept_ra is intentionally left untouched so SLAAC",
-            "# connectivity keeps working. Managed by Ragnar; edit via the RA Guard tool.",
+            "# connectivity keeps working. Managed by OptarisDefense; edit via the RA Guard tool.",
             ""]
     for scope in scopes:
         for key, val in _RAGUARD_HARDEN:
@@ -13865,11 +13865,11 @@ _NET_TOOL_PKGS = {
 
 def _configure_lldpd():
     """Enable CDPv1/v2/EDP/FDP/SONMP decoding and (re)start lldpd -- mirrors the
-    Ragnar installer/updater so on-demand installs also see non-LLDP switches."""
+    OptarisDefense installer/updater so on-demand installs also see non-LLDP switches."""
     try:
         os.makedirs('/etc/default', exist_ok=True)
         with open('/etc/default/lldpd', 'w') as f:
-            f.write('# Ragnar: decode CDPv1/v2 (Cisco), EDP (Extreme), FDP (Foundry), '
+            f.write('# OptarisDefense: decode CDPv1/v2 (Cisco), EDP (Extreme), FDP (Foundry), '
                     'SONMP (Nortel)\n')
             f.write('# neighbours in addition to LLDP, so switch discovery covers '
                     'non-LLDP gear.\n')
@@ -13911,7 +13911,7 @@ def _install_scapy():
 
 def do_install_tool(tool):
     """Install a missing network tool on demand via apt. Whitelisted packages
-    only. The Ragnar service runs as root, so apt is invoked directly."""
+    only. The OptarisDefense service runs as root, so apt is invoked directly."""
     if tool == 'scapy':
         return _install_scapy()
     entry = _NET_TOOL_PKGS.get(tool)
@@ -14911,7 +14911,7 @@ def _cli(argv=None):
     import argparse
     p = argparse.ArgumentParser(
         prog='network_diagnostics',
-        description='Ragnar passive network diagnostics (CLI subset).')
+        description='OptarisDefense passive network diagnostics (CLI subset).')
     sub = p.add_subparsers(dest='cmd')
 
     w = sub.add_parser('igmp-watch', help='passive IGMP-snooping security scan')

@@ -1,12 +1,12 @@
 # SPDX-License-Identifier: LicenseRef-FoxIO-License-1.1
 #
-# JA4S (TLS server fingerprint) for the Ragnar suite.
+# JA4S (TLS server fingerprint) for the OptarisDefense suite.
 # ---------------------------------------------------------------------------
 # JA4S is part of the JA4+ family and is licensed by FoxIO under the FoxIO
 # License 1.1 — NOT the BSD-3-Clause that covers JA4 (the client fingerprint).
 # See https://github.com/FoxIO-LLC/ja4/blob/main/LICENSE-JA4S.md for the terms.
 #
-# It is kept in this separate, clearly identified file so the rest of Ragnar
+# It is kept in this separate, clearly identified file so the rest of OptarisDefense
 # (MIT) and the JA4 client fingerprint (BSD-3-Clause) stay unencumbered, exactly
 # as FoxIO's FAQ permits: JA4+ code may coexist with differently licensed
 # surrounding code provided the JA4+ component remains clearly identified under
@@ -14,7 +14,7 @@
 #
 # This module is imported ONLY when the operator has both enabled JA4S and
 # acknowledged this license (see tls_watch.ENABLE_JA4S / ACKNOWLEDGE_JA4S_LICENSE).
-# By default Ragnar ships with JA4S disabled and never imports this file.
+# By default OptarisDefense ships with JA4S disabled and never imports this file.
 """JA4S server fingerprint. Format: a_b_c where
   a = [proto][2-char version][2-digit ServerHello ext count][ALPN],
   b = the chosen cipher as 4-hex (not hashed),

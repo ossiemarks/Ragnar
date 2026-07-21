@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------------
-# Ragnar WiFi-Defense monitor-mode doctor
+# OptarisDefense WiFi-Defense monitor-mode doctor
 #
 # Diagnoses why 802.11 monitor capture ("ragmon0") fails or hears nothing.
 # It captures the environment, enables monitor via the SAME code the webapp
-# uses, then compares an OS-level capture (tcpdump) against Ragnar's own
+# uses, then compares an OS-level capture (tcpdump) against OptarisDefense's own
 # capture — that contrast tells us whether the bug is our code or the driver.
 #
 # Usage:   sudo ./scripts/wifidef_doctor.sh [interface]
@@ -80,9 +80,9 @@ capture_test() {
   else
     echo "  (tcpdump not installed — skipping OS oracle; 'apt install tcpdump')"
   fi
-  scan_summary "\$ Ragnar scan --channel $ch (fixed):" \
+  scan_summary "\$ OptarisDefense scan --channel $ch (fixed):" \
       python3 "$REPO/wifi_defense.py" scan --interface "$IFACE" --seconds 8 --channel "$ch"
-  scan_summary "\$ Ragnar scan hopping (all bands, 12s):" \
+  scan_summary "\$ OptarisDefense scan hopping (all bands, 12s):" \
       python3 "$REPO/wifi_defense.py" scan --interface "$IFACE" --seconds 12
 }
 
@@ -93,18 +93,18 @@ run uname -a
 run "$IW" --version
 echo "repo: $REPO"
 run git -C "$REPO" log --oneline -3
-SVC_START="$(systemctl show ragnar.service -p ActiveEnterTimestampMonotonic --value 2>/dev/null)"
-echo -n "ragnar.service last (re)start: "
-systemctl show ragnar.service -p ActiveEnterTimestamp --value 2>/dev/null
+SVC_START="$(systemctl show optaris-defense.service -p ActiveEnterTimestampMonotonic --value 2>/dev/null)"
+echo -n "optaris-defense.service last (re)start: "
+systemctl show optaris-defense.service -p ActiveEnterTimestamp --value 2>/dev/null
 # Warn LOUDLY if the service is older than the newest code — a very common
 # reason "the fix doesn't work": the running process still has the old module.
 COMMIT_EPOCH="$(git -C "$REPO" log -1 --format=%ct 2>/dev/null)"
-SVC_EPOCH="$(date -d "$(systemctl show ragnar.service -p ActiveEnterTimestamp --value 2>/dev/null)" +%s 2>/dev/null)"
+SVC_EPOCH="$(date -d "$(systemctl show optaris-defense.service -p ActiveEnterTimestamp --value 2>/dev/null)" +%s 2>/dev/null)"
 if [ -n "$COMMIT_EPOCH" ] && [ -n "$SVC_EPOCH" ] && [ "$SVC_EPOCH" -lt "$COMMIT_EPOCH" ]; then
   echo "  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-  echo "  !! STALE SERVICE: the running ragnar.service started BEFORE the latest"
+  echo "  !! STALE SERVICE: the running optaris-defense.service started BEFORE the latest"
   echo "  !! commit, so the web UI is still running OLD code. Run:"
-  echo "  !!     sudo systemctl restart ragnar"
+  echo "  !!     sudo systemctl restart optaris_defense"
   echo "  !! then RE-RUN this doctor. (CLI tests below use the fresh code regardless.)"
   echo "  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 fi
@@ -113,7 +113,7 @@ python3 -c 'import scapy; print("scapy:", scapy.__version__)' 2>/dev/null || ech
 
 echo "interfering managers (they can re-up / reset the adapter under monitor):"
 systemctl is-active NetworkManager 2>/dev/null | sed 's/^/  NetworkManager: /'
-command -v nmcli >/dev/null && echo "  nmcli: present (Ragnar will set the adapter unmanaged while monitoring)" || echo "  nmcli: absent"
+command -v nmcli >/dev/null && echo "  nmcli: present (OptarisDefense will set the adapter unmanaged while monitoring)" || echo "  nmcli: absent"
 pgrep -a wpa_supplicant 2>/dev/null | sed 's/^/  wpa_supplicant: /' || echo "  wpa_supplicant: not running"
 
 section "RADIOS / INTERFACES"
@@ -127,7 +127,7 @@ echo; lsusb | grep -iE 'ralink|mediatek|realtek|atheros|0e8d|0bda' || echo "(no 
 
 # ---- choose interface -------------------------------------------------------
 # Only a MANAGED interface is a valid base — never our monitor vif (ragmon0) or a
-# P2P-device. Prefer the base_iface Ragnar already recorded, then a non-onboard
+# P2P-device. Prefer the base_iface OptarisDefense already recorded, then a non-onboard
 # managed adapter whose radio supports monitor.
 IFACE="${1:-}"
 if [ -z "$IFACE" ]; then
@@ -172,13 +172,13 @@ else
   echo ">> $IFACE not associated; will test on channel $TESTCH plus a hopping scan"
 fi
 
-section "CURRENT RAGNAR STATE"
+section "CURRENT OPTARIS_DEFENSE STATE"
 run cat "$REPO/data/wifi_defense.json"
-echo "recent ragnar.service log lines (monitor/scan/ragmon):"
-journalctl -u ragnar.service --no-pager -n 400 2>/dev/null | grep -iE "wifidef|monitor|ragmon" | tail -n 30
+echo "recent optaris-defense.service log lines (monitor/scan/ragmon):"
+journalctl -u optaris-defense.service --no-pager -n 400 2>/dev/null | grep -iE "wifidef|monitor|ragmon" | tail -n 30
 
 # ===========================================================================
-section "TEST 1 — ENABLE MONITOR (Ragnar's code path)"
+section "TEST 1 — ENABLE MONITOR (OptarisDefense's code path)"
 python3 "$REPO/wifi_defense.py" monitor --interface "$IFACE" --enable
 echo
 capture_test "$TESTCH"

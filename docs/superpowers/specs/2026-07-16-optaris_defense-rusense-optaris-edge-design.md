@@ -1,9 +1,9 @@
-# Ragnar + RuSense on optaris-edge — Deployment Design
+# OptarisDefense + RuSense on optaris-edge — Deployment Design
 
 **Date:** 2026-07-16
 **Target:** `optaris-edge` — Raspberry Pi 5, Ubuntu 24.04.4 LTS (arm64), 7.8 GB RAM, 45 GB free.
 Reachable at `optaris-edge.local` / `192.168.8.149` (LAN `192.168.8.0/24`, gateway = GL-MT3000).
-**Goal:** Replace the existing OptarisSense sensing stack with Ragnar + its vendored RuSense
+**Goal:** Replace the existing OptarisSense sensing stack with OptarisDefense + its vendored RuSense
 engine, and feed it CSI from all four available sources.
 
 > Credentials are **not** stored in this doc. Pi and router logins live in Secrets Manager
@@ -12,7 +12,7 @@ engine, and feed it CSI from all four available sources.
 
 ## Measured current state
 
-- **Ragnar: not installed** (no `~/Ragnar`, no `ragnar.service`).
+- **OptarisDefense: not installed** (no `~/OptarisDefense`, no `optaris-defense.service`).
 - **OptarisSense running** — `sensing-server.service`, binary `/usr/local/bin/sensing-server`,
   WorkingDirectory `/opt/optaris-sense`, `CLOUD_ENABLE=true` (cloud currently **offline**).
   Ports: UDP `:5005` (CSI ingest) + `:50051`, HTTP dashboard `:8080`, WebSocket `:8765`.
@@ -32,7 +32,7 @@ engine, and feed it CSI from all four available sources.
 
 ## Target architecture
 
-Ragnar (web UI `:8000`) + `ragnar-sensing.service` (RuView engine, HTTP `:3000`, WS `:3100`,
+OptarisDefense (web UI `:8000`) + `optaris-defense-sensing.service` (RuView engine, HTTP `:3000`, WS `:3100`,
 UDP CSI ingest `:5005`) on the Pi. All four CSI sources stream to the Pi's `:5005`:
 
 | Source | Location | Transport | CSI toolchain |
@@ -67,17 +67,17 @@ UDP CSI ingest `:5005`) on the Pi. All four CSI sources stream to the Pi's `:500
 3. **Verify:** `:5005` no longer bound by the old server; snapshot restore path documented.
    **Rollback:** `systemctl enable --now sensing-server.service`.
 
-### Phase 1 — Ragnar + vendored RuSense (documented happy path)
-1. Clone Ragnar to `/home/pi/Ragnar`; run `install_ragnar.sh` in a **headless/server** profile,
+### Phase 1 — OptarisDefense + vendored RuSense (documented happy path)
+1. Clone OptarisDefense to `/home/pi/OptarisDefense`; run `install_optaris_defense.sh` in a **headless/server** profile,
    non-interactively (feed the profile choice; no display hardware present). Result:
-   `ragnar.service`, web UI on `:8000`.
-2. Run `scripts/install_sensing.sh` → `ragnar-sensing.service` on `:5005/:3000/:3100`
+   `optaris-defense.service`, web UI on `:8000`.
+2. Run `scripts/install_sensing.sh` → `optaris-defense-sensing.service` on `:5005/:3000/:3100`
    (native arm64 glibc binary — no container).
 3. Keep the Nexmon bridge (node 200) targeting `:5005`; let the 2 ESP32 nodes reconnect
    automatically (they target `box-IP:5005`).
 4. **Verify:** RuSense **Nodes** tab shows nodes 2 & 5 with climbing pps; `/api/v1/health` ok;
-   Ragnar dashboard reachable at `http://optaris-edge.local:8000`.
-   **Milestone:** satisfies "install Ragnar + RuSense + use the ESP32 nodes."
+   OptarisDefense dashboard reachable at `http://optaris-edge.local:8000`.
+   **Milestone:** satisfies "install OptarisDefense + RuSense + use the ESP32 nodes."
 
 ### Phase 2 — Intel AX210 / Killer as a CSI source (novel)
 Uses **FeitCSI** (AX200/AX210 CSI tool + patched iwlwifi) — already mid-build on the Pi at
@@ -101,11 +101,11 @@ for the `feitcsi` reader.
    router's coverage. **Caveat:** independent node, not fused with ESP32.
 
 ## Out of scope / deferred
-- Reinstating OptarisSense cloud telemetry under Ragnar (Ragnar's sensing has no cloud spool).
+- Reinstating OptarisSense cloud telemetry under OptarisDefense (OptarisDefense's sensing has no cloud spool).
 - Multistatic fusion across heterogeneous chips (engine limitation, not deliverable).
 - Training adaptive models per room (post-deploy tuning, separate effort).
 
 ## Verification summary
 Each phase is independently verifiable via `/api/v1/nodes`, `/api/v1/health`, live `:5005` UDP
-frame counts, and the Ragnar web UI. Full rollback to OptarisSense available at any point via the
+frame counts, and the OptarisDefense web UI. Full rollback to OptarisSense available at any point via the
 Phase 0 snapshot.

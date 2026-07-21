@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# UDP CSI fan-out: receive on :5005, duplicate each datagram to OptarisSense + Ragnar sensing.
+# UDP CSI fan-out: receive on :5005, duplicate each datagram to OptarisSense + OptarisDefense sensing.
 import socket, os
 LISTEN = ("0.0.0.0", int(os.environ.get("FANOUT_LISTEN_PORT", "5005")))
 TARGETS = [("127.0.0.1", int(p)) for p in os.environ.get("FANOUT_TARGETS", "5105,5006").split(",")]

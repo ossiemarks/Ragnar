@@ -1,4 +1,4 @@
-/* Ragnar ESP32-C6 Coordinator — Web Flasher
+/* OptarisDefense ESP32-C6 Coordinator — Web Flasher
  * Uses esptool-js v0.6.0 via CDN.
  * Adapted from Piglet web flasher (MIT / CC BY-NC-SA 4.0).
  */

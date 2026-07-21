@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # ============================================================================
-# Ragnar Advanced Security Tools Installer
+# OptarisDefense Advanced Security Tools Installer
 # ============================================================================
 # This script installs advanced security tools for server-mode features:
 # - Traffic Analysis (tcpdump, tshark, ngrep, iftop, nethogs)
 # - Advanced Vulnerability Assessment (nuclei, nikto, sqlmap, whatweb)
 #
-# Run this script after install_ragnar.sh on capable hardware (8GB+ RAM)
+# Run this script after install_optaris_defense.sh on capable hardware (8GB+ RAM)
 # Usage: sudo ./install_advanced_tools.sh
 # ============================================================================
 
@@ -29,7 +29,7 @@ fi
 
 echo -e "${CYAN}"
 echo "╔══════════════════════════════════════════════════════════════════╗"
-echo "║          Ragnar Advanced Security Tools Installer                ║"
+echo "║          OptarisDefense Advanced Security Tools Installer                ║"
 echo "║                  Server Mode Features                            ║"
 echo "╚══════════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
@@ -66,19 +66,19 @@ echo -e "${CYAN}Installing basic dependencies...${NC}"
 $UPDATE_CMD
 $INSTALL_CMD curl wget unzip git 2>/dev/null || true
 
-# Determine the user running Ragnar (for permissions)
-# Check for ragnar user, fall back to current SUDO_USER or 'nobody'
-if id "ragnar" &>/dev/null; then
-    RAGNAR_USER="ragnar"
+# Determine the user running OptarisDefense (for permissions)
+# Check for optaris_defense user, fall back to current SUDO_USER or 'nobody'
+if id "optaris_defense" &>/dev/null; then
+    OPTARIS_DEFENSE_USER="optaris_defense"
 elif [ -n "$SUDO_USER" ] && [ "$SUDO_USER" != "root" ]; then
-    RAGNAR_USER="$SUDO_USER"
+    OPTARIS_DEFENSE_USER="$SUDO_USER"
 else
-    RAGNAR_USER=""
-    echo -e "${YELLOW}Note: No ragnar user found, skipping user-specific permissions${NC}"
+    OPTARIS_DEFENSE_USER=""
+    echo -e "${YELLOW}Note: No optaris_defense user found, skipping user-specific permissions${NC}"
 fi
 
-if [ -n "$RAGNAR_USER" ]; then
-    echo -e "${BLUE}Ragnar user: ${RAGNAR_USER}${NC}"
+if [ -n "$OPTARIS_DEFENSE_USER" ]; then
+    echo -e "${BLUE}OptarisDefense user: ${OPTARIS_DEFENSE_USER}${NC}"
 fi
 
 # Function to check if command exists
@@ -163,8 +163,8 @@ echo -e "${CYAN}═════════════════════�
 
 if check_installed "nuclei"; then
     echo -e "${GREEN}Nuclei already installed, checking for updates...${NC}"
-    if [ -n "$RAGNAR_USER" ]; then
-        sudo -u "$RAGNAR_USER" nuclei -update-templates 2>/dev/null || nuclei -update-templates 2>/dev/null || true
+    if [ -n "$OPTARIS_DEFENSE_USER" ]; then
+        sudo -u "$OPTARIS_DEFENSE_USER" nuclei -update-templates 2>/dev/null || nuclei -update-templates 2>/dev/null || true
     else
         nuclei -update-templates 2>/dev/null || true
     fi
@@ -208,8 +208,8 @@ else
                 
                 # Download templates
                 echo -e "${BLUE}Downloading Nuclei templates...${NC}"
-                if [ -n "$RAGNAR_USER" ]; then
-                    sudo -u "$RAGNAR_USER" nuclei -update-templates 2>/dev/null || nuclei -update-templates 2>/dev/null || true
+                if [ -n "$OPTARIS_DEFENSE_USER" ]; then
+                    sudo -u "$OPTARIS_DEFENSE_USER" nuclei -update-templates 2>/dev/null || nuclei -update-templates 2>/dev/null || true
                 else
                     nuclei -update-templates 2>/dev/null || true
                 fi
@@ -250,34 +250,34 @@ if grep -qi "Raspberry Pi Zero" /proc/cpuinfo 2>/dev/null; then
     IS_PI_ZERO=true
 fi
 
-# Determine Ragnar installation directory (where this script is located)
+# Determine OptarisDefense installation directory (where this script is located)
 # Handle both direct execution and sudo execution
 if [ -n "${BASH_SOURCE[0]}" ]; then
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 else
     SCRIPT_DIR="$(pwd)"
 fi
-RAGNAR_DIR="$SCRIPT_DIR"
+OPTARIS_DEFENSE_DIR="$SCRIPT_DIR"
 
-# Verify this is actually the Ragnar directory
-if [ ! -f "$RAGNAR_DIR/Ragnar.py" ] && [ ! -f "$RAGNAR_DIR/webapp_modern.py" ]; then
+# Verify this is actually the OptarisDefense directory
+if [ ! -f "$OPTARIS_DEFENSE_DIR/optaris_defense.py" ] && [ ! -f "$OPTARIS_DEFENSE_DIR/webapp_modern.py" ]; then
     # Fallback to common locations (check in order of likelihood)
-    if [ -d "/home/ragnar/Ragnar" ] && [ -f "/home/ragnar/Ragnar/Ragnar.py" ]; then
-        RAGNAR_DIR="/home/ragnar/Ragnar"
-    elif [ -f "$(pwd)/Ragnar.py" ]; then
-        RAGNAR_DIR="$(pwd)"
-    elif [ -d "/opt/ragnar" ]; then
-        RAGNAR_DIR="/opt/ragnar"
-    elif [ -d "/home/ragnar/ragnar" ]; then
-        RAGNAR_DIR="/home/ragnar/ragnar"
+    if [ -d "/home/optaris-defense/OptarisDefense" ] && [ -f "/home/optaris-defense/OptarisDefense/optaris_defense.py" ]; then
+        OPTARIS_DEFENSE_DIR="/home/optaris-defense/OptarisDefense"
+    elif [ -f "$(pwd)/optaris_defense.py" ]; then
+        OPTARIS_DEFENSE_DIR="$(pwd)"
+    elif [ -d "/opt/optaris_defense" ]; then
+        OPTARIS_DEFENSE_DIR="/opt/optaris_defense"
+    elif [ -d "/home/optaris-defense/optaris_defense" ]; then
+        OPTARIS_DEFENSE_DIR="/home/optaris-defense/optaris_defense"
     else
-        echo -e "${RED}ERROR: Could not determine Ragnar installation directory${NC}"
-        echo -e "${YELLOW}Please run this script from the Ragnar directory${NC}"
+        echo -e "${RED}ERROR: Could not determine OptarisDefense installation directory${NC}"
+        echo -e "${YELLOW}Please run this script from the OptarisDefense directory${NC}"
         exit 1
     fi
 fi
 
-echo -e "${BLUE}Ragnar directory: ${RAGNAR_DIR}${NC}"
+echo -e "${BLUE}OptarisDefense directory: ${OPTARIS_DEFENSE_DIR}${NC}"
 
 if [ "$IS_PI_ZERO" = true ]; then
     echo -e "${YELLOW}Raspberry Pi Zero detected - skipping ZAP installation (insufficient resources)${NC}"
@@ -306,8 +306,8 @@ else
     # Download and install ZAP if Java is available
     if command -v java &> /dev/null; then
         ZAP_VERSION="2.17.0"
-        # Install ZAP inside Ragnar's tools directory for predictable location
-        ZAP_DIR="${RAGNAR_DIR}/tools/zap"
+        # Install ZAP inside OptarisDefense's tools directory for predictable location
+        ZAP_DIR="${OPTARIS_DEFENSE_DIR}/tools/zap"
         ZAP_GLOBAL_DIR="/opt/zaproxy"
 
         if [ ! -d "$ZAP_DIR" ] && [ ! -d "$ZAP_GLOBAL_DIR" ]; then
@@ -320,17 +320,17 @@ else
                 tar -xzf "ZAP_${ZAP_VERSION}_Linux.tar.gz"
 
                 # Debug: Show paths
-                echo -e "${BLUE}RAGNAR_DIR: ${RAGNAR_DIR}${NC}"
+                echo -e "${BLUE}OPTARIS_DEFENSE_DIR: ${OPTARIS_DEFENSE_DIR}${NC}"
                 echo -e "${BLUE}ZAP_DIR: ${ZAP_DIR}${NC}"
 
-                # Create tools/zap directory in Ragnar folder
+                # Create tools/zap directory in OptarisDefense folder
                 echo -e "${BLUE}Creating directory: ${ZAP_DIR}${NC}"
-                mkdir -p "${RAGNAR_DIR}/tools/zap"
+                mkdir -p "${OPTARIS_DEFENSE_DIR}/tools/zap"
 
                 # Verify directory was created
-                if [ ! -d "${RAGNAR_DIR}/tools/zap" ]; then
-                    echo -e "${RED}Failed to create ${RAGNAR_DIR}/tools/zap${NC}"
-                    ls -la "${RAGNAR_DIR}/tools/"
+                if [ ! -d "${OPTARIS_DEFENSE_DIR}/tools/zap" ]; then
+                    echo -e "${RED}Failed to create ${OPTARIS_DEFENSE_DIR}/tools/zap${NC}"
+                    ls -la "${OPTARIS_DEFENSE_DIR}/tools/"
                     exit 1
                 fi
 
@@ -340,8 +340,8 @@ else
 
                 if [ -n "$ZAP_EXTRACTED" ] && [ -d "$ZAP_EXTRACTED" ]; then
                     # Move contents into the zap directory
-                    echo -e "${BLUE}Moving contents to ${RAGNAR_DIR}/tools/zap/${NC}"
-                    mv "${ZAP_EXTRACTED}"/* "${RAGNAR_DIR}/tools/zap/"
+                    echo -e "${BLUE}Moving contents to ${OPTARIS_DEFENSE_DIR}/tools/zap/${NC}"
+                    mv "${ZAP_EXTRACTED}"/* "${OPTARIS_DEFENSE_DIR}/tools/zap/"
                     rm -rf "$ZAP_EXTRACTED"
                 else
                     echo -e "${RED}Could not find extracted ZAP directory${NC}"
@@ -354,8 +354,8 @@ else
 
                 # Set permissions
                 chmod +x "${ZAP_DIR}/zap.sh"
-                if [ -n "$RAGNAR_USER" ]; then
-                    chown -R "${RAGNAR_USER}:${RAGNAR_USER}" "${RAGNAR_DIR}/tools" 2>/dev/null || true
+                if [ -n "$OPTARIS_DEFENSE_USER" ]; then
+                    chown -R "${OPTARIS_DEFENSE_USER}:${OPTARIS_DEFENSE_USER}" "${OPTARIS_DEFENSE_DIR}/tools" 2>/dev/null || true
                 fi
 
                 # Create global symlink for convenience
@@ -445,7 +445,7 @@ echo -e "${CYAN}  Configuring Permissions${NC}"
 echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
 
 # Only configure sudo permissions if we have a valid user
-if [ -n "$RAGNAR_USER" ]; then
+if [ -n "$OPTARIS_DEFENSE_USER" ]; then
     # Find actual paths for tools (may vary by distro)
     TCPDUMP_PATH=$(which tcpdump 2>/dev/null || echo "/usr/bin/tcpdump")
     TSHARK_PATH=$(which tshark 2>/dev/null || echo "/usr/bin/tshark")
@@ -456,29 +456,29 @@ if [ -n "$RAGNAR_USER" ]; then
     NUCLEI_PATH=$(which nuclei 2>/dev/null || echo "/usr/local/bin/nuclei")
 
     # Allow user to run tcpdump without password
-    SUDOERS_FILE="/etc/sudoers.d/ragnar-traffic"
+    SUDOERS_FILE="/etc/sudoers.d/optaris-defense-traffic"
     echo -e "${BLUE}Configuring sudo permissions for traffic capture...${NC}"
     cat > "$SUDOERS_FILE" << EOF
-# Allow ${RAGNAR_USER} user to run traffic analysis tools without password
-${RAGNAR_USER} ALL=(ALL) NOPASSWD: ${TCPDUMP_PATH}
-${RAGNAR_USER} ALL=(ALL) NOPASSWD: ${TSHARK_PATH}
-${RAGNAR_USER} ALL=(ALL) NOPASSWD: ${IFTOP_PATH}
-${RAGNAR_USER} ALL=(ALL) NOPASSWD: ${NETHOGS_PATH}
+# Allow ${OPTARIS_DEFENSE_USER} user to run traffic analysis tools without password
+${OPTARIS_DEFENSE_USER} ALL=(ALL) NOPASSWD: ${TCPDUMP_PATH}
+${OPTARIS_DEFENSE_USER} ALL=(ALL) NOPASSWD: ${TSHARK_PATH}
+${OPTARIS_DEFENSE_USER} ALL=(ALL) NOPASSWD: ${IFTOP_PATH}
+${OPTARIS_DEFENSE_USER} ALL=(ALL) NOPASSWD: ${NETHOGS_PATH}
 EOF
     chmod 440 "$SUDOERS_FILE"
-    echo -e "${GREEN}✓ Traffic capture permissions configured for ${RAGNAR_USER}${NC}"
+    echo -e "${GREEN}✓ Traffic capture permissions configured for ${OPTARIS_DEFENSE_USER}${NC}"
 
     # Allow user to run vuln scanners
-    SUDOERS_FILE="/etc/sudoers.d/ragnar-vuln"
+    SUDOERS_FILE="/etc/sudoers.d/optaris-defense-vuln"
     echo -e "${BLUE}Configuring sudo permissions for vulnerability scanners...${NC}"
     cat > "$SUDOERS_FILE" << EOF
-# Allow ${RAGNAR_USER} user to run vulnerability scanners without password
-${RAGNAR_USER} ALL=(ALL) NOPASSWD: ${NIKTO_PATH}
-${RAGNAR_USER} ALL=(ALL) NOPASSWD: ${SQLMAP_PATH}
-${RAGNAR_USER} ALL=(ALL) NOPASSWD: ${NUCLEI_PATH}
+# Allow ${OPTARIS_DEFENSE_USER} user to run vulnerability scanners without password
+${OPTARIS_DEFENSE_USER} ALL=(ALL) NOPASSWD: ${NIKTO_PATH}
+${OPTARIS_DEFENSE_USER} ALL=(ALL) NOPASSWD: ${SQLMAP_PATH}
+${OPTARIS_DEFENSE_USER} ALL=(ALL) NOPASSWD: ${NUCLEI_PATH}
 EOF
     chmod 440 "$SUDOERS_FILE"
-    echo -e "${GREEN}✓ Vulnerability scanner permissions configured for ${RAGNAR_USER}${NC}"
+    echo -e "${GREEN}✓ Vulnerability scanner permissions configured for ${OPTARIS_DEFENSE_USER}${NC}"
 else
     echo -e "${YELLOW}Skipping sudo permissions (no user detected)${NC}"
     echo -e "${YELLOW}You may need to run tools with sudo manually${NC}"
@@ -507,10 +507,10 @@ done
 echo ""
 echo -e "${BLUE}Web Application Security:${NC}"
 check_installed "java"
-if [ -f "${RAGNAR_DIR}/tools/zap/zap.sh" ] || [ -f "/opt/zaproxy/zap.sh" ] || check_installed "zap" 2>/dev/null; then
+if [ -f "${OPTARIS_DEFENSE_DIR}/tools/zap/zap.sh" ] || [ -f "/opt/zaproxy/zap.sh" ] || check_installed "zap" 2>/dev/null; then
     echo -e "${GREEN}✓ OWASP ZAP is installed${NC}"
-    if [ -f "${RAGNAR_DIR}/tools/zap/zap.sh" ]; then
-        echo -e "${BLUE}  Location: ${RAGNAR_DIR}/tools/zap/${NC}"
+    if [ -f "${OPTARIS_DEFENSE_DIR}/tools/zap/zap.sh" ]; then
+        echo -e "${BLUE}  Location: ${OPTARIS_DEFENSE_DIR}/tools/zap/${NC}"
     fi
 else
     echo -e "${YELLOW}✗ OWASP ZAP not installed${NC}"
@@ -521,6 +521,6 @@ echo -e "${CYAN}═════════════════════�
 echo -e "${GREEN}  Advanced tools installation complete!${NC}"
 echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
 echo ""
-echo -e "${YELLOW}Note: Restart Ragnar for changes to take effect:${NC}"
-echo -e "  sudo systemctl restart ragnar"
+echo -e "${YELLOW}Note: Restart OptarisDefense for changes to take effect:${NC}"
+echo -e "  sudo systemctl restart optaris_defense"
 echo ""

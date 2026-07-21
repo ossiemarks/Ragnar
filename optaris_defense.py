@@ -1,6 +1,6 @@
-#ragnar.py
-# This script defines the main execution flow for the Ragnar application. It initializes and starts
-# various components such as network scanning, display, and web server functionalities. The Ragnar 
+#optaris_defense.py
+# This script defines the main execution flow for the OptarisDefense application. It initializes and starts
+# various components such as network scanning, display, and web server functionalities. The OptarisDefense 
 # application serves as a comprehensive IoT security tool designed for network analysis and penetration testing.
 # It integrates various modules to provide a unified platform for cybersecurity professionals and enthusiasts.
 
@@ -18,7 +18,7 @@ except ImportError:
 import logging
 from collections import defaultdict
 
-# ragnar.py
+# optaris_defense.py
 
 
 import threading
@@ -35,10 +35,10 @@ from logger import Logger
 from wifi_manager import WiFiManager
 from env_manager import load_env
 
-logger = Logger(name="Ragnar.py", level=logging.DEBUG)
+logger = Logger(name="optaris_defense.py", level=logging.DEBUG)
 
-class Ragnar:
-    """Main class for Ragnar. Manages the primary operations of the application."""
+class OptarisDefense:
+    """Main class for OptarisDefense. Manages the primary operations of the application."""
     def __init__(self, shared_data):
         self.shared_data = shared_data
         self.commentaire_ia = Commentaireia()
@@ -47,7 +47,7 @@ class Ragnar:
         self.wifi_manager = WiFiManager(shared_data)
 
         # Set reference to this instance in shared_data for other modules
-        self.shared_data.ragnar_instance = self
+        self.shared_data.optaris_defense_instance = self
         self.shared_data.headless_mode = False
 
         # Reference to display instance (will be set when display is started)
@@ -57,7 +57,7 @@ class Ragnar:
         self._web_portal_lock = threading.Lock()
         self._web_thread_ref = None  # Reference to current web server thread
 
-        # PiSugar button listener (for Ragnar/Pwnagotchi swap via hardware button)
+        # PiSugar button listener (for OptarisDefense/Pwnagotchi swap via hardware button)
         self.pisugar_listener = None
         try:
             from pisugar_button import PiSugarButtonListener
@@ -66,9 +66,9 @@ class Ragnar:
             pass
 
     def run(self):
-        """Main loop for Ragnar. Waits for Wi-Fi connection and starts Orchestrator."""
+        """Main loop for OptarisDefense. Waits for Wi-Fi connection and starts Orchestrator."""
         logger.info("=" * 70)
-        logger.info("RAGNAR MAIN THREAD STARTING")
+        logger.info("OPTARIS_DEFENSE MAIN THREAD STARTING")
         logger.info("=" * 70)
         
         # Start PiSugar button listener (if available)
@@ -96,14 +96,14 @@ class Ragnar:
         self.wifi_manager.start()
         logger.info("Wi-Fi management system started")
 
-        # Main loop to keep Ragnar running
-        logger.info("Entering main Ragnar loop...")
+        # Main loop to keep OptarisDefense running
+        logger.info("Entering main OptarisDefense loop...")
 
         loop_count = 0
         while not self.shared_data.should_exit:
             loop_count += 1
             if loop_count % 6 == 1:  # Log every 60 seconds (6 iterations * 10 sec)
-                logger.info(f"Ragnar main loop iteration {loop_count}, manual_mode={self.shared_data.manual_mode}")
+                logger.info(f"OptarisDefense main loop iteration {loop_count}, manual_mode={self.shared_data.manual_mode}")
             
             if not self.shared_data.manual_mode:
                 self.check_and_start_orchestrator()
@@ -113,7 +113,7 @@ class Ragnar:
                     break
                 time.sleep(1)
         
-        logger.info("Ragnar main loop exited")
+        logger.info("OptarisDefense main loop exited")
 
 
 
@@ -164,8 +164,8 @@ class Ragnar:
             self.shared_data.orchestrator_should_exit = True
             self.orchestrator_thread.join(timeout=3)
             logger.info("Orchestrator thread stopped.")
-            self.shared_data.ragnarorch_status = "IDLE"
-            self.shared_data.ragnarstatustext2 = ""
+            self.shared_data.optaris_defenseorch_status = "IDLE"
+            self.shared_data.optaris_defensestatustext2 = ""
             self.shared_data.manual_mode = True
 
     def _start_wardriving_on_boot(self):
@@ -179,7 +179,7 @@ class Ragnar:
         try:
             from wardriving import WardrivingEngine
             self._wd_engine = WardrivingEngine(self.shared_data)
-            device_name = self.shared_data.config.get('wardriving_device_name', 'Ragnar')
+            device_name = self.shared_data.config.get('wardriving_device_name', 'OptarisDefense')
             gps_port = self.shared_data.config.get('wardriving_gps_port', '') or None
             result = self._wd_engine.start(device_name=device_name, gps_port=gps_port)
             logger.info(f"Wardriving auto-started on boot: {result}")
@@ -227,8 +227,8 @@ class Ragnar:
             return True
 
     def stop(self):
-        """Stop Ragnar and cleanup all resources."""
-        logger.info("Stopping Ragnar...")
+        """Stop OptarisDefense and cleanup all resources."""
+        logger.info("Stopping OptarisDefense...")
 
         # Stop PiSugar listener
         if self.pisugar_listener:
@@ -247,7 +247,7 @@ class Ragnar:
         self.shared_data.display_should_exit = True
         self.shared_data.webapp_should_exit = True
         
-        logger.info("Ragnar stopped successfully")
+        logger.info("OptarisDefense stopped successfully")
 
     def is_wifi_connected(self):
         """Legacy method - use wifi_manager for new code."""
@@ -271,13 +271,13 @@ class Ragnar:
         
         return display_thread
 
-def handle_exit(sig, frame, display_thread, ragnar_thread, web_thread):
+def handle_exit(sig, frame, display_thread, optaris_defense_thread, web_thread):
     """Handles the termination of the main, display, and web threads."""
     logger.info("Received exit signal, initiating clean shutdown...")
 
-    # Stop Ragnar instance first
-    if hasattr(shared_data, 'ragnar_instance') and shared_data.ragnar_instance:
-        shared_data.ragnar_instance.stop()
+    # Stop OptarisDefense instance first
+    if hasattr(shared_data, 'optaris_defense_instance') and shared_data.optaris_defense_instance:
+        shared_data.optaris_defense_instance.stop()
 
     # Set all exit flags
     shared_data.should_exit = True
@@ -297,8 +297,8 @@ def handle_exit(sig, frame, display_thread, ragnar_thread, web_thread):
 
     if display_thread and display_thread.is_alive():
         display_thread.join(timeout=1)
-    if ragnar_thread and ragnar_thread.is_alive():
-        ragnar_thread.join(timeout=1)
+    if optaris_defense_thread and optaris_defense_thread.is_alive():
+        optaris_defense_thread.join(timeout=1)
     if web_thread and web_thread.is_alive():
         web_thread.join(timeout=1)
 
@@ -327,10 +327,10 @@ if __name__ == "__main__":
         logger.info("Loading shared data config...")
         shared_data.load_config()
 
-        # Always reset pwnagotchi_mode on Ragnar startup so Ragnar
+        # Always reset pwnagotchi_mode on OptarisDefense startup so OptarisDefense
         # is the canonical mode after every boot / service restart.
-        shared_data.config['pwnagotchi_mode'] = 'ragnar'
-        shared_data.config['pwnagotchi_last_status'] = 'Ragnar service is running'
+        shared_data.config['pwnagotchi_mode'] = 'optaris_defense'
+        shared_data.config['pwnagotchi_last_status'] = 'OptarisDefense service is running'
         shared_data.save_config()
 
         # Clean up leftover pwnagotchi state (mon0, services)
@@ -341,7 +341,7 @@ if __name__ == "__main__":
             (['iw', 'mon0', 'del'], 5),
             (['systemctl', 'stop', 'pwnagotchi'], 10),
             (['systemctl', 'stop', 'bettercap'], 10),
-            (['systemctl', 'stop', 'ragnar-swap-button'], 5),
+            (['systemctl', 'stop', 'optaris-defense-swap-button'], 5),
         ]
         cleanup_procs = []
         for cmd, _ in cleanup_cmds:
@@ -377,25 +377,25 @@ if __name__ == "__main__":
 
         logger.info("Starting display thread...")
         shared_data.display_should_exit = False  # Initialize display should_exit
-        display_thread = Ragnar.start_display()
+        display_thread = OptarisDefense.start_display()
 
-        logger.info("Starting Ragnar thread...")
-        ragnar = Ragnar(shared_data)
-        shared_data.ragnar_instance = ragnar  # Assigner l'instance de Ragnar à shared_data
+        logger.info("Starting OptarisDefense thread...")
+        optaris_defense = OptarisDefense(shared_data)
+        shared_data.optaris_defense_instance = optaris_defense  # Assigner l'instance de OptarisDefense à shared_data
 
-        # Link display instance to ragnar instance
+        # Link display instance to optaris_defense instance
         if hasattr(shared_data, 'display_instance'):
-            ragnar.display = shared_data.display_instance
+            optaris_defense.display = shared_data.display_instance
 
-        # Register web thread with Ragnar instance for portal lifecycle management
-        ragnar._web_thread_ref = web_thread
+        # Register web thread with OptarisDefense instance for portal lifecycle management
+        optaris_defense._web_thread_ref = web_thread
         shared_data.web_portal_active = web_thread is not None
 
-        ragnar_thread = threading.Thread(target=ragnar.run)
-        ragnar_thread.start()
+        optaris_defense_thread = threading.Thread(target=optaris_defense.run)
+        optaris_defense_thread.start()
 
-        signal.signal(signal.SIGINT, lambda sig, frame: handle_exit(sig, frame, display_thread, ragnar_thread, web_thread))
-        signal.signal(signal.SIGTERM, lambda sig, frame: handle_exit(sig, frame, display_thread, ragnar_thread, web_thread))
+        signal.signal(signal.SIGINT, lambda sig, frame: handle_exit(sig, frame, display_thread, optaris_defense_thread, web_thread))
+        signal.signal(signal.SIGTERM, lambda sig, frame: handle_exit(sig, frame, display_thread, optaris_defense_thread, web_thread))
 
     except Exception as e:
         logger.error(f"An exception occurred during thread start: {e}")

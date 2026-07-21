@@ -1,7 +1,7 @@
 // RuSense loader — mounts the RuView SPA views into a Shadow DOM island inside
-// Ragnar's #rusense-tab. The shadow root fully isolates RuView's compiled
-// Tailwind build (assets/app.css) from Ragnar's own styles in both directions.
-// Navigation is driven by Ragnar's native sub-tab buttons (ragnar_modern.js).
+// OptarisDefense's #rusense-tab. The shadow root fully isolates RuView's compiled
+// Tailwind build (assets/app.css) from optaris_defense's own styles in both directions.
+// Navigation is driven by OptarisDefense's native sub-tab buttons (optaris_defense_modern.js).
 import { html, setQueryRoot } from './lib.js?v=20260704-sparkfit';
 import { sensingService } from '../services/sensing.service.js';
 import dashboard from './views/dashboard.js?v=20260704-sparkfit';

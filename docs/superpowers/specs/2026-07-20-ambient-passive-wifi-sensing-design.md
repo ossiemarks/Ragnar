@@ -3,7 +3,7 @@
 **Date:** 2026-07-20
 **Decision log:** [`decisionTree.md`](../../../decisionTree.md) (D1–D4)
 **Relationship:** Augments the existing RuSense stack (dedicated ESP32 / AX210-node-210 /
-Pi-Nexmon-node-200 nodes on the fan-out `:5005` → OptarisSense `:5105` + Ragnar `:5006`).
+Pi-Nexmon-node-200 nodes on the fan-out `:5005` → OptarisSense `:5105` + OptarisDefense `:5006`).
 This layer is **additive and isolated** — it never touches that pipeline.
 
 ## Goal
@@ -56,7 +56,7 @@ Ambient AX/AC devices ──beamforming feedback──▶ [USB mon adapter (5GHz
                                                                                 │
                                                                                 ▼
                                                             ambient presence/motion  ──▶ UI / mirror aggregate
-UNTOUCHED: dedicated nodes → fan-out :5005 → OptarisSense :5105 + Ragnar :5006
+UNTOUCHED: dedicated nodes → fan-out :5005 → OptarisSense :5105 + OptarisDefense :5006
 ```
 
 ### Components (isolated, testable)
@@ -66,7 +66,7 @@ UNTOUCHED: dedicated nodes → fan-out :5005 → OptarisSense :5105 + Ragnar :50
 2. **BFI capture→feed** — supplies the captured frames to the bfi instance in whatever form
    `--bfi-pcap` requires (see Open Question O1).
 3. **Ambient `sensing-server --source bfi`** — a separate 3rd instance on `:8081`/`:8766`
-   (distinct from OptarisSense `:8080`/`:8765` and Ragnar). Produces the ambient layer.
+   (distinct from OptarisSense `:8080`/`:8765` and OptarisDefense). Produces the ambient layer.
 4. **Aggregation** — surface ambient + dedicated together (UI overlay, or the engine's
    `mirror` source which is built to combine instances).
 

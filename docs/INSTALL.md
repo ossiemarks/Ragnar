@@ -19,14 +19,14 @@ https://www.raspberrypi.com/software/
 
 ![image](https://github.com/user-attachments/assets/e8d276be-4cb2-474d-a74d-b5b6704d22f5)
 
-I did not develop ragnar for the raspberry pi zero w2 64bits, but several feedbacks have attested that the installation worked perfectly.
+I did not develop optaris_defense for the raspberry pi zero w2 64bits, but several feedbacks have attested that the installation worked perfectly.
 
 - Raspberry Pi OS installed. 
     - Stable:
       - System: 64-bit
       - Kernel version: 6.6
       - Debian version: Debian GNU/Linux 13 (trixie)'
-- Username and hostname set to `ragnar`.
+- Username and hostname set to `optaris_defense`.
 - 2.13-inch e-Paper HAT connected to GPIO pins.
 - **Optional:** [PiSugar UPS](https://www.pisugar.com/) for battery power, battery monitoring, and hardware button support. The installer will prompt you to install `pisugar-server` if you have one attached. You can also install it manually later:
   ```bash
@@ -39,12 +39,12 @@ I juste hope the V1 & V3 will work the same.
  
 ### ⚡ Quick Install
 
-The fastest way to install ragnar is using the automatic installation script :
+The fastest way to install optaris_defense is using the automatic installation script :
 
 ```bash
 # Download and run the installer
-wget https://raw.githubusercontent.com/PierreGode/Ragnar/main/install_ragnar.sh
-sudo chmod +x install_ragnar.sh && sudo ./install_ragnar.sh
+wget https://raw.githubusercontent.com/PierreGode/OptarisDefense/main/install_optaris_defense.sh
+sudo chmod +x install_optaris_defense.sh && sudo ./install_optaris_defense.sh
 # Choose the choice 1 for automatic installation. It may take a while as a lot of packages and modules will be installed. You must reboot at the end.
 ```
 
@@ -99,13 +99,13 @@ sudo nmap --script-updatedb
 
 ```
 
-#### Step 3: ragnar Installation
+#### Step 3: optaris_defense Installation
 
 ```bash
-# Clone the ragnar repository
-cd /home/ragnar
-git clone https://github.com/infinition/ragnar.git
-cd ragnar
+# Clone the optaris_defense repository
+cd /home/optaris-defense
+git clone https://github.com/infinition/optaris_defense.git
+cd optaris_defense
 
 # Install Python dependencies within the virtual environment
 sudo pip install -r requirements.txt --break-system-packages
@@ -117,7 +117,7 @@ Choose your e-Paper HAT version by modifying the configuration file:
 
 1. Open the configuration file:
 ```bash
-sudo vi /home/ragnar/Ragnar/config/shared_config.json
+sudo vi /home/optaris-defense/OptarisDefense/config/shared_config.json
 ```
 Press i to enter insert mode
 Locate the line containing "epd_type":
@@ -218,23 +218,23 @@ fs.file-max = 2097152
 
 ### 🐝 Pwnagotchi Bridge
 
-Running Ragnar and Pwnagotchi on the same SD card is now supported through a helper script plus new dashboard controls. The workflow is optional and completely disabled until you run the installer.
+Running OptarisDefense and Pwnagotchi on the same SD card is now supported through a helper script plus new dashboard controls. The workflow is optional and completely disabled until you run the installer.
 
-1. **Execute the installer as root inside the Ragnar repository:**
+1. **Execute the installer as root inside the OptarisDefense repository:**
     ```bash
-    cd /home/ragnar/Ragnar
+    cd /home/optaris-defense/OptarisDefense
     sudo ./scripts/install_pwnagotchi.sh
     ```
 2. The script will:
     - Install the required apt packages (python3, libpcap-dev, hcxdumptool, etc.).
     - Upgrade `pip` when possible and install the `pwnagotchi` Python module system-wide.
     - Clone the upstream repo into `/opt/pwnagotchi` and generate `/etc/pwnagotchi/config.toml` plus plugin folders.
-    - Drop `pwnagotchi.service` in `/etc/systemd/system/` but leave it disabled so Ragnar keeps control after installation.
-    - Stream logs to `/var/log/ragnar/pwnagotchi_install_<timestamp>.log` and write a JSON status file at `data/pwnagotchi_status.json`.
-3. **Use the web UI to manage swaps:** open the Ragnar dashboard → Config tab → *Pwnagotchi Bridge*.
+    - Drop `pwnagotchi.service` in `/etc/systemd/system/` but leave it disabled so OptarisDefense keeps control after installation.
+    - Stream logs to `/var/log/optaris_defense/pwnagotchi_install_<timestamp>.log` and write a JSON status file at `data/pwnagotchi_status.json`.
+3. **Use the web UI to manage swaps:** open the OptarisDefense dashboard → Config tab → *Pwnagotchi Bridge*.
     - *Install or Repair* re-runs the script in the background.
-    - *Switch to Pwnagotchi* schedules a service hand-off (Ragnar stops, Pwnagotchi starts). Keep SSH open because the web UI becomes unreachable until you return.
-    - *Return to Ragnar* brings the original service back (usually after rebooting out of Pwnagotchi).
+    - *Switch to Pwnagotchi* schedules a service hand-off (OptarisDefense stops, Pwnagotchi starts). Keep SSH open because the web UI becomes unreachable until you return.
+    - *Return to OptarisDefense* brings the original service back (usually after rebooting out of Pwnagotchi).
 4. A read-only card also appears in the Discovered tab showing the latest status, phase, and last switch timestamp so you can monitor the bridge while viewing loot.
 
 Re-run the installer any time you need to refresh dependencies or repair a failed upgrade. It is idempotent: existing repos/configs are updated in place.
@@ -274,34 +274,34 @@ This ensures that the limits set in `/etc/security/limits.conf` are enforced for
 
 #### Step 7: Configure Services
 
-##### 7.1: ragnar Service
+##### 7.1: optaris_defense Service
 
 Create the service file:
 
 ```bash
-sudo vi /etc/systemd/system/ragnar.service
+sudo vi /etc/systemd/system/optaris-defense.service
 ```
 
 Add the following content:
 
 ```ini
 [Unit]
-Description=ragnar Service
+Description=optaris_defense Service
 DefaultDependencies=no
 Before=basic.target
 After=local-fs.target
 
 [Service]
-ExecStartPre=/home/ragnar/ragnar/kill_port_8000.sh
-ExecStart=/usr/bin/python3 /home/ragnar/ragnar/ragnar.py
-WorkingDirectory=/home/ragnar/ragnar
+ExecStartPre=/home/optaris-defense/optaris_defense/kill_port_8000.sh
+ExecStart=/usr/bin/python3 /home/optaris-defense/optaris_defense/optaris_defense.py
+WorkingDirectory=/home/optaris-defense/optaris_defense
 StandardOutput=inherit
 StandardError=inherit
 Restart=always
 User=root
 
 # Check open files and restart if it reached the limit (ulimit -n buffer of 1000)
-ExecStartPost=/bin/bash -c 'FILE_LIMIT=$(ulimit -n); THRESHOLD=$(( FILE_LIMIT - 1000 )); while :; do TOTAL_OPEN_FILES=$(lsof | wc -l); if [ "$TOTAL_OPEN_FILES" -ge "$THRESHOLD" ]; then echo "File descriptor threshold reached: $TOTAL_OPEN_FILES (threshold: $THRESHOLD). Restarting service."; systemctl restart ragnar.service; exit 0; fi; sleep 10; done &'
+ExecStartPost=/bin/bash -c 'FILE_LIMIT=$(ulimit -n); THRESHOLD=$(( FILE_LIMIT - 1000 )); while :; do TOTAL_OPEN_FILES=$(lsof | wc -l); if [ "$TOTAL_OPEN_FILES" -ge "$THRESHOLD" ]; then echo "File descriptor threshold reached: $TOTAL_OPEN_FILES (threshold: $THRESHOLD). Restarting service."; systemctl restart optaris-defense.service; exit 0; fi; sleep 10; done &'
 
 [Install]
 WantedBy=multi-user.target
@@ -314,7 +314,7 @@ WantedBy=multi-user.target
 Create the script to free up port 8000:
 
 ```bash
-vi /home/ragnar/ragnar/kill_port_8000.sh
+vi /home/optaris-defense/optaris_defense/kill_port_8000.sh
 ```
 
 Add:
@@ -333,7 +333,7 @@ fi
 Make the script executable:
 
 ```bash
-chmod +x /home/ragnar/ragnar/kill_port_8000.sh
+chmod +x /home/optaris-defense/optaris_defense/kill_port_8000.sh
 ```
 
 
@@ -491,4 +491,4 @@ Set the static IP address on your Windows PC:
 
 ## 📜 License
 
-2024 - ragnar is distributed under the MIT License. For more details, please refer to the [LICENSE](LICENSE) file included in this repository.
+2024 - optaris_defense is distributed under the MIT License. For more details, please refer to the [LICENSE](LICENSE) file included in this repository.

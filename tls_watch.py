@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: MIT
-"""Passive TLS/QUIC handshake observer for the Ragnar suite.
+"""Passive TLS/QUIC handshake observer for the OptarisDefense suite.
 
 The session/presentation-layer (OSI L5/L6) detector: it sniffs ClientHello /
 ServerHello off the wire, computes JA3/JA3S and JA4/JA4_r client fingerprints,
@@ -31,7 +31,7 @@ import struct
 # JA4S (the server fingerprint) is licensed under the FoxIO License 1.1, not the
 # BSD/MIT that covers everything else here. It lives in a separate, clearly
 # identified file (ja4s.py) and is imported ONLY when the operator both enables
-# it and acknowledges that license. Ragnar ships with both flags False, so the
+# it and acknowledges that license. OptarisDefense ships with both flags False, so the
 # default build never touches JA4S. See _maybe_ja4s().
 ENABLE_JA4S = False
 ACKNOWLEDGE_JA4S_LICENSE = False

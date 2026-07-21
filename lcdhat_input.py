@@ -24,7 +24,7 @@
 #   Joy Press     : start/stop page autoscroll (auto-cycle every 5s)
 #   KEY1          : toggle On-Screen Network Diagnostic Mode
 #   KEY2          : rotate the screen (0→90→180→270)
-#   KEY3 short/long: next display page / restart Ragnar service
+#   KEY3 short/long: next display page / restart OptarisDefense service
 #
 # Network Diagnostic layer (config network_diagnostic_mode) — a field-test pad,
 # navigated as a stack of "cards": LINK / IP / SWITCH / DHCP / WIFI (SSID+RSSI) /
@@ -35,7 +35,7 @@
 #   Joy Right     : next card        (as seen on the text)
 #   Joy Up / Down : cycle the highlighted function inside the card
 #   Joy Press     : OK/select — run the highlighted function (or dismiss a result)
-#   KEY1          : switch to Ragnar — toggle the mode off (normal screens)
+#   KEY1          : switch to OptarisDefense — toggle the mode off (normal screens)
 #   KEY2          : exit card → the card-selection menu (press again to leave it)
 #   KEY3          : pause / start auto-switch (auto-cycle the cards every 5 s)
 # Card functions (Up/Down + press): LINK/SWITCH → Locate Port · L2 Health;
@@ -52,7 +52,7 @@ from epd_button import (EPDButtonListener, PAGE_COUNT, NETDIAG_HOLD_TIME,
 
 logger = logging.getLogger(__name__)
 
-# Seconds each normal Ragnar page is shown when page autoscroll is enabled
+# Seconds each normal OptarisDefense page is shown when page autoscroll is enabled
 # (joystick-center toggles it). Matches the net-diag auto-cycle cadence.
 AUTOSCROLL_INTERVAL = 5.0
 
@@ -249,7 +249,7 @@ class LCDHATInputListener(EPDButtonListener):
         logger.info(f"LCD HAT: page -> {self.current_page}")
 
     def _toggle_autoscroll(self):
-        """Joystick center: start/stop auto-cycling the normal Ragnar pages."""
+        """Joystick center: start/stop auto-cycling the normal OptarisDefense pages."""
         self.autoscroll = not self.autoscroll
         logger.info(f"LCD: page autoscroll {'ON' if self.autoscroll else 'OFF'}")
 
@@ -287,7 +287,7 @@ class LCDHATInputListener(EPDButtonListener):
           * menu  : the card-selection list — any direction moves the highlight,
                     Press enters the card.
 
-        Keys (act on press): KEY1 = switch to Ragnar (handled in _on_input_press),
+        Keys (act on press): KEY1 = switch to OptarisDefense (handled in _on_input_press),
         KEY2 = exit to card-selection menu, KEY3 = pause/start auto-switch."""
         self.netdiag_seq += 1   # wake the display promptly
 

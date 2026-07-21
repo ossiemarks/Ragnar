@@ -9,8 +9,8 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-HOSTAPD_CONFIG="/tmp/ragnar/hostapd.conf"
-DNSMASQ_CONFIG="/tmp/ragnar/dnsmasq.conf"
+HOSTAPD_CONFIG="/tmp/optaris_defense/hostapd.conf"
+DNSMASQ_CONFIG="/tmp/optaris_defense/dnsmasq.conf"
 INTERFACE="wlan0"
 AP_IP="192.168.4.1"
 
@@ -293,7 +293,7 @@ show_status() {
 
 # Show help
 show_help() {
-    echo "ragnar Wi-Fi Manager Service Script"
+    echo "optaris_defense Wi-Fi Manager Service Script"
     echo "Usage: $0 <command> [options]"
     echo
     echo "Commands:"

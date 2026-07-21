@@ -3,14 +3,14 @@
 set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 STATUS_FILE="$REPO_ROOT/data/pwnagotchi_status.json"
-LOG_DIR="/var/log/ragnar"
+LOG_DIR="/var/log/optaris_defense"
 LOG_FILE="$LOG_DIR/pwnagotchi_install_$(date +%Y%m%d_%H%M%S).log"
 PWN_DIR="/opt/pwnagotchi"
 PWN_REPO="https://github.com/PierreGode/pwnagotchiworking.git"
 SERVICE_FILE="/etc/systemd/system/pwnagotchi.service"
 CONFIG_DIR="/etc/pwnagotchi"
 CONFIG_FILE="$CONFIG_DIR/config.toml"
-TEMP_DIR="/home/ragnar/tmp_pwnagotchi_install"
+TEMP_DIR="/home/optaris-defense/tmp_pwnagotchi_install"
 MIN_SPACE_MB=300
 
 mkdir -p "$LOG_DIR" "$REPO_ROOT/data" "$TEMP_DIR"
@@ -159,16 +159,16 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 HEADLESS_DETECTED=false
-if pgrep -f "headlessRagnar.py" >/dev/null 2>&1; then
+if pgrep -f "headless_optaris_defense.py" >/dev/null 2>&1; then
     HEADLESS_DETECTED=true
 else
-    if systemctl cat ragnar.service 2>/dev/null | grep -q "headlessRagnar.py"; then
+    if systemctl cat optaris-defense.service 2>/dev/null | grep -q "headless_optaris_defense.py"; then
         HEADLESS_DETECTED=true
     fi
 fi
 
 if [[ "$HEADLESS_DETECTED" == true ]]; then
-    BLOCK_MSG="Pwnagotchi requires an e-paper display, but Ragnar is running in Headless mode. Installation is disabled."
+    BLOCK_MSG="Pwnagotchi requires an e-paper display, but OptarisDefense is running in Headless mode. Installation is disabled."
     echo "[ERROR] ${BLOCK_MSG}"
     write_status "error" "$BLOCK_MSG" "preflight"
     exit 1
@@ -352,10 +352,10 @@ echo "[INFO] Configuring Pwnagotchi config file..."
 write_status "installing" "Creating configuration files" "config_files"
 if [[ ! -f "$CONFIG_FILE" ]]; then
     cat >"$CONFIG_FILE" <<EOF
-# Ragnar-managed Pwnagotchi config (pwnagotchiworking)
+# OptarisDefense-managed Pwnagotchi config (pwnagotchiworking)
 
 [main]
-name = "RagnarPwn"
+name = "OptarisDefensePwn"
 confd = "/etc/pwnagotchi/conf.d"
 custom_plugins = "/etc/pwnagotchi/custom_plugins"
 iface = "${STATION_IFACE}"
@@ -372,8 +372,8 @@ color = "black"
 [ui.web]
 enabled = true
 address = "0.0.0.0"
-username = "ragnar"
-password = "ragnar"
+username = "optaris_defense"
+password = "optaris_defense"
 port = 8080
 
 [ui.font]
@@ -395,11 +395,11 @@ else
     set_or_update_config_value "main.mon_iface" "${MONITOR_IFACE_NAME}"
     set_or_update_config_value "main.mon_start_cmd" "/usr/bin/monstart"
     set_or_update_config_value "main.mon_stop_cmd" "/usr/bin/monstop"
-    # Ensure Ragnar-managed settings are correct
+    # Ensure OptarisDefense-managed settings are correct
     set_or_update_config_value "ui.web.enabled" "true"
     set_or_update_config_value "ui.web.address" "0.0.0.0"
-    set_or_update_config_value "ui.web.username" "ragnar"
-    set_or_update_config_value "ui.web.password" "ragnar"
+    set_or_update_config_value "ui.web.username" "optaris_defense"
+    set_or_update_config_value "ui.web.password" "optaris_defense"
     set_or_update_config_value "ui.web.port" "8080"
     set_or_update_config_value "ui.display.enabled" "true"
     set_or_update_config_value "ui.display.type" "waveshare_4"
@@ -457,11 +457,11 @@ if [[ -z "$launcher_target" ]]; then
 fi
 
 # Flag-aware launcher: honors MANU/AUTO boot flags so the service can start
-# Pwnagotchi paused. One-shot flags (Pwnagotchi web UI / Ragnar) win and are
+# Pwnagotchi paused. One-shot flags (Pwnagotchi web UI / OptarisDefense) win and are
 # consumed on read; the persistent file keeps every launch in manual mode.
 cat > /usr/bin/pwnagotchi-launcher <<EOF
 #!/bin/bash
-# ragnar-managed flag-aware launcher
+# optaris-defense-managed flag-aware launcher
 MANUAL=0
 if [[ -f "/root/.pwnagotchi-manual" ]]; then
     rm -f "/root/.pwnagotchi-manual" "/root/.pwnagotchi-auto"
@@ -469,7 +469,7 @@ if [[ -f "/root/.pwnagotchi-manual" ]]; then
 elif [[ -f "/root/.pwnagotchi-auto" ]]; then
     rm -f "/root/.pwnagotchi-auto"
     MANUAL=0
-elif [[ -f "/etc/pwnagotchi/.ragnar-manual-mode" ]]; then
+elif [[ -f "/etc/pwnagotchi/.optaris-defense-manual-mode" ]]; then
     MANUAL=1
 fi
 if [[ "\$MANUAL" == "1" ]]; then
@@ -522,18 +522,18 @@ timeout 15 systemctl stop pwnagotchi >/dev/null 2>&1 || {
 # PISUGAR SWAP BUTTON SERVICE
 # -------------------------------------------------------------------
 echo "[INFO] Setting up PiSugar swap button service..."
-SWAP_BUTTON_SCRIPT="$REPO_ROOT/scripts/ragnar_swap_button.py"
-SWAP_BUTTON_SERVICE="/etc/systemd/system/ragnar-swap-button.service"
+SWAP_BUTTON_SCRIPT="$REPO_ROOT/scripts/optaris_defense_swap_button.py"
+SWAP_BUTTON_SERVICE="/etc/systemd/system/optaris-defense-swap-button.service"
 
 if [[ -f "$SWAP_BUTTON_SCRIPT" ]]; then
     chmod 755 "$SWAP_BUTTON_SCRIPT"
     # Run directly from repo so git pull auto-updates the script
     # Also keep a symlink at the old path for backwards compatibility
-    ln -sf "$SWAP_BUTTON_SCRIPT" /usr/local/bin/ragnar-swap-button
+    ln -sf "$SWAP_BUTTON_SCRIPT" /usr/local/bin/optaris-defense-swap-button
 
     cat >"$SWAP_BUTTON_SERVICE" <<EOF
 [Unit]
-Description=Swap Button Listener - GPIO KEY1 + PiSugar (Ragnar/Pwnagotchi)
+Description=Swap Button Listener - GPIO KEY1 + PiSugar (OptarisDefense/Pwnagotchi)
 After=pisugar-server.service
 Wants=pisugar-server.service
 
@@ -549,10 +549,10 @@ EOF
 
     chmod 644 "$SWAP_BUTTON_SERVICE"
     timeout 10 systemctl daemon-reload || true
-    timeout 10 systemctl enable ragnar-swap-button >/dev/null 2>&1 || true
+    timeout 10 systemctl enable optaris-defense-swap-button >/dev/null 2>&1 || true
     echo "[INFO] PiSugar swap button service installed"
 else
-    echo "[INFO] ragnar_swap_button.py not found - skipping PiSugar button setup"
+    echo "[INFO] optaris_defense_swap_button.py not found - skipping PiSugar button setup"
 fi
 
 # -------------------------------------------------------------------
@@ -560,14 +560,14 @@ fi
 # -------------------------------------------------------------------
 echo "[INFO] Setting up migration service..."
 MIGRATE_SCRIPT="$REPO_ROOT/scripts/migrate_pwnagotchi.sh"
-MIGRATE_SERVICE="/etc/systemd/system/ragnar-pwn-migrate.service"
+MIGRATE_SERVICE="/etc/systemd/system/optaris-defense-pwn-migrate.service"
 
 if [[ -f "$MIGRATE_SCRIPT" ]]; then
     chmod 755 "$MIGRATE_SCRIPT"
 
     cat >"$MIGRATE_SERVICE" <<EOF
 [Unit]
-Description=Ragnar Pwnagotchi Migration Check
+Description=OptarisDefense Pwnagotchi Migration Check
 After=local-fs.target
 Before=pwnagotchi.service
 ConditionPathExists=/opt/pwnagotchi
@@ -584,11 +584,11 @@ EOF
 
     chmod 644 "$MIGRATE_SERVICE"
     timeout 10 systemctl daemon-reload || true
-    timeout 10 systemctl enable ragnar-pwn-migrate >/dev/null 2>&1 || true
+    timeout 10 systemctl enable optaris-defense-pwn-migrate >/dev/null 2>&1 || true
     echo "[INFO] Migration service installed"
 
-    mkdir -p /var/lib/ragnar
-    date -Iseconds > /var/lib/ragnar/.pwn_migrated
+    mkdir -p /var/lib/optaris_defense
+    date -Iseconds > /var/lib/optaris_defense/.pwn_migrated
 else
     echo "[WARN] migrate_pwnagotchi.sh not found - skipping"
 fi
@@ -609,20 +609,20 @@ echo "[INFO] Cleaning up temp files..."
 write_status "installing" "Cleaning up" "cleanup"
 rm -rf "$TEMP_DIR"
 
-# Ensure Ragnar is still the master - clean up any leftover pwnagotchi state
-echo "[INFO] Ensuring Ragnar is running..."
+# Ensure OptarisDefense is still the master - clean up any leftover pwnagotchi state
+echo "[INFO] Ensuring OptarisDefense is running..."
 ip link set mon0 down 2>/dev/null || true
 iw mon0 del 2>/dev/null || true
 timeout 10 systemctl stop pwnagotchi 2>/dev/null || true
 timeout 10 systemctl stop bettercap 2>/dev/null || true
-if ! systemctl is-active ragnar >/dev/null 2>&1; then
-    echo "[INFO] Ragnar was stopped - restarting..."
-    systemctl start ragnar
+if ! systemctl is-active optaris_defense >/dev/null 2>&1; then
+    echo "[INFO] OptarisDefense was stopped - restarting..."
+    systemctl start optaris_defense
 fi
 
-write_status "installed" "Pwnagotchi installed successfully. Use Ragnar dashboard to launch." "complete"
+write_status "installed" "Pwnagotchi installed successfully. Use OptarisDefense dashboard to launch." "complete"
 echo "[INFO] =========================================="
 echo "[INFO] Installation complete!"
-echo "[INFO] Ragnar: $(systemctl is-active ragnar 2>/dev/null)"
+echo "[INFO] OptarisDefense: $(systemctl is-active optaris_defense 2>/dev/null)"
 echo "[INFO] Pwnagotchi: $(systemctl is-active pwnagotchi 2>/dev/null) (disabled)"
 echo "[INFO] =========================================="

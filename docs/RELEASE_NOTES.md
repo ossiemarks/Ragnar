@@ -1,4 +1,4 @@
-# Ragnar Release Notes
+# OptarisDefense Release Notes
 
 ---
 
@@ -150,7 +150,7 @@ Hardware Requirements Check:
 
 ### Installation Script Enhancements
 
-#### **install_ragnar.sh**
+#### **install_optaris_defense.sh**
 - Added RAM detection with 7.5GB threshold (accounts for system overhead on 8GB systems)
 - Integrated automatic advanced tools installation (Step 9 of 10)
 - Enhanced logging with hardware qualification details
@@ -160,7 +160,7 @@ Hardware Requirements Check:
 #### **install_advanced_tools.sh**
 - Multi-distro package manager support (apt, dnf, yum, pacman)
 - Architecture-aware Nuclei binary installation
-- Intelligent Ragnar directory detection
+- Intelligent OptarisDefense directory detection
 - Pi Zero resource protection
 - Comprehensive tool validation and status reporting
 
@@ -194,17 +194,17 @@ Hardware Requirements Check:
 
 ### Fresh Installation (8GB+ System)
 ```bash
-wget https://raw.githubusercontent.com/PierreGode/Ragnar/main/install_ragnar.sh
-sudo chmod +x install_ragnar.sh && sudo ./install_ragnar.sh
+wget https://raw.githubusercontent.com/PierreGode/OptarisDefense/main/install_optaris_defense.sh
+sudo chmod +x install_optaris_defense.sh && sudo ./install_optaris_defense.sh
 # Advanced tools automatically installed on capable hardware
 # No user interaction required
 ```
 
 ### Existing Installation Upgrade
 ```bash
-cd /home/ragnar/Ragnar
+cd /home/optaris-defense/OptarisDefense
 sudo ./install_advanced_tools.sh
-sudo systemctl restart ragnar
+sudo systemctl restart optaris_defense
 ```
 
 ### Manual Verification
@@ -228,7 +228,7 @@ python3 -c "from server_capabilities import get_server_capabilities; caps = get_
 ### Permissions
 - Sudoers rules for traffic capture tools (tcpdump, tshark)
 - Sudoers rules for vulnerability scanners (nikto, sqlmap, nuclei)
-- User-specific permissions for the ragnar service account
+- User-specific permissions for the optaris_defense service account
 
 ## 🐛 Bug Fixes
 
@@ -243,14 +243,14 @@ None. All changes are backward compatible.
 
 ## 🔄 Migration Guide
 
-### For Existing Ragnar Installations
+### For Existing OptarisDefense Installations
 
 **To enable advanced features:**
 ```bash
-cd /home/ragnar/Ragnar
+cd /home/optaris-defense/OptarisDefense
 git pull  # Get latest code
 sudo ./install_advanced_tools.sh
-sudo systemctl restart ragnar
+sudo systemctl restart optaris_defense
 ```
 
 **Verify installation:**
@@ -258,9 +258,9 @@ sudo systemctl restart ragnar
 # Check installed tools
 which nuclei nikto sqlmap tcpdump tshark
 
-# Check Ragnar capabilities
-systemctl status ragnar
-journalctl -u ragnar -n 50
+# Check OptarisDefense capabilities
+systemctl status optaris_defense
+journalctl -u optaris_defense -n 50
 ```
 
 ## 📊 Performance Impact
@@ -299,8 +299,8 @@ We welcome contributions! Areas of interest:
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/PierreGode/Ragnar/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/PierreGode/Ragnar/discussions)
+- **Issues**: [GitHub Issues](https://github.com/PierreGode/OptarisDefense/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/PierreGode/OptarisDefense/discussions)
 - **Documentation**: [README.md](README.md) | [INSTALL.md](INSTALL.md)
 
 ## 🙏 Acknowledgments

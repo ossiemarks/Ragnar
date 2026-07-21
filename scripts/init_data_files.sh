@@ -12,7 +12,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-echo -e "${BLUE}Initializing Ragnar data files from templates...${NC}"
+echo -e "${BLUE}Initializing OptarisDefense data files from templates...${NC}"
 
 # Template files to initialize
 TEMPLATES=(

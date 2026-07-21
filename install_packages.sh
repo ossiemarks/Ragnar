@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Ragnar Package Installation Script
+# OptarisDefense Package Installation Script
 # Ensures all required system and Python packages are installed
-# Author: Ragnar Team
+# Author: OptarisDefense Team
 # Version: 1.0
 
 # Colors for output
@@ -301,7 +301,7 @@ verify_installation() {
 }
 
 main() {
-    log "INFO" "Starting Ragnar package installation..."
+    log "INFO" "Starting OptarisDefense package installation..."
     
     check_root
     
@@ -329,7 +329,7 @@ main() {
     }
     
     log "SUCCESS" "All packages installed successfully!"
-    log "INFO" "You can now proceed with Ragnar installation or service restart"
+    log "INFO" "You can now proceed with OptarisDefense installation or service restart"
 }
 
 main

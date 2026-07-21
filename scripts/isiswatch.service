@@ -1,29 +1,29 @@
 [Unit]
-# Ragnar isiswatch — dedicated passive IS-IS security monitor.
+# OptarisDefense isiswatch — dedicated passive IS-IS security monitor.
 # OPT-IN. Runs isiswatch.py live on a SPAN/tap-facing interface and writes a
-# snapshot to /run/ragnar/isiswatch.json for the web UI to poll. PASSIVE ONLY:
+# snapshot to /run/optaris_defense/isiswatch.json for the web UI to poll. PASSIVE ONLY:
 # granted CAP_NET_RAW/CAP_NET_ADMIN to sniff in promiscuous mode and nothing
 # else — it never transmits IS-IS.
 #   sudo cp scripts/isiswatch.service /etc/systemd/system/
-#   sudo install -Dm644 baseline.example.json /etc/ragnar/isis-baseline.json
-#   sudoedit /etc/ragnar/isiswatch.env         # set ISISWATCH_IFACE=eth0 etc.
+#   sudo install -Dm644 baseline.example.json /etc/optaris_defense/isis-baseline.json
+#   sudoedit /etc/optaris_defense/isiswatch.env         # set ISISWATCH_IFACE=eth0 etc.
 #   sudo systemctl enable --now isiswatch
 #   journalctl -u isiswatch -f
-Description=Ragnar isiswatch passive IS-IS security monitor
+Description=OptarisDefense isiswatch passive IS-IS security monitor
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/ragnar/Ragnar
+WorkingDirectory=/home/optaris-defense/OptarisDefense
 # Edit ISISWATCH_IFACE (and optionally baseline) here. '-' = missing-file ok.
-EnvironmentFile=-/etc/ragnar/isiswatch.env
+EnvironmentFile=-/etc/optaris_defense/isiswatch.env
 Environment=ISISWATCH_IFACE=eth0
-Environment=ISISWATCH_BASELINE=/etc/ragnar/isis-baseline.json
-ExecStartPre=/bin/mkdir -p /run/ragnar
-ExecStart=/usr/bin/python3 /home/ragnar/Ragnar/python/isiswatch.py \
+Environment=ISISWATCH_BASELINE=/etc/optaris_defense/isis-baseline.json
+ExecStartPre=/bin/mkdir -p /run/optaris_defense
+ExecStart=/usr/bin/python3 /home/optaris-defense/OptarisDefense/python/isiswatch.py \
     -i ${ISISWATCH_IFACE} -b ${ISISWATCH_BASELINE} \
-    --web-json /run/ragnar/isiswatch.json
+    --web-json /run/optaris_defense/isiswatch.json
 Restart=on-failure
 RestartSec=5
 
@@ -36,7 +36,7 @@ NoNewPrivileges=yes
 RestrictAddressFamilies=AF_PACKET AF_UNIX
 ProtectSystem=strict
 ProtectHome=read-only
-ReadWritePaths=/run/ragnar
+ReadWritePaths=/run/optaris_defense
 PrivateTmp=yes
 ProtectKernelTunables=yes
 ProtectKernelModules=yes

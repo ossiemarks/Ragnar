@@ -104,7 +104,7 @@ class StealFilesFTP:
         """
         try:
             if 'success' in row.get(self.b_parent_action, ''):  # Verify if the parent action is successful
-                self.shared_data.ragnarorch_status = "StealFilesFTP"
+                self.shared_data.optaris_defenseorch_status = "StealFilesFTP"
                 logger.info(f"Stealing files from {ip}:{port}...")
                 # Wait a bit because it's too fast to see the status change
                 time.sleep(5)

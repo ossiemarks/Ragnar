@@ -4,9 +4,9 @@
 import { icons } from '../icons.js';
 import { html } from '../lib.js?v=20260704-sparkfit';
 
-const FLASHER_URL = 'https://pierregode.github.io/Ragnar/';
+const FLASHER_URL = 'https://pierregode.github.io/OptarisDefense/';
 const RUVIEW_URL = 'https://github.com/ruvnet/ruview';          // the source project (by ruvnet)
-const RUVIEW_FORK_URL = 'https://github.com/PierreGode/RuView';  // the fork Ragnar vendors bins from
+const RUVIEW_FORK_URL = 'https://github.com/PierreGode/RuView';  // the fork OptarisDefense vendors bins from
 
 const PIPELINE = [
   ['CSI input', 'Channel State Information from the WiFi antenna array'],
@@ -63,7 +63,7 @@ export default {
           <h3 class="card-title">How it works</h3>
           <p class="text-sm text-ink-soft">Every WiFi packet spreads across dozens of frequency <em>subcarriers</em>; the receiver measures each one's amplitude and phase — its <strong>Channel State Information (CSI)</strong>. A body moving, breathing, or simply standing reflects and scatters those subcarriers in a measurable way. A RuSense node samples up to <strong>114 subcarriers at ~100 Hz</strong> on 2.4 GHz and streams that fingerprint of the room for analysis — never any video.</p>
           <div class="overflow-x-auto -mx-1">
-            <pre class="text-xs font-mono text-ink-soft bg-ink-0 rounded-lg p-3 whitespace-pre">  ESP32 CSI node(s)  ──UDP CSI frames──▶  sensing-server  ──HTTP/WS──▶  Ragnar web UI
+            <pre class="text-xs font-mono text-ink-soft bg-ink-0 rounded-lg p-3 whitespace-pre">  ESP32 CSI node(s)  ──UDP CSI frames──▶  sensing-server  ──HTTP/WS──▶  OptarisDefense web UI
    (ESP32-S3 / C6)        :5005             (127.0.0.1:3000)            (RuSense tabs)</pre>
           </div>
           <div class="text-sm font-medium">What it can report</div>
@@ -140,7 +140,7 @@ export default {
           ])}
           ${callout('False-positive guards', 'An alert only fires when <strong>all</strong> hold: minimum confidence (default 80%), the condition lasts a sustain window (default 2 s), and the disturbance is inside the geofence. A cooldown stops a flapping signal from spamming you.')}
           <p class="text-sm text-ink-soft">Every confirmed presence alert is also logged to the Dashboard\'s <strong>Recent sightings</strong> — with how long the person was seen — so you can review a detection even after they\'ve left. The Dashboard\'s <strong>Health trends</strong> card additionally charts 7 days of heart-rate / breathing / activity history with resting averages — wellness tracking, <em>not</em> a medical device.</p>
-          <p class="text-xs text-ink-muted">The alert monitor runs inside the <span class="font-mono">ragnar</span> service. After changing alert settings or pulling new code, restart it: <span class="font-mono">sudo systemctl restart ragnar</span>.</p>
+          <p class="text-xs text-ink-muted">The alert monitor runs inside the <span class="font-mono">optaris_defense</span> service. After changing alert settings or pulling new code, restart it: <span class="font-mono">sudo systemctl restart optaris_defense</span>.</p>
         </div>
 
         <!-- Training -->
@@ -184,7 +184,7 @@ export default {
         <!-- Credits -->
         <div class="card card-pad space-y-3">
           <h3 class="card-title">Credits — RuView</h3>
-          <p class="text-sm text-ink-soft">RuSense is powered by <a href="${RUVIEW_URL}" target="_blank" rel="noopener" class="text-brand-300 font-semibold">RuView</a> — the WiFi-CSI DensePose sensing engine (crate <span class="font-mono">wifi-densepose-sensing-server</span>), created by <strong>ruvnet</strong>. <strong>All of the CSI ingestion, inference, pose estimation and training logic originates there.</strong> Ragnar just vendors RuView's prebuilt sensing server and ESP32 CSI-node firmware (via the <a href="${RUVIEW_FORK_URL}" target="_blank" rel="noopener" class="text-brand-300">PierreGode/RuView</a> fork). Full credit and thanks to the RuView project.</p>
+          <p class="text-sm text-ink-soft">RuSense is powered by <a href="${RUVIEW_URL}" target="_blank" rel="noopener" class="text-brand-300 font-semibold">RuView</a> — the WiFi-CSI DensePose sensing engine (crate <span class="font-mono">wifi-densepose-sensing-server</span>), created by <strong>ruvnet</strong>. <strong>All of the CSI ingestion, inference, pose estimation and training logic originates there.</strong> OptarisDefense just vendors RuView's prebuilt sensing server and ESP32 CSI-node firmware (via the <a href="${RUVIEW_FORK_URL}" target="_blank" rel="noopener" class="text-brand-300">PierreGode/RuView</a> fork). Full credit and thanks to the RuView project.</p>
           <div>${linkBtn(RUVIEW_URL, 'github.com/ruvnet/ruview →', true)}</div>
         </div>
 

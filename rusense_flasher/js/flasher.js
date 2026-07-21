@@ -1,6 +1,6 @@
 /* RuSense CSI Node — Web Flasher
  * Uses esptool-js v0.6.0 via CDN.
- * Adapted from the Ragnar/Piglet web flasher (MIT / CC BY-NC-SA 4.0).
+ * Adapted from the OptarisDefense/Piglet web flasher (MIT / CC BY-NC-SA 4.0).
  * Flashes the multi-part ESP-IDF image (bootloader + partition-table +
  * ota_data + app) for ESP32-S3 and ESP32-C6 CSI sensor nodes.
  */
@@ -225,7 +225,7 @@ window.provisionDevice = async function () {
     if (!octets || octets.slice(1).some((o) => parseInt(o, 10) > 255)) {
       alert(
         "Server IP must be a plain IPv4 address like 192.168.1.20 — no http://, no :port, no hostname.\n" +
-        "It's the address of your Ragnar box; the CSI stream goes to the UDP port in the Port field (default 5005)."
+        "It's the address of your OptarisDefense box; the CSI stream goes to the UDP port in the Port field (default 5005)."
       );
       return;
     }
@@ -233,7 +233,7 @@ window.provisionDevice = async function () {
   const nodeIdRaw = ($("prov-node").value || "").trim();
   const nodeId = nodeIdRaw === "" ? 1 : parseInt(nodeIdRaw, 10);
   if (!ssid)     { alert("Enter your 2.4 GHz WiFi SSID."); return; }
-  if (!targetIp) { alert("Enter the RuSense server IP (your Ragnar box's address)."); return; }
+  if (!targetIp) { alert("Enter the RuSense server IP (your OptarisDefense box's address)."); return; }
   if (!Number.isInteger(nodeId) || nodeId < 0 || nodeId > 255) {
     alert("Node ID must be a whole number 0-255. Give each node in the mesh a different ID.");
     return;

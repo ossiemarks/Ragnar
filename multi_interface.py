@@ -1,4 +1,4 @@
-"""Multi-interface coordination utilities for Ragnar."""
+"""Multi-interface coordination utilities for OptarisDefense."""
 
 from __future__ import annotations
 

@@ -1,10 +1,10 @@
-# AI Integration for Ragnar
+# AI Integration for OptarisDefense
 
-This document describes the AI integration feature added to Ragnar, which provides intelligent network analysis and vulnerability summaries using OpenAI's GPT-5 Nano.
+This document describes the AI integration feature added to OptarisDefense, which provides intelligent network analysis and vulnerability summaries using OpenAI's GPT-5 Nano.
 
 ## Overview
 
-The AI integration brings PWNAGOTCHI-style intelligence to Ragnar, providing:
+The AI integration brings PWNAGOTCHI-style intelligence to OptarisDefense, providing:
 - Network security summaries
 - Vulnerability analysis and prioritization
 - Network weakness identification
@@ -50,7 +50,7 @@ Identifies potential attack vectors and security gaps in your network:
 2. Sign up or log in to your account
 3. Navigate to API Keys section
 4. Create a new API key
-5. Copy the API key and paste it into the `openai_api_token` field in Ragnar
+5. Copy the API key and paste it into the `openai_api_token` field in OptarisDefense
 
 ### 3. Save Configuration
 
@@ -131,7 +131,7 @@ The AI integration consists of:
    - RESTful endpoints for AI functionality
    - Integration with network intelligence
    
-3. **Web UI** (index_modern.html, ragnar_modern.js)
+3. **Web UI** (index_modern.html, optaris_defense_modern.js)
    - Dashboard display components
    - Auto-loading and refresh functionality
 
@@ -149,20 +149,20 @@ Cache is automatically cleared on:
 
 ### Integration with Network Intelligence
 
-The AI service integrates seamlessly with Ragnar's Network Intelligence system:
+The AI service integrates seamlessly with OptarisDefense's Network Intelligence system:
 - Uses active findings for current network
 - Analyzes vulnerabilities and credentials
 - Respects network context and history
 
 ## Personality
 
-The AI assistant ("Ragnar") is designed to be:
+The AI assistant ("OptarisDefense") is designed to be:
 - **Knowledgeable**: Expert in cybersecurity and penetration testing
 - **Witty**: Occasionally includes personality in responses
 - **Concise**: Provides actionable insights without verbosity
 - **Tactical**: Focuses on practical recommendations
 
-Similar to PWNAGOTCHI, Ragnar provides intelligent analysis that helps both attackers (in authorized pentests) and defenders understand network security.
+Similar to PWNAGOTCHI, OptarisDefense provides intelligent analysis that helps both attackers (in authorized pentests) and defenders understand network security.
 
 ## Cost Considerations
 
@@ -265,7 +265,7 @@ Planned improvements:
 ## Support
 
 For issues or questions:
-1. Check the [GitHub Issues](https://github.com/PierreGode/Ragnar/issues)
+1. Check the [GitHub Issues](https://github.com/PierreGode/OptarisDefense/issues)
 2. Review the main [README](../README.md)
 3. Submit a bug report with:
    - AI configuration (redact API token)
@@ -275,4 +275,4 @@ For issues or questions:
 
 ## License
 
-This AI integration is part of Ragnar and follows the same license as the main project.
+This AI integration is part of OptarisDefense and follows the same license as the main project.

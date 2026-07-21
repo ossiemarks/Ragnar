@@ -1,14 +1,14 @@
-# Ragnar System Specification
+# OptarisDefense System Specification
 
 ## 1. Purpose & Scope
-- Capture the authoritative description of Ragnar as of December 2025.
+- Capture the authoritative description of OptarisDefense as of December 2025.
 - Align contributors on hardware expectations, software architecture, data flow, and operational behaviors.
 - Cover every major subsystem including ping sweeps, orchestrator, Wi-Fi/AP control, network data separation, dashboards, vulnerabilities, installation, AI, and e-paper display.
 
 ## 2. Platform Baseline
 - **Hardware target**: Raspberry Pi Zero 2 W, Pi 4, Pi 5 with Waveshare 2.13" E-Paper HAT (default `epd2in13_V4`). Pi Zero 2 W is the lowest common denominator; all timing and memory assumptions follow its limits.
 - **OS**: Raspberry Pi OS (Debian Trixie, 64-bit), kernel 6.12. Earlier Debian versions must provide `systemd`, `hostapd`, `dnsmasq`, `nmap >= 7.94`.
-- **Users**: System user and hostname default to `ragnar` for scripts and service files. Changing the account requires updating systemd units (`/etc/systemd/system/ragnar.service`, `ragnar_wifi.service`).
+- **Users**: System user and hostname default to `optaris_defense` for scripts and service files. Changing the account requires updating systemd units (`/etc/systemd/system/optaris-defense.service`, `optaris_defense_wifi.service`).
 - **Resource constraints**: 512 MB RAM on Pi Zero 2 W drives conservative threading (1 orchestrator worker, 6 nmap threads), aggressive garbage collection, and incremental scanning.
 - **Power**: Optimized for mobile battery packs; actual draw varies by Pi model/peripherals, so concurrency throttles and display refresh cadence are used instead of assuming fixed wattage.
 - **Networking**: Single onboard WLAN interface; AP and STA modes are mutually exclusive and coordinated by Wi-Fi manager.
@@ -107,7 +107,7 @@
 - Parent actions (no `b_parent_action`) execute first, followed by their children on the same host, then remaining children globally. Example chain: `FTPConnector` → `StealFilesFTP` once credentials succeed.
 - Each action runs through `_execute_with_timeout()` to guard against hung operations; timeouts mapped to `action_timeout` (default 300 s). Return codes `success`, `failed`, `timeout` feed `_update_action_status()`.
 - Standalone actions run once per cycle and can modify global state (e.g., `log_standalone.py` writing daily summary).
-- Active action names propagate to `shared_data.ragnarorch_status` for e-paper + dashboard status card.
+- Active action names propagate to `shared_data.optaris_defenseorch_status` for e-paper + dashboard status card.
 
 ### 6.3 Retry Semantics
 - Status strings `success_YYYYMMDD_HHMMSS` and `failed_*` stored per host/action row plus `retry_reason`. Manual DB edits should respect this format.
@@ -158,11 +158,11 @@
 - Periodic validations every `wifi_validation_interval` (180 s) with up to `wifi_validation_retries` (default 5). Each validation pings gateway, resolves DNS, optionally hits configured health URL.
 - Analytics stored per cycle (RSSI, bitrate, Wi-Fi chip temperature, packet loss) for dashboard historical charts.
 - Failsafe counter reboots after `failsafe_cycle_limit` cycles (default 20) with >5 minute disconnections and no AP clients; ensures unattended deployments recover automatically.
-- Restart markers in `/tmp/ragnar_wifi_manager.pid` prevent multiple concurrent managers.
+- Restart markers in `/tmp/optaris_defense_wifi_manager.pid` prevent multiple concurrent managers.
 
 ### 8.3 AP Mode Lifecycle
-- Activates when Wi-Fi is unavailable and `wifi_auto_ap_fallback` is true or when forced via `/api/wifi/ap-mode`. Relies on `hostapd` + `dnsmasq`; `wifi_manager.py` writes fresh `/tmp/ragnar/hostapd.conf` and `/tmp/ragnar/dnsmasq.conf` files on every AP start instead of loading templates from `resources/`.
-- Configurable SSID/password (`wifi_ap_ssid`, `wifi_ap_password`), default `Ragnar`/`ragnarconnect`. Channel default 6, can be changed via config.
+- Activates when Wi-Fi is unavailable and `wifi_auto_ap_fallback` is true or when forced via `/api/wifi/ap-mode`. Relies on `hostapd` + `dnsmasq`; `wifi_manager.py` writes fresh `/tmp/optaris_defense/hostapd.conf` and `/tmp/optaris_defense/dnsmasq.conf` files on every AP start instead of loading templates from `resources/`.
+- Configurable SSID/password (`wifi_ap_ssid`, `wifi_ap_password`), default `OptarisDefense`/`optaris_defenseconnect`. Channel default 6, can be changed via config.
 - Serves captive portal at `http://192.168.4.1/portal` (assets under `web/`). Portal surfaces known networks, RSSI, manual SSID entry, countdown timers, and AP-client analytics.
 - AP logger writes to `/var/log/ap.log` or `data/logs/ap.log` fallback; logs include AP start/stop, client associations, portal submissions, and forced exits.
 - Idle timeout (`ap_mode_timeout`, default 180 s) cycles between AP and Wi-Fi reconnect attempts; user interactions extend timers and mark `ap_clients_connected=True` to prevent premature shutdown.
@@ -170,7 +170,7 @@
 - Credentials captured via portal stored encrypted (simple XOR + base64) inside SQLite until applied to wpa_supplicant.
 
 ### 8.4 Endless Loop & Analytics (from `WiFiManager`)
-- `_initial_endless_loop_sequence()` enforces a 30 s post-boot delay, checks for existing connection via `/tmp/ragnar_wifi_state.json`, then either schedules AP mode or triggers `_trigger_initial_ping_sweep()` for the connected SSID.
+- `_initial_endless_loop_sequence()` enforces a 30 s post-boot delay, checks for existing connection via `/tmp/optaris_defense_wifi_state.json`, then either schedules AP mode or triggers `_trigger_initial_ping_sweep()` for the connected SSID.
 - `_endless_loop_monitoring()` (not shown in excerpt) continually alternates between `connect_to_known_networks()` attempts, AP activation via `start_ap_mode()`, and validation cycles. Each loop records timestamps so `failsafe_cycle_limit` logic can trigger reboots if the unit stays offline >5 minutes per cycle.
 - Every successful connection inserts/updates rows in `wifi_connection_history` (start/end timestamps, signal, durations) and `wifi_network_analytics` (success/failure counters). This telemetry feeds `/api/wifi/status`, `/api/wifi/networks`, and the dashboard charts without rescanning the OS every refresh.
 - `setup_ap_logger()` writes AP lifecycle events to `/var/log/ap.log` when possible or `data/logs/ap.log` otherwise, making AP troubleshooting possible even during captive-portal onboarding.
@@ -192,7 +192,7 @@
 - `display.py` composes layered canvas: background template → headline metrics (targets, creds, vulns) → Wi-Fi info (SSID, IP) → rotating comments/AI quips → loot ticker. Fonts loaded from `resources/fonts` with fallback.
 - Supports full refresh every configurable interval (default 2 minutes) to clear ghosting; partial updates used for incremental status changes. Full refresh triggered when `screen_reversed` changes or hardware profile swapped.
 - Gamification data from `data/gamification.json` surfaces progress badges (e.g., "First Blood", "Credential Hoarder"). Each badge includes icon path under `resources/images/badges`.
-- Display subsystem listens to `shared_data.ragnarorch_status`, network stats, AI summary, and Wi-Fi manager state for real-time updates.
+- Display subsystem listens to `shared_data.optaris_defenseorch_status`, network stats, AI summary, and Wi-Fi manager state for real-time updates.
 
 ### 10.1 Display Data Sources (`display.py`)
 - `schedule_update_shared_data()` runs every 5 s, reading `livestatus.csv`, counting credentials by iterating the **network-scoped** `crackedpwddir`, and setting `shared_data.targetnbr`, `portnbr`, `vulnnbr`, `crednbr`, and `networkkbnbr`. It contains retry logic around temporary CSV locks to avoid race conditions while actions write credentials.
@@ -201,13 +201,13 @@
 
 ## 11. Web Dashboard & APIs
 - **Server**: `webapp_modern.py` (Flask + Flask-SocketIO) serves REST endpoints under `/api`, WebSocket for live updates, and static files from `web/`.
-- **Frontend**: `web/index_modern.html` + Tailwind CSS + vanilla Socket.IO-driven helpers in `web/scripts/ragnar_modern.js` deliver the responsive dashboard and WebSocket widgets (no AlpineJS at present).
+- **Frontend**: `web/index_modern.html` + Tailwind CSS + vanilla Socket.IO-driven helpers in `web/scripts/optaris_defense_modern.js` deliver the responsive dashboard and WebSocket widgets (no AlpineJS at present).
 - **Key features**:
   - Real-time host list, port map, and threat intelligence overlays with filtering, tagging, and per-host action history.
   - Config tab editing `shared_config.json` with validation + diff preview; writes via `/api/config` endpoint.
   - File browser and gallery backed by per-network loot directories; preview images, download artifacts, delete entries (updates DB + filesystem).
   - System monitor (CPU, RAM, storage, GPU temp) via `/api/system/metrics` (resource_monitor) with streaming updates.
-  - Pwnagotchi bridge controls calling `scripts/install_pwnagotchi.sh` and toggling systemd units `ragnar.service`, `pwnagotchi.service`.
+  - Pwnagotchi bridge controls calling `scripts/install_pwnagotchi.sh` and toggling systemd units `optaris-defense.service`, `pwnagotchi.service`.
   - AI insights cards (network summary, vulnerabilities, weaknesses) with manual refresh + cache status.
   - Notification center showing kill switch warnings, AP status, update availability.
 - **API surface (representative)**:
@@ -245,7 +245,7 @@
 - Errors (quota exceeded, timeout) bubbled to UI with actionable remediation tips.
 
 ### 12.1 AIService Internals
-- `EnvManager` loads `RAGNAR_OPENAI_API_KEY` from environment or `.env` and persists tokens when `/api/ai/token` POST/DELETE endpoints run.
+- `EnvManager` loads `OPTARIS_DEFENSE_OPENAI_API_KEY` from environment or `.env` and persists tokens when `/api/ai/token` POST/DELETE endpoints run.
 - `_ask()` wraps the OpenAI Responses API with a two-pass system: attempt with configured `temperature`, then automatically retry without it if the model reports an unsupported parameter.
 - Responses are cached per-input via `_cache_key()` using md5 hashes of the prompt JSON; the default TTL is 3600 s (overriding legacy 300 s) to minimize token usage on Pi deployments with limited bandwidth.
 - `analyze_network_summary`, `analyze_vulnerabilities`, and `identify_network_weaknesses` are the three domain-specific prompt builders. Each checks flags (`ai_network_insights`, `ai_vulnerability_summaries`) before calling `_ask()` and logs token counts for auditing.
@@ -286,15 +286,15 @@
 | `web/` | Modern dashboard HTML/CSS/JS plus captive portal assets. |
 | `scripts/` | Maintenance/install scripts (`install_pwnagotchi.sh`, `fix_permissions.sh`, etc.). |
 | `var/log/` | Runtime logs (AP, orchestrator) when system paths writable. |
-| `var/log/ragnar/` | Optional custom log dir for packaged releases. |
+| `var/log/optaris_defense/` | Optional custom log dir for packaged releases. |
 | `requirements.txt` | Python dependencies for pip installation. |
 | `INSTALL.md`, `KILL_SWITCH.md`, `AI_INTEGRATION.md` | Topical documentation referenced by spec. |
 
 ## 15. Installation & Upgrade Flows
-- **Automated install (`install_ragnar.sh`)**
+- **Automated install (`install_optaris_defense.sh`)**
   1. Download via wget/curl, make executable, run as root.
   2. Script installs apt dependencies (nmap, arp-scan, hostapd, dnsmasq, python3-pip, libopenjp2) and pip packages from `requirements.txt`.
-  3. Copies systemd units (`ragnar.service`, `ragnar_wifi.service`, `ragnar_web.service`), enables them, and seeds `/etc/sudoers.d/ragnar` entries for necessary commands.
+  3. Copies systemd units (`optaris-defense.service`, `optaris_defense_wifi.service`, `optaris_defense_web.service`), enables them, and seeds `/etc/sudoers.d/optaris_defense` entries for necessary commands.
   4. Runs `init_data_files.sh` to create data directories, templates, and default configs.
   5. Prompts for reboot after verifying EPD hardware and Wi-Fi chips.
 - **Manual install**: Clone repo, run `pip install -r requirements.txt`, execute `python3 init_shared.py`, configure systemd units manually.
@@ -304,8 +304,8 @@
 
 ### 15.1 Kill Switch Flow (`kill_switch()`)
 1. Validate `confirmation == "ERASE_ALL_DATA"` and optional `shutdown` flag.
-2. Delete `data/ragnar.db` (or active network DB path), followed by `data/` tree via `shutil.rmtree`.
-3. Remove the entire repository directory (`ragnar_dir`) fetched either from `$HOME/Ragnar` or the running directory.
+2. Delete `data/optaris_defense.db` (or active network DB path), followed by `data/` tree via `shutil.rmtree`.
+3. Remove the entire repository directory (`optaris_defense_dir`) fetched either from `$HOME/OptarisDefense` or the running directory.
 4. Log each step with CRITICAL severity and collect per-step success flags for the API response.
 5. If `shutdown_after` is true, schedule `sudo shutdown now` after returning JSON so the HTTP response flushes before power-off.
 
@@ -327,11 +327,11 @@
 - Pi Zero resource exhaustion can still occur if custom actions disregard semaphore or spawn heavy subprocesses. Always profile new modules with `shared_data` instrumentation before enabling in production.
 - AP mode exposes open HTTP portal—protect physical device to prevent rogue reconfiguration. Change default AP password and disable AP auto mode if device is in hostile environment.
 - AI integration sends sanitized data to OpenAI; disable in air-gapped or regulated environments or configure local proxy/LLM.
-- Kill switch relies on local HTTP endpoint; if Ragnar exposed publicly without auth, attacker could wipe device. Always gate reverse proxy with auth.
+- Kill switch relies on local HTTP endpoint; if OptarisDefense exposed publicly without auth, attacker could wipe device. Always gate reverse proxy with auth.
 - Database encryption at rest not enabled by default; use encrypted FS (LUKS) for highly sensitive deployments.
 
 ## 18. Operational Runbook (Summary)
-1. Boot device; Wi-Fi manager connects or launches AP. Verify `systemctl status ragnar.service` green before proceeding.
+1. Boot device; Wi-Fi manager connects or launches AP. Verify `systemctl status optaris-defense.service` green before proceeding.
 2. Once networked, initial ping sweep populates SQLite. Confirm via `data/logs/network_scanner.log` or dashboard host count.
 3. Orchestrator loops:
   - Filter alive hosts from DB.
@@ -340,7 +340,7 @@
   - Schedule standalone maintenance tasks.
   - Monitor `data/logs/orchestrator.log` for failures/timeouts.
 4. Nmap vulnerability scanner runs per interval and updates intelligence; check `/api/v1/intel/vulnerabilities` JSON for new findings or UI Vulnerabilities tab.
-5. Dashboard, AI, and e-paper display live state from shared DB/intelligence files. If UI stale, restart `ragnar_web.service` or inspect WebSocket logs.
+5. Dashboard, AI, and e-paper display live state from shared DB/intelligence files. If UI stale, restart `optaris_defense_web.service` or inspect WebSocket logs.
 6. Logs rotate under `data/logs`; archive regularly. Kill switch wipes artifacts when needed—document reason externally before triggering.
 7. For Pwnagotchi swaps: use Config tab control, wait for service handoff, reboot, then confirm mode via dashboard badges.
 
@@ -375,7 +375,7 @@ _Ground truth: `webapp_modern.py` as of December 2025. Methods shown exactly as 
 ### 20.3 Dashboard Status & Telemetry APIs
 | Path | Methods | Purpose |
 | --- | --- | --- |
-| `/api/status` | GET | High-level Ragnar health summary (hosts, Wi-Fi, orchestrator state). |
+| `/api/status` | GET | High-level OptarisDefense health summary (hosts, Wi-Fi, orchestrator state). |
 | `/api/stats` | GET | Aggregated counters for UI scorecards. |
 | `/api/dashboard/quick` | GET | Lightweight stats for splash/loading cards. |
 | `/api/dashboard/stats` | GET | Full dashboard metrics bundle (graphs, loot counts, etc.). |
@@ -506,7 +506,7 @@ _Ground truth: `webapp_modern.py` as of December 2025. Methods shown exactly as 
 | `/api/pwnagotchi/status` | GET | Current Pwnagotchi install/switch state. |
 | `/api/pwnagotchi/install` | POST | Kick off the installer script. |
 | `/api/pwnagotchi/logs` | GET | Stream installer/service logs. |
-| `/api/pwnagotchi/swap` | POST | Schedule Ragnar ↔ Pwnagotchi mode swap. |
+| `/api/pwnagotchi/swap` | POST | Schedule OptarisDefense ↔ Pwnagotchi mode swap. |
 
 ### 20.13 Kill Switch & Data Hygiene
 | Path | Methods | Purpose |

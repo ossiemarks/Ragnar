@@ -1,6 +1,6 @@
 #!/bin/bash
 # setup_gpsd.sh
-# Configure gpsd so the Ragnar wardriving stack (and Kismet) consume GPS via the
+# Configure gpsd so the OptarisDefense wardriving stack (and Kismet) consume GPS via the
 # gpsd socket on localhost:2947 instead of opening the raw serial port. gps_manager
 # already prefers gpsd when it is running.
 #
@@ -43,7 +43,7 @@ REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 systemctl stop gpsd.socket >/dev/null 2>&1 || true
 systemctl stop gpsd        >/dev/null 2>&1 || true
 
-# Detect the GPS generically using Ragnar's own detector (keyword match on
+# Detect the GPS generically using OptarisDefense's own detector (keyword match on
 # /dev/serial/by-id, then an NMEA probe on any non-Espressif serial). Works for
 # any USB GPS, not just the u-blox 7. Empty if nothing is plugged in right now.
 GPS_DEV=""
@@ -88,7 +88,7 @@ fi
 # searching for a fix.
 info "Writing /etc/default/gpsd"
 cat > /etc/default/gpsd <<EOF
-# Managed by Ragnar scripts/setup_gpsd.sh — pins gpsd to the detected USB GPS.
+# Managed by OptarisDefense scripts/setup_gpsd.sh — pins gpsd to the detected USB GPS.
 # USBAUTO is intentionally false so gpsd never grabs a companion ESP32
 # (Piglet/Huginn) /dev/ttyACM* port. Re-run setup_gpsd.sh after swapping the GPS.
 START_DAEMON="true"

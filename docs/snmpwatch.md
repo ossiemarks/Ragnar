@@ -76,7 +76,7 @@ seen with that community (one capture = write access to N devices). Emitted as a
 
 ```bash
 python3 python/snmpwatch.py --selftest                         # 82/82, no root
-sudo python3 python/snmpwatch.py -i eth0 --json /var/lib/ragnar/snmpwatch.json
+sudo python3 python/snmpwatch.py -i eth0 --json /var/lib/optaris_defense/snmpwatch.json
 sudo python3 python/snmpwatch.py -i eth0 -t 300 --json -       # bounded audit, JSON to stdout
 ```
 
@@ -93,7 +93,7 @@ Requires `CAP_NET_RAW` (sudo, or the systemd unit which grants only that).
 ## systemd
 
 `scripts/snmpwatch.service` runs least-privilege (`CAP_NET_RAW`, `ProtectSystem=
-strict`, `MemoryMax=128M`); set `RAGNAR_IFACE=` in the unit (`br0` for inline).
+strict`, `MemoryMax=128M`); set `OPTARIS_DEFENSE_IFACE=` in the unit (`br0` for inline).
 
 ## Web UI
 

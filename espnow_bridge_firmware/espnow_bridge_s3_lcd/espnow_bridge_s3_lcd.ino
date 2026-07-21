@@ -1,5 +1,5 @@
 /*
- * espnow_bridge_s3_lcd.ino — Ragnar STANDALONE ESP-Now coordinator (Piglet Core)
+ * espnow_bridge_s3_lcd.ino — OptarisDefense STANDALONE ESP-Now coordinator (Piglet Core)
  *
  * Target hardware: Waveshare ESP32-S3-Touch-LCD-4B
  *   - ESP32-S3-N16R8 (16 MB flash / 8 MB PSRAM)
@@ -9,7 +9,7 @@
  * Same coordinator behaviour as espnow_bridge_c5; adds a 480×480 status UI
  * mirroring the layout of the (now retired) c6_lcd firmware:
  *   ┌────────────────────────────────────┐
- *   │ RAGNAR COORDINATOR                 │
+ *   │ OPTARIS_DEFENSE COORDINATOR                 │
  *   │ <status line, color-coded>         │
  *   │ NODES        n / 24                │
  *   │ NETWORKS SEEN                      │
@@ -19,7 +19,7 @@
  *   │ UPTIME  h:mm:ss                    │
  *   │ LAST RX  Ns / Nm / Nh              │
  *   │ CH / MAC  6  XX:XX                 │
- *   │ ragnar standalone core             │
+ *   │ optaris_defense standalone core             │
  *   └────────────────────────────────────┘
  *
  * Build (arduino-cli):
@@ -494,7 +494,7 @@ static void alive_tick(void) {
                        (unsigned long)g_dropped_rows,
                        (unsigned long)g_queue_drops,
                        (unsigned long)(now / 1000));
-    // Per-node JSON dump so Ragnar can show MAC + contribution count.
+    // Per-node JSON dump so OptarisDefense can show MAC + contribution count.
     for (int i = 0; i < MAX_NODES; i++) {
         if (!g_nodes[i].used) continue;
         char mac[18];
@@ -635,7 +635,7 @@ static void ui_init(void) {
     gfx->setTextColor(C_ACCENT);
     gfx->setTextSize(3);
     gfx->setCursor(60, Y_TITLE);
-    gfx->print("RAGNAR COORDINATOR");
+    gfx->print("OPTARIS_DEFENSE COORDINATOR");
 
     // Static labels
     gfx->setTextSize(2);
@@ -648,7 +648,7 @@ static void ui_init(void) {
     // Footer
     gfx->setTextSize(2);
     gfx->setTextColor(C_GREY);
-    gfx->setCursor(110, Y_FOOTER); gfx->print("ragnar standalone core");
+    gfx->setCursor(110, Y_FOOTER); gfx->print("optaris_defense standalone core");
 }
 
 static const char *fmt_uptime(uint32_t ms) {
@@ -790,9 +790,9 @@ void setup() {
     Serial.begin(BAUD);
     delay(2000);
 
-    Serial.println("[CORE] Ragnar standalone coordinator booted (Piglet)");
+    Serial.println("[CORE] OptarisDefense standalone coordinator booted (Piglet)");
     Serial.println(
-        "{\"device\":\"RagnarCoord\",\"fw\":\"s3-lcd-1\","
+        "{\"device\":\"OptarisDefenseCoord\",\"fw\":\"s3-lcd-1\","
         "\"board\":\"ESP32-S3-LCD-4B\",\"caps\":[\"espnow\",\"piglet-core\",\"display\"]}");
 
     // ESP-Now — channel must be set AFTER esp_now_init

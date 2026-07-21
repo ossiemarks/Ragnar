@@ -1,6 +1,6 @@
 # advanced_vuln_scanner.py
 """
-Advanced Vulnerability Assessment Module for Ragnar Server Mode
+Advanced Vulnerability Assessment Module for OptarisDefense Server Mode
 
 This module provides enhanced vulnerability scanning capabilities
 only available when running on a capable server (8GB+ RAM).
@@ -163,7 +163,7 @@ class ScanProgress:
 
 class AdvancedVulnScanner:
     """
-    Advanced vulnerability scanner for Ragnar server mode.
+    Advanced vulnerability scanner for OptarisDefense server mode.
 
     Provides enterprise-grade vulnerability scanning using:
     - Nuclei for template-based scanning
@@ -304,8 +304,8 @@ class AdvancedVulnScanner:
         40015, 90028,
     ]
 
-    # Ragnar-Fuzz payload library
-    RAGNAR_FUZZ_PAYLOADS = {
+    # OptarisDefense-Fuzz payload library
+    OPTARIS_DEFENSE_FUZZ_PAYLOADS = {
         'xss_basic': [
             '<script>alert(1)</script>',
             '"><script>alert(1)</script>',
@@ -412,8 +412,8 @@ class AdvancedVulnScanner:
             '<?xml version="1.0"?><!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]><foo>&xxe;</foo>',
         ],
         'crlf': [
-            '%0d%0aSet-Cookie:ragnar=test',
-            '\\r\\nX-Injected: ragnar',
+            '%0d%0aSet-Cookie:optaris_defense=test',
+            '\\r\\nX-Injected: optaris_defense',
             '%0AHost: evil.com',
         ],
         'log4shell': [
@@ -870,16 +870,16 @@ class AdvancedVulnScanner:
                 logger.debug(f"{tool} not found in PATH")
 
         # Detect ZAP - check multiple possible locations
-        # Priority: Ragnar tools dir > /opt > standard locations > PATH
-        ragnar_dir = os.path.dirname(os.path.abspath(__file__))
+        # Priority: OptarisDefense tools dir > /opt > standard locations > PATH
+        optaris_defense_dir = os.path.dirname(os.path.abspath(__file__))
         import sys
         is_windows = sys.platform == 'win32'
 
         if is_windows:
             # Windows ZAP locations
             zap_paths = [
-                # Ragnar's tools directory
-                os.path.join(ragnar_dir, 'tools', 'zap', 'zap.bat'),
+                # OptarisDefense's tools directory
+                os.path.join(optaris_defense_dir, 'tools', 'zap', 'zap.bat'),
                 # Standard Windows installation paths
                 os.path.join(os.environ.get('PROGRAMFILES', 'C:\\Program Files'), 'OWASP', 'Zed Attack Proxy', 'zap.bat'),
                 os.path.join(os.environ.get('PROGRAMFILES(X86)', 'C:\\Program Files (x86)'), 'OWASP', 'Zed Attack Proxy', 'zap.bat'),
@@ -891,8 +891,8 @@ class AdvancedVulnScanner:
         else:
             # Linux/Mac ZAP locations
             zap_paths = [
-                # Ragnar's tools directory (installed by install_advanced_tools.sh)
-                os.path.join(ragnar_dir, 'tools', 'zap', 'zap.sh'),
+                # OptarisDefense's tools directory (installed by install_advanced_tools.sh)
+                os.path.join(optaris_defense_dir, 'tools', 'zap', 'zap.sh'),
                 # Standard system locations
                 '/opt/zaproxy/zap.sh',
                 '/usr/share/zaproxy/zap.sh',
@@ -2628,7 +2628,7 @@ class AdvancedVulnScanner:
         """Add target URL to ZAP scope (for focused scanning)"""
         try:
             # Create a context for the target
-            context_name = f"ragnar_{int(time.time())}"
+            context_name = f"optaris_defense_{int(time.time())}"
             self._zap_api_call('JSON/context/action/newContext', {'contextName': context_name})
 
             # Add target to context scope
@@ -3295,10 +3295,10 @@ class AdvancedVulnScanner:
 
             self._scan_log(scan_id, 'info', "ZAP active scan completed")
 
-            # ragnar-fuzz phase (thorough/insane only)
+            # optaris-defense-fuzz phase (thorough/insane only)
             if profile['enable_fuzzer']:
-                progress.current_check = "Running ragnar-fuzz..."
-                self._scan_log(scan_id, 'info', "Starting ragnar-fuzz custom parameter fuzzer...")
+                progress.current_check = "Running optaris-defense-fuzz..."
+                self._scan_log(scan_id, 'info', "Starting optaris-defense-fuzz custom parameter fuzzer...")
                 self._run_zap_parameter_fuzz_phase(scan_id, target, options, progress)
 
                 progress.current_check = "Detecting JSON reflections..."
@@ -3691,7 +3691,7 @@ class AdvancedVulnScanner:
         """Run complete ZAP scan with strength-aware orchestration.
 
         Standard  (3 phases): Spider → AJAX Spider → Active Scan
-        Thorough+ (5 phases): Spider → AJAX Spider → Active Scan → ragnar-fuzz → JSON Reflections
+        Thorough+ (5 phases): Spider → AJAX Spider → Active Scan → optaris-defense-fuzz → JSON Reflections
         """
         self._zap_busy = True
         try:
@@ -3793,11 +3793,11 @@ class AdvancedVulnScanner:
             self._scan_log(scan_id, 'info', f"Phase 3/{total_phases}: Starting active vulnerability scan...")
             self._run_zap_active_scan_phase(scan_id, target, options, progress, policy_name)
 
-            # Phase 4: ragnar-fuzz (thorough/insane only)
+            # Phase 4: optaris-defense-fuzz (thorough/insane only)
             if profile['enable_fuzzer']:
-                progress.current_check = f"Phase 4/{total_phases}: Running ragnar-fuzz..."
+                progress.current_check = f"Phase 4/{total_phases}: Running optaris-defense-fuzz..."
                 self._scan_log(scan_id, 'info',
-                               f"Phase 4/{total_phases}: Starting ragnar-fuzz custom parameter fuzzer...")
+                               f"Phase 4/{total_phases}: Starting optaris-defense-fuzz custom parameter fuzzer...")
                 self._run_zap_parameter_fuzz_phase(scan_id, target, options, progress)
 
             # Phase 5: JSON Reflection Detection (thorough/insane only)
@@ -4032,7 +4032,7 @@ class AdvancedVulnScanner:
         if strength == 'standard':
             return None
 
-        policy_name = f"ragnar-{strength}-{scan_id[-8:]}"
+        policy_name = f"optaris-defense-{strength}-{scan_id[-8:]}"
 
         try:
             self._zap_api_call('JSON/ascan/action/addScanPolicy', {
@@ -4442,15 +4442,15 @@ class AdvancedVulnScanner:
                 severity = risk_map.get(ctx['risk'], VulnSeverity.MEDIUM)
 
                 finding = VulnerabilityFinding(
-                    finding_id=f"{scan_id}-ragnar-fuzz-{len(findings):04d}",
-                    scanner='ragnar-fuzz',
+                    finding_id=f"{scan_id}-optaris-defense-fuzz-{len(findings):04d}",
+                    scanner='optaris-defense-fuzz',
                     host=target_host,
                     port=parsed_target.port,
                     severity=severity,
                     title=f"Reflected Input - {ctx['context']}",
                     description=ctx['description'],
                     cwe_ids=[ctx['cwe_id']],
-                    tags=['ragnar-fuzz', ctx['context'], category],
+                    tags=['optaris-defense-fuzz', ctx['context'], category],
                     matched_at=req_url or target,
                     evidence=f"Payload: {payload[:100]} | Context: {ctx['context']}",
                     details={
@@ -4472,7 +4472,7 @@ class AdvancedVulnScanner:
 
     def _run_zap_parameter_fuzz_phase(self, scan_id: str, target: str,
                                       options: Dict, progress: ScanProgress):
-        """Ragnar-Fuzz: fire-then-verify custom parameter fuzzing.
+        """OptarisDefense-Fuzz: fire-then-verify custom parameter fuzzing.
 
         1. Extract parameterized endpoints from ZAP message history
         2. Generate synthetic fuzz targets from clean paths
@@ -4491,18 +4491,18 @@ class AdvancedVulnScanner:
             # 1. Extract endpoints from ZAP message history
             endpoints = self._extract_fuzz_endpoints(scan_id, target)
             self._scan_log(scan_id, 'info',
-                           f"ragnar-fuzz: Found {len(endpoints)} parameterized endpoints")
+                           f"optaris-defense-fuzz: Found {len(endpoints)} parameterized endpoints")
 
             # 2. Generate synthetic targets
             synthetic = self._generate_synthetic_fuzz_targets(endpoints, target)
             all_targets = endpoints + synthetic
             self._scan_log(scan_id, 'info',
-                           f"ragnar-fuzz: {len(all_targets)} total fuzz targets "
+                           f"optaris-defense-fuzz: {len(all_targets)} total fuzz targets "
                            f"({len(synthetic)} synthetic)")
 
             # 3. Build flat payload list limited by max_payloads
             all_payloads = []
-            for category, payloads in self.RAGNAR_FUZZ_PAYLOADS.items():
+            for category, payloads in self.OPTARIS_DEFENSE_FUZZ_PAYLOADS.items():
                 all_payloads.extend([(p, category) for p in payloads])
 
             # Limit total payloads per parameter
@@ -4519,7 +4519,7 @@ class AdvancedVulnScanner:
                 body = endpoint.get('body')
 
                 progress.current_check = (
-                    f"ragnar-fuzz: Fuzzing endpoint {i + 1}/{max_targets}..."
+                    f"optaris-defense-fuzz: Fuzzing endpoint {i + 1}/{max_targets}..."
                 )
                 progress.progress_percent = 70 + int((i / max(max_targets, 1)) * 10)
 
@@ -4554,23 +4554,23 @@ class AdvancedVulnScanner:
                         if fired_count % 10 == 0:
                             time.sleep(0.05)
 
-            self._scan_log(scan_id, 'info', f"ragnar-fuzz: Fired {fired_count} payloads")
+            self._scan_log(scan_id, 'info', f"optaris-defense-fuzz: Fired {fired_count} payloads")
 
             # 5. Bulk verify reflections
-            progress.current_check = "ragnar-fuzz: Verifying reflections..."
+            progress.current_check = "optaris-defense-fuzz: Verifying reflections..."
             progress.progress_percent = 82
             reflection_findings = self._verify_fuzz_reflections(
                 scan_id, target, per_param_payloads)
 
             self._scan_log(scan_id, 'info',
-                           f"ragnar-fuzz: Found {len(reflection_findings)} reflected payloads")
+                           f"optaris-defense-fuzz: Found {len(reflection_findings)} reflected payloads")
 
             for finding in reflection_findings:
                 self.scan_results[scan_id].append(finding)
 
         except Exception as e:
             self._scan_log(scan_id, 'warning',
-                           f"ragnar-fuzz phase error (continuing): {e}")
+                           f"optaris-defense-fuzz phase error (continuing): {e}")
 
     def _detect_json_reflections(self, scan_id: str, target: str,
                                  options: Dict, progress: ScanProgress):
@@ -4653,8 +4653,8 @@ class AdvancedVulnScanner:
 
                     reflection_count += 1
                     finding = VulnerabilityFinding(
-                        finding_id=f"{scan_id}-ragnar-jsonreflect-{reflection_count:04d}",
-                        scanner='ragnar-fuzz',
+                        finding_id=f"{scan_id}-optaris-defense-jsonreflect-{reflection_count:04d}",
+                        scanner='optaris-defense-fuzz',
                         host=target_host,
                         port=parsed_target.port,
                         severity=VulnSeverity.LOW,
@@ -4665,7 +4665,7 @@ class AdvancedVulnScanner:
                             f"output encoding in the API."
                         ),
                         cwe_ids=['CWE-116'],
-                        tags=['ragnar-fuzz', 'json-reflection', 'api'],
+                        tags=['optaris-defense-fuzz', 'json-reflection', 'api'],
                         matched_at=req_url or target,
                         evidence=f"Reflected value: {val[:100]}",
                         details={
@@ -6125,10 +6125,10 @@ class AdvancedVulnScanner:
                 try:
                     template = 'traditional-html' if report_format == 'html' else 'traditional-md'
                     report_resp = self._zap_api_call('JSON/reports/action/generate', {
-                        'title': 'Ragnar Security Scan Report',
+                        'title': 'OptarisDefense Security Scan Report',
                         'template': template,
                         'reportDir': '',
-                        'reportFileName': f'ragnar_report.{report_format}'
+                        'reportFileName': f'optaris_defense_report.{report_format}'
                     })
 
                     # Get the report file path

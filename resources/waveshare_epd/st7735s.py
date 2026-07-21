@@ -2,7 +2,7 @@
 # Driver for the Waveshare 1.44" LCD HAT — ST7735S 128x128 RGB TFT LCD.
 #
 # Exposes the same interface as the Waveshare e-Paper drivers so it integrates
-# transparently with EPDHelper and the rest of Ragnar:
+# transparently with EPDHelper and the rest of OptarisDefense:
 #   width, height, init(), Clear(), getbuffer(image), display(buf),
 #   displayPartial(buf), sleep()
 #
@@ -43,7 +43,7 @@ SPI_BUS    = 0
 SPI_DEVICE = 0
 SPI_MAX_HZ = 24_000_000
 
-# MADCTL (0x36): MY|MX set, RGB colour order. Ragnar renders mostly monochrome
+# MADCTL (0x36): MY|MX set, RGB colour order. OptarisDefense renders mostly monochrome
 # content, so a red/blue swap would be invisible anyway; RGB keeps colour icons
 # faithful on the panels that honour it.
 MADCTL = 0xC0
@@ -92,7 +92,7 @@ class EPD:
     def getbuffer(self, image):
         """Convert a PIL image (any mode) to a packed RGB565 byte string.
 
-        Ragnar renders 1-bit ('1') PIL images internally; this converts any PIL
+        OptarisDefense renders 1-bit ('1') PIL images internally; this converts any PIL
         mode to 16-bit RGB565 for the TFT, resizing to the panel size if needed.
         """
         img = image.convert("RGB")

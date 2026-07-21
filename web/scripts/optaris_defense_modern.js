@@ -1,4 +1,4 @@
-// Ragnar_modern.js - Enhanced Modern JavaScript for Ragnar web interface by Pierre Gode 2025
+// OptarisDefense_modern.js - Enhanced Modern JavaScript for OptarisDefense web interface by Pierre Gode 2025
 
 let socket;
 let reconnectAttempts = 0;
@@ -21,8 +21,8 @@ let pwnStatus = {
     phase: 'idle',
     installed: false,
     installing: false,
-    mode: 'ragnar',
-    target_mode: 'ragnar',
+    mode: 'optaris_defense',
+    target_mode: 'optaris_defense',
     last_switch: '',
     service_active: false,
     service_enabled: false,
@@ -86,7 +86,7 @@ function filterCredsByService(svc) {
     credServiceFilter = svc;
     document.querySelectorAll('.cred-svc-btn').forEach(b => {
         const active = b.getAttribute('data-svc') === svc;
-        b.classList.toggle('bg-Ragnar-600', active);
+        b.classList.toggle('bg-OptarisDefense-600', active);
         b.classList.toggle('bg-slate-700', !active);
         b.classList.toggle('hover:bg-slate-600', !active);
     });
@@ -183,7 +183,7 @@ function exportCredentialsCSV() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `ragnar_credentials_${new Date().toISOString().slice(0,10)}.csv`;
+    a.download = `optaris_defense_credentials_${new Date().toISOString().slice(0,10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
 }
@@ -191,7 +191,7 @@ function exportCredentialsCSV() {
 const configMetadata = {
     manual_mode: {
         label: "Pentest Mode",
-        description: "Hold Ragnar in hands-on pentest control. Disable this to let the orchestrator continuously discover devices, run actions, and launch vulnerability scans automatically."
+        description: "Hold OptarisDefense in hands-on pentest control. Disable this to let the orchestrator continuously discover devices, run actions, and launch vulnerability scans automatically."
     },
     debug_mode: {
         label: "Debug Mode",
@@ -207,7 +207,7 @@ const configMetadata = {
     },
     enable_attacks: {
         label: "Enable Automatic Attacks",
-        description: "Allow Ragnar to perform automated attacks (SSH, FTP, SMB, SQL, etc.) on discovered targets. Disable to only scan without attacking."
+        description: "Allow OptarisDefense to perform automated attacks (SSH, FTP, SMB, SQL, etc.) on discovered targets. Disable to only scan without attacking."
     },
     retry_success_actions: {
         label: "Retry Successful Actions",
@@ -227,23 +227,23 @@ const configMetadata = {
     },
     log_debug: {
         label: "Log Debug Messages",
-        description: "Include debug-level entries in Ragnar logs."
+        description: "Include debug-level entries in OptarisDefense logs."
     },
     log_info: {
         label: "Log Info Messages",
-        description: "Include informational entries in Ragnar logs."
+        description: "Include informational entries in OptarisDefense logs."
     },
     log_warning: {
         label: "Log Warning Messages",
-        description: "Include warning-level entries in Ragnar logs."
+        description: "Include warning-level entries in OptarisDefense logs."
     },
     log_error: {
         label: "Log Error Messages",
-        description: "Include error-level entries in Ragnar logs."
+        description: "Include error-level entries in OptarisDefense logs."
     },
     log_critical: {
         label: "Log Critical Messages",
-        description: "Include critical-level entries in Ragnar logs."
+        description: "Include critical-level entries in OptarisDefense logs."
     },
     startup_delay: {
         label: "Startup Delay (s)",
@@ -343,11 +343,11 @@ const configMetadata = {
     },
     mac_scan_blacklist: {
         label: "MAC Scan Blacklist",
-        description: "Comma separated MAC addresses Ragnar should ignore during scans and automated actions."
+        description: "Comma separated MAC addresses OptarisDefense should ignore during scans and automated actions."
     },
     ip_scan_blacklist: {
         label: "IP Scan Blacklist",
-        description: "Comma separated IP addresses Ragnar should ignore during scans and automated actions."
+        description: "Comma separated IP addresses OptarisDefense should ignore during scans and automated actions."
     },
     steal_file_names: {
         label: "Target File Names",
@@ -355,7 +355,7 @@ const configMetadata = {
     },
     steal_file_extensions: {
         label: "Target File Extensions",
-        description: "Comma separated file extensions that Ragnar should collect when found."
+        description: "Comma separated file extensions that OptarisDefense should collect when found."
     },
     nmap_scan_aggressivity: {
         label: "Nmap Aggressiveness",
@@ -395,15 +395,15 @@ const configMetadata = {
     },
     wifi_known_networks: {
         label: "Known Wi-Fi Networks",
-        description: "Comma separated list of SSIDs Ragnar should automatically join when detected."
+        description: "Comma separated list of SSIDs OptarisDefense should automatically join when detected."
     },
     wifi_ap_ssid: {
         label: "AP SSID",
-        description: "Network name broadcast when Ragnar creates its own access point."
+        description: "Network name broadcast when OptarisDefense creates its own access point."
     },
     wifi_ap_password: {
         label: "AP Password",
-        description: "Password clients must use to join Ragnar's access point."
+        description: "Password clients must use to join OptarisDefense's access point."
     },
     wifi_connection_timeout: {
         label: "Wi-Fi Connection Timeout (s)",
@@ -423,15 +423,15 @@ const configMetadata = {
     },
     wifi_auto_ap_fallback: {
         label: "Auto AP Fallback",
-        description: "Automatically enable Ragnar's access point if normal Wi-Fi connectivity cannot be restored."
+        description: "Automatically enable OptarisDefense's access point if normal Wi-Fi connectivity cannot be restored."
     },
     wifi_ap_timeout: {
         label: "AP Timeout (s)",
-        description: "Maximum duration before an active Ragnar access point session shuts down automatically."
+        description: "Maximum duration before an active OptarisDefense access point session shuts down automatically."
     },
     wifi_ap_idle_timeout: {
         label: "AP Idle Timeout (s)",
-        description: "Seconds of inactivity allowed before shutting down the Ragnar access point."
+        description: "Seconds of inactivity allowed before shutting down the OptarisDefense access point."
     },
     wifi_reconnect_interval: {
         label: "Wi-Fi Reconnect Interval (s)",
@@ -487,7 +487,7 @@ const configMetadata = {
     },
     wardriving_display: {
         label: "Wardriving on Display",
-        description: "Replace the normal Ragnar display with a wardriving dashboard while a session is running. Works on all displays: e-paper, GC9A01 TFT, SSD1306 OLED, LCD1602, and MAX7219 LED matrix."
+        description: "Replace the normal OptarisDefense display with a wardriving dashboard while a session is running. Works on all displays: e-paper, GC9A01 TFT, SSD1306 OLED, LCD1602, and MAX7219 LED matrix."
     },
     wardriving_scan_interval: {
         label: "Scan Interval (s)",
@@ -619,10 +619,10 @@ function initializeSocket() {
     });
 
     socket.on('connect', function() {
-        console.log('Connected to Ragnar server');
+        console.log('Connected to OptarisDefense server');
         updateConnectionStatus(true);
         reconnectAttempts = 0;
-        addConsoleMessage('Connected to Ragnar server', 'success');
+        addConsoleMessage('Connected to OptarisDefense server', 'success');
 
         socket.emit('request_status');
         socket.emit('request_logs');
@@ -641,7 +641,7 @@ function initializeSocket() {
     });
 
     socket.on('disconnect', function() {
-        console.log('Disconnected from Ragnar server');
+        console.log('Disconnected from optaris_defense server');
         updateConnectionStatus(false);
         addConsoleMessage('Disconnected from server', 'error');
         setTimeout(() => {
@@ -814,7 +814,7 @@ function initializeTabs() {
 
 // ── RuSense (native RuView WiFi-CSI console, Shadow-DOM island) ─────────────
 // The RuView SPA is served from /web/rusense/ and mounted into a shadow root
-// under #rusense-host, so its compiled Tailwind never collides with Ragnar's
+// under #rusense-host, so its compiled Tailwind never collides with OptarisDefense's
 // styles. Sensing data is proxied by this Flask app (/ws/sensing, /api/v1/*).
 const RUSENSE_SUBTABS = ['dashboard', 'observatory', 'sensing', 'nodes', 'training', 'settings', 'about'];
 let _rusenseLoader = null;        // resolved loader module
@@ -991,7 +991,7 @@ function startSensingLogPoll() {
 
 // ── RuSense tab visibility (toggle lives in Settings; hidden by default) ─────
 // Stored server-side under the same key so the choice is shared across every
-// browser/device (like Ragnar's other settings). localStorage is a local cache
+// browser/device (like OptarisDefense's other settings). localStorage is a local cache
 // for instant first paint; the server value is synced in on load and wins.
 const RUSENSE_TAB_KEY = 'rusense_tab_visible';
 
@@ -1162,7 +1162,7 @@ function showTab(tabName) {
     });
     
     document.querySelectorAll('.nav-btn, [data-tab]').forEach(btn => {
-        btn.classList.remove('bg-Ragnar-600');
+        btn.classList.remove('bg-OptarisDefense-600');
         btn.classList.add('text-gray-300', 'hover:text-white', 'hover:bg-gray-700');
     });
     
@@ -1173,7 +1173,7 @@ function showTab(tabName) {
     
     const selectedBtn = document.querySelector(`[data-tab="${tabName}"]`);
     if (selectedBtn) {
-        selectedBtn.classList.add('bg-Ragnar-600');
+        selectedBtn.classList.add('bg-OptarisDefense-600');
         selectedBtn.classList.remove('text-gray-300', 'hover:text-white', 'hover:bg-gray-700');
     }
     
@@ -1191,7 +1191,7 @@ function showTab(tabName) {
 
 function _setSubtabActive(btn, active) {
     if (!btn) return;
-    btn.classList.toggle('bg-Ragnar-600', active);
+    btn.classList.toggle('bg-OptarisDefense-600', active);
     btn.classList.toggle('text-white', active);
     btn.classList.toggle('text-slate-400', !active);
     btn.classList.toggle('hover:bg-slate-700', !active);
@@ -1287,7 +1287,7 @@ function wifiInit() {
                 _wifiState.band = btn.dataset.band;
                 document.querySelectorAll('#wifi-band-group .wifi-band').forEach(b => {
                     const on = b === btn;
-                    b.classList.toggle('bg-Ragnar-600', on); b.classList.toggle('text-white', on);
+                    b.classList.toggle('bg-OptarisDefense-600', on); b.classList.toggle('text-white', on);
                     b.classList.toggle('text-slate-300', !on);
                 });
                 wifiScan();
@@ -1299,7 +1299,7 @@ function wifiInit() {
             const bar = document.getElementById('wifi-view-bar'), dome = document.getElementById('wifi-view-dome');
             [['bar', bar], ['dome', dome]].forEach(([name, el]) => {
                 const on = name === v;
-                el.classList.toggle('bg-Ragnar-600', on); el.classList.toggle('text-white', on);
+                el.classList.toggle('bg-OptarisDefense-600', on); el.classList.toggle('text-white', on);
                 el.classList.toggle('text-slate-300', !on);
             });
             if (_wifiState.data) _wifiDrawSpectrum();
@@ -1407,9 +1407,9 @@ function wifiRenderChanges() {
 
 function wifiSetApView(v) {
     _wifiState.apView = v;
-    document.getElementById('wifi-view-aps').classList.toggle('bg-Ragnar-600', v === 'aps');
+    document.getElementById('wifi-view-aps').classList.toggle('bg-OptarisDefense-600', v === 'aps');
     document.getElementById('wifi-view-aps').classList.toggle('text-white', v === 'aps');
-    document.getElementById('wifi-view-nets').classList.toggle('bg-Ragnar-600', v === 'nets');
+    document.getElementById('wifi-view-nets').classList.toggle('bg-OptarisDefense-600', v === 'nets');
     document.getElementById('wifi-view-nets').classList.toggle('text-white', v === 'nets');
     document.getElementById('wifi-ap-table').classList.toggle('hidden', v !== 'aps');
     document.getElementById('wifi-nets-view').classList.toggle('hidden', v !== 'nets');
@@ -1444,7 +1444,7 @@ function wifiRenderTable() {
         const isSel = _wifiState.selected === a.bssid;
         const bar = a.signal == null ? 0 : Math.max(4, Math.min(100, (a.signal + 100) / 70 * 100));
         const issue = a.security_findings && a.security_findings.length;
-        // Selected row: inline Ragnar accent (custom-colour opacity classes aren't
+        // Selected row: inline OptarisDefense accent (custom-colour opacity classes aren't
         // in the prebuilt tailwind.css). Selection wins the left bar over amber.
         const rowCls = isSel ? '' : 'hover:bg-slate-800/40' + (issue ? ' border-l-2 border-l-amber-500' : '');
         const rowStyle = isSel ? ' style="background-color:rgba(2,132,199,0.25);border-left:3px solid rgb(56,189,248)"' : '';
@@ -1569,7 +1569,7 @@ function wifiExportReport() {
   ${issues.length ? '<h2>Security issues (' + issues.length + ')</h2><ul>' + issues.map(a => `<li><b>${_esc(a.ssid) || 'hidden'}</b> (${_esc(a.bssid)}): ${_esc(a.security_findings.join('; '))}</li>`).join('') + '</ul>' : ''}
   <h2>AP inventory</h2>
   <table><thead><tr><th>SSID</th><th>BSSID</th><th>Vendor</th><th>Band</th><th>Ch</th><th>Width</th><th>RSSI</th><th>SNR</th><th>Security</th></tr></thead><tbody>${rows}</tbody></table>
-  <div class="foot">Generated by Ragnar WiFi Analyzer. Passive survey — estimates, not survey-grade measurements.</div>
+  <div class="foot">Generated by OptarisDefense WiFi Analyzer. Passive survey — estimates, not survey-grade measurements.</div>
   <script>window.onload=function(){setTimeout(function(){window.print();},250);};<\/script>
 </body></html>`;
     const w = window.open('', '_blank');
@@ -2861,7 +2861,7 @@ function _wifidefFillIfaces() {
         if (d.build && d.build !== WIFIDEF_BUILD && st) {
             st.innerHTML = '<span class="text-amber-400">⚠ WiFi Defense service is running old code (build '
                 + _esc(d.build) + ', page expects ' + WIFIDEF_BUILD
-                + '). Restart it: <code>sudo systemctl restart ragnar</code></span>';
+                + '). Restart it: <code>sudo systemctl restart optaris_defense</code></span>';
         }
         if (!ifs.length) { sel.innerHTML = '<option value="">No wireless adapter</option>'; }
         else {
@@ -2908,7 +2908,7 @@ function wifidefToggleMonitor() {
     const st = document.getElementById('wifidef-status');
     // Boot-dedicated monitor is managed by systemd; the UI must not toggle it.
     if (_wifidef.dedicated) {
-        if (st) st.textContent = 'Adapter is a boot-dedicated monitor (managed by ragnar-wifidef-monitor.service)';
+        if (st) st.textContent = 'Adapter is a boot-dedicated monitor (managed by optaris-defense-wifidef-monitor.service)';
         return;
     }
     if (_wifidef.monitor) {
@@ -2947,7 +2947,7 @@ function _wifidefProgress(st, secs, label) {
     const bar = (pct, pulse, text) =>
         '<span class="inline-flex items-center gap-1.5 align-middle">'
         + '<span class="inline-block w-28 h-1.5 rounded overflow-hidden" style="background:rgba(51,65,85,.8)">'
-        + `<span class="block h-full rounded bg-Ragnar-500${pulse ? ' animate-pulse' : ''}" style="width:${pct}%"></span></span>`
+        + `<span class="block h-full rounded bg-OptarisDefense-500${pulse ? ' animate-pulse' : ''}" style="width:${pct}%"></span></span>`
         + `<span>${text}</span></span>`;
     const render = () => {
         const el = Date.now() - t0;
@@ -3237,7 +3237,7 @@ function _ndDownloadCsv(nameBase, header, rows) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `ragnar_${nameBase}_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `optaris_defense_${nameBase}_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
 }
@@ -3426,7 +3426,7 @@ async function runSpeedtest() {
         }
         const card = (label, val, unit) => `
             <div class="bg-slate-800 rounded-lg p-4 text-center">
-                <div class="text-2xl font-bold text-Ragnar-400">${val}<span class="text-sm text-gray-400"> ${unit}</span></div>
+                <div class="text-2xl font-bold text-OptarisDefense-400">${val}<span class="text-sm text-gray-400"> ${unit}</span></div>
                 <div class="text-xs uppercase text-gray-500 mt-1">${label}</div>
             </div>`;
         out.innerHTML = `
@@ -3592,7 +3592,7 @@ async function runIperf() {
             return;
         }
         const card = (label, val, unit) => `<div class="bg-slate-800 rounded-lg p-4 text-center">
-            <div class="text-2xl font-bold text-Ragnar-400">${val}<span class="text-sm text-gray-400"> ${unit}</span></div>
+            <div class="text-2xl font-bold text-OptarisDefense-400">${val}<span class="text-sm text-gray-400"> ${unit}</span></div>
             <div class="text-xs uppercase text-gray-500 mt-1">${label}</div></div>`;
         let extra = '';
         if (d.protocol === 'TCP') extra = card('Retransmits', d.retransmits != null ? d.retransmits : '—', '');
@@ -3665,7 +3665,7 @@ function _ndMissingTool(data, reloadFnName) {
     // tool comes from a fixed server-side whitelist, so it is safe to inline.
     return `<div class="text-sm text-amber-300 mb-2">${escapeHtml(data.error || (tool + ' is not installed.'))}</div>
         <button onclick="installNetTool('${escapeHtml(tool)}', this, ${reloadFnName})"
-            class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-3 py-1.5 rounded text-sm whitespace-nowrap">
+            class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-3 py-1.5 rounded text-sm whitespace-nowrap">
             Install ${escapeHtml(tool)}</button>`;
 }
 
@@ -3929,7 +3929,7 @@ async function analyzePcap() {
         }
         const s = d.summary || {};
         const stat = (label, val) => `<div class="bg-slate-800 rounded-lg p-3 text-center">
-            <div class="text-lg font-bold text-Ragnar-400">${val}</div>
+            <div class="text-lg font-bold text-OptarisDefense-400">${val}</div>
             <div class="text-xs uppercase text-gray-500 mt-1">${label}</div></div>`;
         const stats = `<div class="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-3">
             ${stat('Packets', s.packets != null ? s.packets : '—')}
@@ -3963,7 +3963,7 @@ async function analyzePcap() {
             <span class="text-xs font-normal">— <span class="text-red-400">${ex.errors || 0} err</span> · <span class="text-amber-300">${ex.warnings || 0} warn</span> · <span class="text-gray-400">${ex.notes || 0} note</span></span></h4>
             ${exItems ? '<ul class="space-y-0.5 text-sm">' + exItems + '</ul>' : '<p class="text-sm text-gray-500">No expert findings.</p>'}`;
 
-        const aiBtn = `<div class="mt-3"><button onclick="aiAnalyzePcap()" class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-3 py-1.5 rounded text-sm whitespace-nowrap">🧠 Explain with AI</button>
+        const aiBtn = `<div class="mt-3"><button onclick="aiAnalyzePcap()" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-3 py-1.5 rounded text-sm whitespace-nowrap">🧠 Explain with AI</button>
             <div id="pcap-ai-results" class="hidden mt-2"></div></div>`;
         out.innerHTML = stats + `<div class="overflow-x-auto">${protoTable}${talkTable}</div>` + _pcapWifiHtml(d.wifi) + expert + aiBtn;
         _lastPcap = d;
@@ -7439,7 +7439,7 @@ async function loadInitialData() {
         // OPTIMIZATION: Defer console logs to much later (lowest priority)
         setTimeout(() => {
             loadConsoleLogs().then(() => {
-                addConsoleMessage('Ragnar Modern Web Interface Initialized', 'success');
+                addConsoleMessage('OptarisDefense Modern Web Interface Initialized', 'success');
                 addConsoleMessage('Dashboard loaded successfully', 'info');
             }).catch(err => {
                 console.warn('Console logs load failed:', err);
@@ -7926,7 +7926,7 @@ function displayAllNetworks(data) {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.14 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path>
                 </svg>
                 <p class="text-lg font-medium">No access points recorded yet</p>
-                <p class="text-sm text-gray-500 mt-2">Networks will appear here after Ragnar connects and scans them.</p>
+                <p class="text-sm text-gray-500 mt-2">Networks will appear here after OptarisDefense connects and scans them.</p>
             </div>`;
         return;
     }
@@ -7947,7 +7947,7 @@ function displayAllNetworks(data) {
         html += `
             <button type="button"
                     onclick="openNetworkFilePanel(${JSON.stringify(net.slug).replace(/"/g, '&quot;')}, ${JSON.stringify(net.ssid || net.slug).replace(/"/g, '&quot;')})"
-                    class="text-left bg-gray-800 hover:bg-gray-700 rounded-xl p-5 transition-colors border border-gray-700 hover:border-Ragnar-500 focus:outline-none focus:ring-2 focus:ring-Ragnar-500">
+                    class="text-left bg-gray-800 hover:bg-gray-700 rounded-xl p-5 transition-colors border border-gray-700 hover:border-OptarisDefense-500 focus:outline-none focus:ring-2 focus:ring-OptarisDefense-500">
                 <div class="flex items-start justify-between mb-3">
                     <div class="flex items-center gap-2 min-w-0">
                         <svg class="w-5 h-5 text-cyan-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -8073,7 +8073,7 @@ function displayNetworkFiles(data) {
                     <div class="flex items-center gap-4 text-xs text-gray-400 flex-shrink-0 ml-4">
                         ${size ? `<span>${size}</span>` : ''}
                         ${mod  ? `<span class="hidden sm:inline">${mod}</span>` : ''}
-                        ${clickable ? `<svg class="w-4 h-4 text-Ragnar-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>` : ''}
+                        ${clickable ? `<svg class="w-4 h-4 text-OptarisDefense-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>` : ''}
                     </div>
                 </div>`;
         });
@@ -9042,7 +9042,7 @@ function updateNetworkTableWithScanData(data) {
                 <div class="flex space-x-2">
                     ${sourceIcon}
                     <button onclick="scanSingleHostEnhanced('${host.ip}')" 
-                            class="text-xs px-2 py-1 bg-Ragnar-600 hover:bg-Ragnar-700 rounded transition-colors">
+                            class="text-xs px-2 py-1 bg-OptarisDefense-600 hover:bg-OptarisDefense-700 rounded transition-colors">
                         Scan
                     </button>
                 </div>
@@ -9966,7 +9966,7 @@ function setAttackGroupBy(groupBy) {
     currentAttackGroupBy = groupBy;
     document.querySelectorAll('.attack-groupby-btn').forEach(btn => {
         const isActive = btn.getAttribute('data-groupby') === groupBy;
-        btn.classList.toggle('bg-Ragnar-600', isActive);
+        btn.classList.toggle('bg-OptarisDefense-600', isActive);
         btn.classList.toggle('text-white', isActive);
         btn.classList.toggle('text-gray-400', !isActive);
         btn.classList.toggle('hover:text-white', !isActive);
@@ -10009,7 +10009,7 @@ function _buildAttackHostBlock(ip, hostLogs) {
         <div class="bg-slate-800 bg-opacity-50 rounded-lg border border-slate-700 overflow-hidden">
             <div class="px-4 py-3 bg-slate-900 bg-opacity-50 flex items-center justify-between cursor-pointer hover:bg-opacity-70 transition-colors" onclick="toggleAttackHost('${safeId}')">
                 <div class="flex items-center space-x-3">
-                    <svg class="w-5 h-5 text-Ragnar-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-OptarisDefense-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
                     </svg>
                     <span class="font-semibold text-lg">${ip}</span>
@@ -10570,7 +10570,7 @@ async function loadSecurityConfig() {
         } else {
             if (badge) { badge.classList.add('hidden'); }
             if (summary) {
-                summary.innerHTML = '<p class="text-sm text-red-400">Set up authentication to protect your Ragnar instance. Once enabled, all access will require login. The database will be encrypted and bound to this hardware.</p>';
+                summary.innerHTML = '<p class="text-sm text-red-400">Set up authentication to protect your OptarisDefense instance. Once enabled, all access will require login. The database will be encrypted and bound to this hardware.</p>';
             }
         }
 
@@ -10579,7 +10579,7 @@ async function loadSecurityConfig() {
             container.innerHTML = `
                 <div class="mb-4">
                     <div class="p-3 rounded-lg bg-yellow-900/30 border border-yellow-700 text-sm text-yellow-300 mb-4">
-                        Warning: Once authentication is enabled, you will need your password or recovery codes to access Ragnar.
+                        Warning: Once authentication is enabled, you will need your password or recovery codes to access OptarisDefense.
                         Make sure to save your recovery codes in a safe place.
                     </div>
                 </div>
@@ -10718,7 +10718,7 @@ async function handleAuthSetup(event) {
                         You will need them if you forget your password.
                     </p>
                     <p class="text-sm text-yellow-300 mb-4">
-                        The database will be encrypted automatically when you log out or when Ragnar shuts down.
+                        The database will be encrypted automatically when you log out or when OptarisDefense shuts down.
                         From the next start, a login will be required.
                     </p>
                     <div class="grid grid-cols-2 gap-2 mb-4">
@@ -11060,7 +11060,7 @@ function updatePwnButtons() {
             swapToPwnBtn.classList.remove('bg-amber-600', 'hover:bg-amber-700');
 
             if (!swapToPwnBtn._countdownRunning && _pwnSwapRequestedThisSession) {
-                // Poll pwnagotchi portal directly - works even after Ragnar goes down.
+                // Poll pwnagotchi portal directly - works even after OptarisDefense goes down.
                 // mode:'no-cors' gives an opaque response but won't throw, meaning server is up.
                 swapToPwnBtn._countdownRunning = true;
                 let elapsed = 0;
@@ -11110,13 +11110,13 @@ function updatePwnButtons() {
 
     const swapHint = document.getElementById('pwn-swap-hint');
     if (swapHint) {
-        let hint = 'Ragnar UI becomes unavailable once the service stops. Plan to reboot via SSH to come back.';
+        let hint = 'OptarisDefense UI becomes unavailable once the service stops. Plan to reboot via SSH to come back.';
         if (pwnStatus.installing) {
             hint = 'Installer is still running. Swapping will be available once it completes.';
         } else if (pwnStatus.state === 'switching' && pwnStatus.target_mode === 'pwnagotchi') {
             hint = 'Pwnagotchi is starting up. Click the button above to open its portal once ready.';
         } else if (pwnStatus.state === 'running' && pwnStatus.target_mode === 'pwnagotchi') {
-            hint = 'Pwnagotchi is running. Ragnar will shut down shortly.';
+            hint = 'Pwnagotchi is running. OptarisDefense will shut down shortly.';
         } else if (pwnStatus.state === 'switching') {
             hint = 'Switch scheduled. Wait for the service hand-off to complete.';
         }
@@ -11193,8 +11193,8 @@ async function savePwnConfig() {
             'ui.invert': document.getElementById('pwn-cfg-invert')?.checked || false,
             'ui.display.rotation': parseInt(document.getElementById('pwn-cfg-rotation')?.value || '180', 10),
             'ui.display.type': document.getElementById('pwn-cfg-display-type')?.value || 'waveshare_4',
-            'ui.web.username': document.getElementById('pwn-cfg-web-user')?.value || 'ragnar',
-            'ui.web.password': document.getElementById('pwn-cfg-web-pass')?.value || 'ragnar',
+            'ui.web.username': document.getElementById('pwn-cfg-web-user')?.value || 'optaris_defense',
+            'ui.web.password': document.getElementById('pwn-cfg-web-pass')?.value || 'optaris_defense',
             'ui.web.port': parseInt(document.getElementById('pwn-cfg-web-port')?.value || '8080', 10),
             'main.plugins.auto-tune.enabled': document.getElementById('pwn-cfg-auto-tune')?.checked || false,
             'main.plugins.webcfg.enabled': document.getElementById('pwn-cfg-webcfg')?.checked || false,
@@ -11759,7 +11759,7 @@ function formatPwnStateLabel(state) {
 }
 
 function formatPwnModeLabel(mode) {
-    return mode === 'pwnagotchi' ? 'Pwnagotchi' : 'Ragnar';
+    return mode === 'pwnagotchi' ? 'Pwnagotchi' : 'OptarisDefense';
 }
 
 function formatPwnPhaseLabel(phase) {
@@ -11797,21 +11797,21 @@ async function handlePwnInstallClick() {
         console.error('Failed to start Pwnagotchi installer:', error);
         addConsoleMessage(`Install failed: ${error.message}`, 'error');
         stopPwnLogStreaming();
-        setPwnLogEmptyMessage('Installer failed to start. Check Ragnar logs for details.');
+        setPwnLogEmptyMessage('Installer failed to start. Check OptarisDefense logs for details.');
     } finally {
         updatePwnButtons();
     }
 }
 
 async function handlePwnSwap(targetMode) {
-    const normalized = targetMode === 'pwnagotchi' ? 'pwnagotchi' : 'ragnar';
+    const normalized = targetMode === 'pwnagotchi' ? 'pwnagotchi' : 'optaris_defense';
 
     if (normalized === 'pwnagotchi' && !pwnStatus.installed) {
         addConsoleMessage('Install Pwnagotchi before swapping', 'warning');
         return;
     }
 
-    const buttonId = normalized === 'pwnagotchi' ? 'pwn-swap-to-pwn-btn' : 'pwn-swap-to-ragnar-btn';
+    const buttonId = normalized === 'pwnagotchi' ? 'pwn-swap-to-pwn-btn' : 'pwn-swap-to-optaris-defense-btn';
     const button = document.getElementById(buttonId);
     if (button) {
         button.disabled = true;
@@ -11943,7 +11943,7 @@ function initializePwnagotchiVisibility() {
 }
 
 // ============================================================================
-// PWNAGOTCHI BRIDGE UPDATES (independent of Ragnar self-update)
+// PWNAGOTCHI BRIDGE UPDATES (independent of OptarisDefense self-update)
 // ============================================================================
 
 let pwnUpdateInitialChecked = false; // wired in Task 9 (one-shot auto-check on Bridge reveal)
@@ -12376,7 +12376,7 @@ async function detectAndApplyHardware() {
     try {
         addConsoleMessage('Detecting hardware...', 'info');
         const infoDiv = document.getElementById('hardware-detection-info');
-        infoDiv.innerHTML = '<span class="text-Ragnar-400">🔍 Detecting hardware...</span>';
+        infoDiv.innerHTML = '<span class="text-OptarisDefense-400">🔍 Detecting hardware...</span>';
         
         const hardware = await fetchAPI('/api/config/detect-hardware');
         
@@ -12397,7 +12397,7 @@ async function detectAndApplyHardware() {
                 </div>
                 <div class="flex justify-between">
                     <span class="text-gray-400">Recommended Profile:</span>
-                    <span class="text-Ragnar-400 font-semibold">${hardware.recommended_profile}</span>
+                    <span class="text-OptarisDefense-400 font-semibold">${hardware.recommended_profile}</span>
                 </div>
             </div>
         `;
@@ -12442,7 +12442,7 @@ async function applyHardwareProfile(profileId) {
             });
             
             // Show restart prompt
-            if (confirm('Hardware profile applied successfully!\n\nRestart the Ragnar service now to apply changes?')) {
+            if (confirm('Hardware profile applied successfully!\n\nRestart the OptarisDefense service now to apply changes?')) {
                 await restartService();
             }
         } else {
@@ -12642,7 +12642,7 @@ async function checkForUpdates() {
                 updateBtn.onclick = autoStashAndUpdate;
                 updateBtn.className = 'w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded transition-colors';
                 updateElement('update-btn-text', 'Update System');
-                addConsoleMessage('Local edits detected. Ragnar will handle them automatically during the update.', 'info');
+                addConsoleMessage('Local edits detected. OptarisDefense will handle them automatically during the update.', 'info');
             } else {
                 updateBtn.onclick = performUpdate;
                 updateElement('update-btn-text', 'Update System');
@@ -12936,12 +12936,12 @@ async function checkForUpdatesQuiet() {
 }
 
 async function restartService() {
-    if (!confirm('This will restart the Ragnar service. The web interface may be temporarily unavailable. Continue?')) {
+    if (!confirm('This will restart the OptarisDefense service. The web interface may be temporarily unavailable. Continue?')) {
         return;
     }
     
     try {
-        addConsoleMessage('Restarting Ragnar service...', 'info');
+        addConsoleMessage('Restarting OptarisDefense service...', 'info');
         updateElement('service-status', 'Restarting...');
         document.getElementById('service-status').className = 'text-sm px-2 py-1 rounded bg-yellow-700 text-yellow-300';
         
@@ -13110,7 +13110,7 @@ async function updateVulnerabilityCount() {
 // ============================================================================
 
 async function startAPMode() {
-    if (!confirm('Start AP Mode?\n\nThis will:\n• Disconnect from current Wi-Fi\n• Start "Ragnar" access point\n• Enable 3-minute smart cycling\n• Allow Wi-Fi configuration via AP\n\nContinue?')) {
+    if (!confirm('Start AP Mode?\n\nThis will:\n• Disconnect from current Wi-Fi\n• Start "OptarisDefense" access point\n• Enable 3-minute smart cycling\n• Allow Wi-Fi configuration via AP\n\nContinue?')) {
         return;
     }
     
@@ -13179,7 +13179,7 @@ async function refreshWifiStatus() {
         const ipBadge = data.ip_address ? ` (${data.ip_address})` : '';
         
         if (data.ap_mode_active) {
-            const apMessage = `AP Mode Active: "${data.ap_ssid || 'Ragnar'}" | Connect to configure Wi-Fi`;
+            const apMessage = `AP Mode Active: "${data.ap_ssid || 'OptarisDefense'}" | Connect to configure Wi-Fi`;
             console.log('Setting AP mode status:', apMessage);
             updateWifiStatus(apMessage, 'ap-mode');
             statusIndicator.textContent = 'AP Mode';
@@ -13661,8 +13661,8 @@ function updateMultiInterfaceModeControls(state) {
             return;
         }
         const isActive = mode === activeMode;
-        button.classList.toggle('bg-Ragnar-500', isActive);
-        button.classList.toggle('border-Ragnar-400', isActive);
+        button.classList.toggle('bg-OptarisDefense-500', isActive);
+        button.classList.toggle('border-OptarisDefense-400', isActive);
         button.classList.toggle('text-white', isActive);
         button.classList.toggle('shadow-md', isActive);
         button.classList.toggle('bg-slate-800', !isActive);
@@ -13874,9 +13874,9 @@ function updateWifiInterfaceSwitchActiveState(activeInterface) {
     const buttons = buttonsContainer.querySelectorAll('button[data-interface]');
     buttons.forEach(button => {
         const isActive = button.dataset.interface === activeInterface;
-        button.classList.remove('bg-Ragnar-600', 'border-Ragnar-400', 'text-white', 'shadow-lg', 'bg-slate-800', 'border-slate-600', 'text-gray-300');
+        button.classList.remove('bg-OptarisDefense-600', 'border-OptarisDefense-400', 'text-white', 'shadow-lg', 'bg-slate-800', 'border-slate-600', 'text-gray-300');
         if (isActive) {
-            button.classList.add('bg-Ragnar-600', 'border-Ragnar-400', 'text-white', 'shadow-lg');
+            button.classList.add('bg-OptarisDefense-600', 'border-OptarisDefense-400', 'text-white', 'shadow-lg');
         } else {
             button.classList.add('bg-slate-800', 'border-slate-600', 'text-gray-300');
         }
@@ -13890,10 +13890,10 @@ function updateDashboardInterfaceSwitchActiveState(activeInterface) {
     }
     buttonsContainer.querySelectorAll('button[data-interface]').forEach(button => {
         const isActive = button.dataset.interface === activeInterface;
-        button.classList.remove('bg-Ragnar-500', 'text-white', 'border-Ragnar-400', 'shadow');
+        button.classList.remove('bg-OptarisDefense-500', 'text-white', 'border-OptarisDefense-400', 'shadow');
         button.classList.remove('bg-slate-800', 'text-gray-300', 'border-slate-700');
         if (isActive) {
-            button.classList.add('bg-Ragnar-500', 'text-white', 'border-Ragnar-400', 'shadow');
+            button.classList.add('bg-OptarisDefense-500', 'text-white', 'border-OptarisDefense-400', 'shadow');
         } else {
             button.classList.add('bg-slate-800', 'text-gray-300', 'border-slate-700');
         }
@@ -14309,7 +14309,7 @@ function displayWifiNetworks(data, options = {}) {
         const signal = network.signal || 0;
         const isSecure = network.security !== 'open' && network.security !== 'Open';
         // Check both backend-provided 'known' flag AND local knownNetworks list
-        // This ensures we catch both Ragnar's known networks AND NetworkManager system profiles
+        // This ensures we catch both OptarisDefense's known networks AND NetworkManager system profiles
         const isKnown = network.known || network.has_system_profile || knownNetworks.includes(ssid);
         const isCurrent = network.in_use || false;
         
@@ -15529,7 +15529,7 @@ function showThreatIntelSubtab(which) {
     const cBtn = document.getElementById('ti-subtab-compliance');
     if (vulns) vulns.classList.toggle('hidden', which !== 'vulns');
     if (comp) comp.classList.toggle('hidden', which !== 'compliance');
-    const active = 'ti-subtab px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-Ragnar-600 text-white';
+    const active = 'ti-subtab px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-OptarisDefense-600 text-white';
     const idle = 'ti-subtab px-4 py-2 rounded-lg text-sm font-semibold transition-colors text-slate-400 hover:bg-slate-700 hover:text-white';
     if (vBtn) vBtn.className = which === 'vulns' ? active : idle;
     if (cBtn) cBtn.className = which === 'compliance' ? active : idle;
@@ -15565,7 +15565,7 @@ function setComplianceFramework(fw) {
     const cisBtn = document.getElementById('compliance-tab-cis');
     const pciBtn = document.getElementById('compliance-tab-pci');
     if (cisBtn && pciBtn) {
-        const active = 'px-4 py-1.5 text-sm bg-Ragnar-600 text-white';
+        const active = 'px-4 py-1.5 text-sm bg-OptarisDefense-600 text-white';
         const idle = 'px-4 py-1.5 text-sm bg-slate-700 text-gray-300 hover:bg-slate-600';
         cisBtn.className = fw === 'cis' ? active : idle;
         pciBtn.className = fw === 'pci' ? active : idle;
@@ -16350,8 +16350,8 @@ async function startOrchestrator() {
         const modeClass = automationActive ? 'text-green-400 font-semibold' : 'text-purple-300 font-semibold';
 
         addConsoleMessage(automationActive ? 'Automation enabled successfully' : 'Automation queued - waiting for connectivity', 'success');
-        updateElement('Ragnar-mode', modeLabelText);
-        const modeLabel = document.getElementById('Ragnar-mode');
+        updateElement('OptarisDefense-mode', modeLabelText);
+        const modeLabel = document.getElementById('OptarisDefense-mode');
         if (modeLabel) {
             modeLabel.className = modeClass;
         }
@@ -16395,14 +16395,14 @@ async function stopOrchestrator() {
 
     if (data.success) {
         addConsoleMessage('Automation disabled - Orchestrator sleeping', 'warning');
-        updateElement('Ragnar-mode', 'Sleeping');
-        const modeLabel = document.getElementById('Ragnar-mode');
+        updateElement('OptarisDefense-mode', 'Sleeping');
+        const modeLabel = document.getElementById('OptarisDefense-mode');
         if (modeLabel) {
             modeLabel.className = 'text-purple-300 font-semibold';
         }
 
         if (statusEl) {
-            statusEl.textContent = 'Automation disabled - Ragnar is sleeping';
+            statusEl.textContent = 'Automation disabled - OptarisDefense is sleeping';
             statusEl.className = 'text-sm text-orange-600 mt-4';
 
             // Hide status after 3 seconds
@@ -16744,8 +16744,8 @@ function updateDashboardStatus(data) {
     });
 
     // Update status - use the actual e-paper display text
-    updateElement('Ragnar-status', data.ragnar_status || 'IDLE');
-    updateElement('Ragnar-says', (data.ragnar_says || 'Hacking away...'));
+    updateElement('OptarisDefense-status', data.optaris_defense_status || 'IDLE');
+    updateElement('OptarisDefense-says', (data.optaris_defense_says || 'Hacking away...'));
     
     // Update mode and handle manual controls
     const automationEnabled = typeof data.automation_enabled === 'boolean' ? data.automation_enabled : !Boolean(data.manual_mode);
@@ -16761,9 +16761,9 @@ function updateDashboardStatus(data) {
         modeClass = 'text-orange-400 font-semibold';
     }
 
-    updateElement('Ragnar-mode', modeLabel);
+    updateElement('OptarisDefense-mode', modeLabel);
     
-    const modeElement = document.getElementById('Ragnar-mode');
+    const modeElement = document.getElementById('OptarisDefense-mode');
     if (modeElement) {
         modeElement.className = modeClass;
     }
@@ -17001,7 +17001,7 @@ function updatePrimaryConnectionCard(data) {
     } else if (data.wifi_connected) {
         const ssid = data.current_ssid || 'Connected';
         label.textContent = data.ap_mode_active ? 'AP Mode' : 'WiFi';
-        name.textContent = data.ap_mode_active ? `AP: ${data.ap_ssid || 'Ragnar'}` : ssid;
+        name.textContent = data.ap_mode_active ? `AP: ${data.ap_ssid || 'OptarisDefense'}` : ssid;
         if (ip) ip.textContent = '';
         if (status) status.className = 'w-3 h-3 bg-green-500 rounded-full pulse-glow';
         if (icon) { icon.innerHTML = wifiIcon; icon.className = 'text-green-400'; }
@@ -17271,7 +17271,7 @@ function displayCredentialsTable(data) {
         if (creds && creds.length > 0) {
             html += `
                 <div class="bg-gray-800 rounded-lg p-4">
-                    <h3 class="text-lg font-semibold text-Ragnar-400 mb-3">${service.toUpperCase()} (${creds.length})</h3>
+                    <h3 class="text-lg font-semibold text-OptarisDefense-400 mb-3">${service.toUpperCase()} (${creds.length})</h3>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-700">
                             <thead>
@@ -17334,12 +17334,12 @@ function displayLootTable(data) {
         const encodedPath = item.path ? encodeURIComponent(item.path) : '';
         const buttonClasses = `bg-gray-800 rounded-lg p-4 text-left hover:bg-gray-700 transition-colors w-full ${encodedPath ? '' : 'opacity-60 cursor-not-allowed'}`;
         const clickAttr = encodedPath ? `onclick="openLootFile('${encodedPath}')"` : 'disabled aria-disabled="true"';
-        const actionHint = encodedPath ? '<p class="text-xs text-Ragnar-400 mt-3">Open in Files →</p>' : '';
+        const actionHint = encodedPath ? '<p class="text-xs text-OptarisDefense-400 mt-3">Open in Files →</p>' : '';
         
         return `
             <button type="button" class="${buttonClasses}" ${clickAttr}>
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-lg font-semibold text-Ragnar-400 truncate" title="${filename}">${filename}</h3>
+                    <h3 class="text-lg font-semibold text-OptarisDefense-400 truncate" title="${filename}">${filename}</h3>
                     <span class="text-xs text-gray-400 ml-2">${size}</span>
                 </div>
                 <div class="space-y-2 text-sm text-gray-300">
@@ -17490,7 +17490,7 @@ function displayConfigForm(config) {
     for (const [sectionName, keys] of Object.entries(sections)) {
         html += `
             <div class="bg-slate-800 bg-opacity-50 rounded-lg p-4">
-                <h3 class="text-lg font-bold mb-4 text-Ragnar-400">${sectionName}</h3>
+                <h3 class="text-lg font-bold mb-4 text-OptarisDefense-400">${sectionName}</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         `;
         
@@ -17531,7 +17531,7 @@ function displayConfigForm(config) {
                                 ${label}
                                 <span class="info-icon" tabindex="0" role="button" aria-label="${description}" data-tooltip="${description}">ⓘ</span>
                             </label>
-                            <select name="${key}" class="w-full px-4 py-2 rounded-lg bg-slate-700 border border-slate-600 focus:border-Ragnar-500 focus:ring-1 focus:ring-Ragnar-500">
+                            <select name="${key}" class="w-full px-4 py-2 rounded-lg bg-slate-700 border border-slate-600 focus:border-OptarisDefense-500 focus:ring-1 focus:ring-OptarisDefense-500">
                                 ${selectOptions.map(option => `<option value="${option.value}" ${option.value === String(selectedValue) ? 'selected' : ''}>${option.label}</option>`).join('')}
                             </select>
                         </div>
@@ -17545,7 +17545,7 @@ function displayConfigForm(config) {
                     html += `
                         <label class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:bg-opacity-50 transition-colors cursor-pointer ${disabledClass}">
                             <input type="checkbox" name="${key}" ${value ? 'checked' : ''} ${disabledAttr}
-                                   class="w-5 h-5 rounded bg-slate-700 border-slate-600 text-Ragnar-500 focus:ring-Ragnar-500"
+                                   class="w-5 h-5 rounded bg-slate-700 border-slate-600 text-OptarisDefense-500 focus:ring-OptarisDefense-500"
                                    ${handlerAttr}>
                             <span class="flex items-center gap-2">
                                 ${label}
@@ -17659,7 +17659,7 @@ function displayConfigForm(config) {
                                 <span class="info-icon" tabindex="0" role="button" aria-label="${description}" data-tooltip="${description}">ⓘ</span>
                             </label>
                             <input type="${type}" name="${key}" value="${value}"
-                                   class="w-full px-4 py-2 rounded-lg bg-slate-700 border border-slate-600 focus:border-Ragnar-500 focus:ring-1 focus:ring-Ragnar-500">
+                                   class="w-full px-4 py-2 rounded-lg bg-slate-700 border border-slate-600 focus:border-OptarisDefense-500 focus:ring-1 focus:ring-OptarisDefense-500">
                         </div>
                     `;
                 }
@@ -17670,7 +17670,7 @@ function displayConfigForm(config) {
     }
     
     html += `
-        <button type="submit" class="w-full bg-Ragnar-600 hover:bg-Ragnar-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+        <button type="submit" class="w-full bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
             Save Configuration
         </button>
     </form></div>`;
@@ -17732,13 +17732,13 @@ function displayConfigForm(config) {
                 const label = getConfigLabel(key);
                 const description = escapeHtml(getConfigDescription(key));
                 if (typeof value === 'boolean') {
-                    wdHtml += `<label class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:bg-opacity-50 transition-colors cursor-pointer"><input type="checkbox" name="${key}" ${value ? 'checked' : ''} class="w-5 h-5 rounded bg-slate-700 border-slate-600 text-Ragnar-500 focus:ring-Ragnar-500"><span class="flex items-center gap-2">${label}<span class="info-icon" tabindex="0" role="button" aria-label="${description}" data-tooltip="${description}">ⓘ</span></span></label>`;
+                    wdHtml += `<label class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:bg-opacity-50 transition-colors cursor-pointer"><input type="checkbox" name="${key}" ${value ? 'checked' : ''} class="w-5 h-5 rounded bg-slate-700 border-slate-600 text-OptarisDefense-500 focus:ring-OptarisDefense-500"><span class="flex items-center gap-2">${label}<span class="info-icon" tabindex="0" role="button" aria-label="${description}" data-tooltip="${description}">ⓘ</span></span></label>`;
                 } else {
-                    wdHtml += `<div class="space-y-2"><label class="flex items-center gap-2 text-sm text-gray-400">${label}<span class="info-icon" tabindex="0" role="button" aria-label="${description}" data-tooltip="${description}">ⓘ</span></label><input type="text" name="${key}" value="${value ?? ''}" class="w-full px-4 py-2 rounded-lg bg-slate-700 border border-slate-600 focus:border-Ragnar-500 focus:ring-1 focus:ring-Ragnar-500"></div>`;
+                    wdHtml += `<div class="space-y-2"><label class="flex items-center gap-2 text-sm text-gray-400">${label}<span class="info-icon" tabindex="0" role="button" aria-label="${description}" data-tooltip="${description}">ⓘ</span></label><input type="text" name="${key}" value="${value ?? ''}" class="w-full px-4 py-2 rounded-lg bg-slate-700 border border-slate-600 focus:border-OptarisDefense-500 focus:ring-1 focus:ring-OptarisDefense-500"></div>`;
                 }
             }
         });
-        wdHtml += '</div><button type="submit" class="w-full mt-4 bg-Ragnar-600 hover:bg-Ragnar-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">Save Wardriving Settings</button></form>';
+        wdHtml += '</div><button type="submit" class="w-full mt-4 bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">Save Wardriving Settings</button></form>';
         wdSlot.innerHTML = wdHtml;
         document.getElementById('wardriving-config-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -17788,7 +17788,7 @@ function handleEnableAttacksToggle(checkbox) {
             return;
         }
         showNotification('Automated attacks are enabled. Ensure you are authorized before proceeding.', 'warning');
-        addConsoleMessage('Automated attacks enabled. Ragnar will launch offensive actions on discovered hosts.', 'warning');
+        addConsoleMessage('Automated attacks enabled. OptarisDefense will launch offensive actions on discovered hosts.', 'warning');
     } else {
         addConsoleMessage('Automated attacks disabled.', 'info');
     }
@@ -17896,8 +17896,8 @@ async function toggleAIEnabled() {
             ? 'p-3 rounded-lg text-sm bg-green-900/30 border border-green-700'
             : 'p-3 rounded-lg text-sm bg-blue-900/30 border border-blue-700';
         statusMessage.textContent = desiredState
-            ? '✓ AI Insights enabled. Ragnar will request GPT analysis for dashboards.'
-            : 'ℹ AI Insights disabled. Ragnar will stop requesting GPT analysis until re-enabled.';
+            ? '✓ AI Insights enabled. OptarisDefense will request GPT analysis for dashboards.'
+            : 'ℹ AI Insights disabled. OptarisDefense will stop requesting GPT analysis until re-enabled.';
         statusDiv.classList.remove('hidden');
 
         setTimeout(() => {
@@ -18221,7 +18221,7 @@ function setFileSort(sort) {
     currentFileSort = sort;
     document.querySelectorAll('.file-sort-btn').forEach(btn => {
         const isActive = btn.getAttribute('data-sort') === sort;
-        btn.classList.toggle('bg-Ragnar-600', isActive);
+        btn.classList.toggle('bg-OptarisDefense-600', isActive);
         btn.classList.toggle('text-white', isActive);
         btn.classList.toggle('text-gray-400', !isActive);
         btn.classList.toggle('hover:text-white', !isActive);
@@ -18345,10 +18345,10 @@ function displayFiles(files, path, highlightFile = null) {
         const highlightKey = encodeURIComponent(highlightFile);
         const target = fileList.querySelector(`[data-file-key="${highlightKey}"]`);
         if (target) {
-            target.classList.add('ring-2', 'ring-Ragnar-500', 'ring-offset-2', 'ring-offset-slate-900');
+            target.classList.add('ring-2', 'ring-OptarisDefense-500', 'ring-offset-2', 'ring-offset-slate-900');
             target.scrollIntoView({ behavior: 'smooth', block: 'center' });
             setTimeout(() => {
-                target.classList.remove('ring-2', 'ring-Ragnar-500', 'ring-offset-2', 'ring-offset-slate-900');
+                target.classList.remove('ring-2', 'ring-OptarisDefense-500', 'ring-offset-2', 'ring-offset-slate-900');
             }, 4000);
             return true;
         }
@@ -19011,9 +19011,9 @@ function sortProcesses(sortBy) {
     document.querySelectorAll('.process-sort-btn').forEach(btn => {
         if (btn.dataset.sort === sortBy) {
             btn.classList.remove('bg-gray-600');
-            btn.classList.add('bg-Ragnar-600');
+            btn.classList.add('bg-OptarisDefense-600');
         } else {
-            btn.classList.remove('bg-Ragnar-600');
+            btn.classList.remove('bg-OptarisDefense-600');
             btn.classList.add('bg-gray-600');
         }
     });
@@ -19173,9 +19173,9 @@ function filterNetkbData(filterType) {
     document.querySelectorAll('.netkb-filter-btn').forEach(btn => {
         if (btn.dataset.filter === filterType) {
             btn.classList.remove('bg-gray-600');
-            btn.classList.add('bg-Ragnar-600');
+            btn.classList.add('bg-OptarisDefense-600');
         } else {
-            btn.classList.remove('bg-Ragnar-600');
+            btn.classList.remove('bg-OptarisDefense-600');
             btn.classList.add('bg-gray-600');
         }
     });
@@ -19486,7 +19486,7 @@ function setThreatIntelFilter(status, options = {}) {
 
     threatIntelStatusFilter = status;
 
-    const activeClasses = 'threat-intel-filter-btn px-3 py-2 rounded-lg text-sm font-semibold border border-Ragnar-500 bg-Ragnar-600 text-white shadow-md shadow-Ragnar-500/40';
+    const activeClasses = 'threat-intel-filter-btn px-3 py-2 rounded-lg text-sm font-semibold border border-OptarisDefense-500 bg-OptarisDefense-600 text-white shadow-md shadow-OptarisDefense-500/40';
     const inactiveClasses = 'threat-intel-filter-btn px-3 py-2 rounded-lg text-sm font-semibold border border-slate-700 bg-slate-800 text-slate-300 hover:text-white hover:border-slate-500';
 
     document.querySelectorAll('.threat-intel-filter-btn').forEach(btn => {
@@ -19623,7 +19623,7 @@ function displayGroupedVulnerabilities(data) {
                             </p>
                         </div>
                     </div>
-                    <button onclick="toggleHostDetails('host-${index}')" class="bg-Ragnar-600 hover:bg-Ragnar-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    <button onclick="toggleHostDetails('host-${index}')" class="bg-OptarisDefense-600 hover:bg-OptarisDefense-700 text-white px-4 py-2 rounded-lg transition-colors">
                         <span id="host-${index}-toggle">Show Details</span>
                     </button>
                 </div>
@@ -19689,7 +19689,7 @@ function displayGroupedVulnerabilities(data) {
                                                 <div class="text-sm text-white font-mono">${vulnText}</div>
                                             </div>
                                             <button onclick='showVulnerabilityDetails(${JSON.stringify(vuln).replace(/'/g, "\\'")})' 
-                                                    class="ml-2 text-Ragnar-400 hover:text-Ragnar-300 text-xs">
+                                                    class="ml-2 text-OptarisDefense-400 hover:text-OptarisDefense-300 text-xs">
                                                 Details
                                             </button>
                                         </div>
@@ -19754,7 +19754,7 @@ function showVulnerabilityDetails(vuln) {
             
             linksHtml += `
                 <div class="bg-slate-700/50 rounded px-3 py-2 flex items-center space-x-2">
-                    <span class="text-Ragnar-400 font-mono text-sm">${cve}</span>
+                    <span class="text-OptarisDefense-400 font-mono text-sm">${cve}</span>
                     <a href="${nvdUrl}" target="_blank" rel="noopener noreferrer" 
                        class="text-blue-400 hover:text-blue-300 transition-colors" 
                        title="View on NIST NVD">
@@ -20493,8 +20493,8 @@ let trafficBandwidthChart = null;
 let trafficProtocolChart = null;
 const TRAFFIC_HISTORY_SIZE = 60; // 60 seconds of history
 
-// Ragnar's local IPs (to identify self-traffic in UI)
-let ragnarLocalIps = new Set(['127.0.0.1', 'localhost']);
+// OptarisDefense's local IPs (to identify self-traffic in UI)
+let optaris_defenseLocalIps = new Set(['127.0.0.1', 'localhost']);
 
 /**
  * Check server capabilities and enable advanced features if available
@@ -20621,8 +20621,8 @@ function updateTrafficSummary(summary) {
     // Store local IPs for UI labeling
     const localIps = summary.excluded_local_ips || summary.local_ips;
     if (localIps && Array.isArray(localIps)) {
-        ragnarLocalIps = new Set(localIps);
-        console.log('[Traffic] Ragnar local IPs:', Array.from(ragnarLocalIps));
+        optaris_defenseLocalIps = new Set(localIps);
+        console.log('[Traffic] OptarisDefense local IPs:', Array.from(optaris_defenseLocalIps));
     }
 }
 
@@ -20821,8 +20821,8 @@ async function loadTrafficHosts() {
         updateTrafficDirectionChart(totalBytesIn, totalBytesOut);
 
         container.innerHTML = data.hosts.map(host => {
-            const isLocalIp = ragnarLocalIps.has(host.ip);
-            const localBadge = isLocalIp ? '<span class="ml-1 px-1 py-0.5 text-xs bg-purple-600 text-purple-100 rounded">RAGNAR</span>' : '';
+            const isLocalIp = optaris_defenseLocalIps.has(host.ip);
+            const localBadge = isLocalIp ? '<span class="ml-1 px-1 py-0.5 text-xs bg-purple-600 text-purple-100 rounded">OPTARIS_DEFENSE</span>' : '';
             const bgClass = isLocalIp ? 'bg-purple-900 bg-opacity-30 border border-purple-600 border-opacity-30' : 'bg-slate-700 bg-opacity-50 hover:bg-slate-600 hover:bg-opacity-50';
             const portsCount = host.ports_contacted?.length || 0;
             const protocolsCount = Object.keys(host.protocols || {}).length;
@@ -21601,7 +21601,7 @@ async function showTrafficHostDetail(ip) {
         }
 
         const host = data.host;
-        const isLocal = ragnarLocalIps.has(host.ip);
+        const isLocal = optaris_defenseLocalIps.has(host.ip);
         const protocols = Object.entries(host.protocols || {});
         const ports = host.ports_contacted || [];
         const dnsQueries = host.dns_queries || [];
@@ -21640,7 +21640,7 @@ async function showTrafficHostDetail(ip) {
                 <div class="flex items-center justify-between mb-2">
                     <div class="flex items-center gap-2">
                         <span class="font-mono text-lg text-white">${escapeHtml(host.ip)}</span>
-                        ${isLocal ? '<span class="px-2 py-0.5 text-xs bg-purple-600 text-purple-100 rounded">RAGNAR</span>' : ''}
+                        ${isLocal ? '<span class="px-2 py-0.5 text-xs bg-purple-600 text-purple-100 rounded">OPTARIS_DEFENSE</span>' : ''}
                         ${host.hostname ? `<span class="text-gray-400">(${escapeHtml(host.hostname)})</span>` : ''}
                     </div>
                     ${host.mac ? `<span class="font-mono text-xs text-gray-500">${escapeHtml(host.mac)}</span>` : ''}
@@ -22352,7 +22352,7 @@ function _renderCompanionBars(status) {
             `<div class="bg-slate-800/40 border border-slate-700 rounded-lg px-4 py-2 flex items-center gap-3 flex-wrap">
                 <span class="text-xs font-bold text-purple-400">Companion</span>
                 <span class="w-2 h-2 rounded-full bg-gray-500 animate-pulse"></span>
-                <span class="text-xs text-gray-400">Ragnar looking for Huginn or Piglet...</span>
+                <span class="text-xs text-gray-400">OptarisDefense looking for Huginn or Piglet...</span>
             </div>`;
         return;
     }
@@ -22429,7 +22429,7 @@ function _companionBarHtml(c, single, status) {
 
     const statusText = c.connected
         ? ''
-        : '<span class="text-xs text-gray-400">Ragnar looking for Huginn or Piglet...</span>';
+        : '<span class="text-xs text-gray-400">OptarisDefense looking for Huginn or Piglet...</span>';
 
     return `<div class="bg-slate-800/40 border border-slate-700 rounded-lg px-4 py-2 flex items-center gap-3 flex-wrap">
             <span class="text-xs font-bold text-purple-400">${escapeHtml(name)}</span>
@@ -22897,7 +22897,7 @@ function _pollKioskStatusUntilStable(expectEnabled, maxAttempts = 12) {
             }
             if (isStableFailure) {
                 _setKioskMessage(
-                    'Kiosk service failed. Check `journalctl -u ragnar-kiosk` on the Pi.',
+                    'Kiosk service failed. Check `journalctl -u optaris-defense-kiosk` on the Pi.',
                     'error'
                 );
                 return;
@@ -23463,7 +23463,7 @@ let _wdVikingMarker = null;
 let _wdGpsInterval = null;
 let _wdSelectedSessionId = null; // null = current/live session
 
-const _VIKING_ICON_HTML = `<img src="/web/images/ragnar.ico" alt="Ragnar" style="width:36px;height:48px;display:block;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.5));">`;
+const _VIKING_ICON_HTML = `<img src="/web/images/optaris_defense.ico" alt="OptarisDefense" style="width:36px;height:48px;display:block;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.5));">`;
 
 function toggleWardrivingMap() {
     const container = document.getElementById('wd-map-container');
@@ -23565,7 +23565,7 @@ async function _updateVikingPosition() {
                 _wdLastFixLon = gps.longitude;
             }
             const stationaryNote = stationary ? '<br><span style="color:#94a3b8">Stationär (drift dämpad)</span>' : '';
-            const popup = `<b>Ragnar</b><br>${speed.toFixed(1)} km/h${stationaryNote}`;
+            const popup = `<b>OptarisDefense</b><br>${speed.toFixed(1)} km/h${stationaryNote}`;
             if (!_wdVikingMarker) {
                 const icon = L.divIcon({
                     html: _VIKING_ICON_HTML,
@@ -25951,7 +25951,7 @@ function _buildMapLegend(deviceColors, deviceLabels) {
     const el = document.getElementById('map-legend');
     if (!el) return;
     el.innerHTML = '';
-    const order = ['router', 'access_point', 'extender', 'switch', 'ragnar', 'laptop', 'workstation', 'server', 'nas', 'sbc', 'phone', 'tablet', 'wearable', 'printer', 'camera', 'smart_tv', 'speaker', 'doorbell', 'thermostat', 'appliance', 'iot', 'media', 'gaming', 'vehicle', 'apple', 'unknown'];
+    const order = ['router', 'access_point', 'extender', 'switch', 'optaris_defense', 'laptop', 'workstation', 'server', 'nas', 'sbc', 'phone', 'tablet', 'wearable', 'printer', 'camera', 'smart_tv', 'speaker', 'doorbell', 'thermostat', 'appliance', 'iot', 'media', 'gaming', 'vehicle', 'apple', 'unknown'];
     order.forEach(t => {
         const color = deviceColors[t];
         const label = deviceLabels[t];
@@ -26063,7 +26063,7 @@ async function loadNetworkMap() {
             risk: n.risk || 0,
             last_seen: n.last_seen,
             is_gateway: n.is_gateway,
-            is_ragnar: n.is_ragnar,
+            is_optaris_defense: n.is_optaris_defense,
         }));
 
         const links = topo.links.map(l => ({
@@ -26130,7 +26130,7 @@ function renderNetworkMap(nodes, links, deviceColors, deviceIcons) {
     // Node radius based on type
     function nodeRadius(d) {
         if (d.is_gateway) return 22;
-        if (d.is_ragnar) return 20;
+        if (d.is_optaris_defense) return 20;
         if (d.type === 'access_point') return 16;
         if (d.type === 'server') return 15;
         return 13;
@@ -26163,7 +26163,7 @@ function renderNetworkMap(nodes, links, deviceColors, deviceIcons) {
                 <div class="text-xs">Ports: ${d.ports.length}${d.ports.length > 0 && d.ports.length <= 8 ? ' (' + d.ports.join(', ') + ')' : ''}</div>
                 <div class="text-xs">Risk: <span class="${riskBadge}">${d.risk}</span></div>
                 ${d.is_gateway ? '<div class="text-xs text-amber-400 mt-1">Default Gateway</div>' : ''}
-                ${d.is_ragnar ? '<div class="text-xs text-sky-400 mt-1">Ragnar Scanner</div>' : ''}
+                ${d.is_optaris_defense ? '<div class="text-xs text-sky-400 mt-1">OptarisDefense Scanner</div>' : ''}
                 <div class="text-xs text-blue-400 mt-1">Click to view details</div>`;
         })
         .on('mousemove', (event) => {
@@ -26191,7 +26191,7 @@ function renderNetworkMap(nodes, links, deviceColors, deviceIcons) {
 
     // Device icon (SVG path inside each node)
     node.each(function(d) {
-        const iconPath = deviceIcons[d.is_ragnar ? 'ragnar' : d.type] || deviceIcons['unknown'];
+        const iconPath = deviceIcons[d.is_optaris_defense ? 'optaris_defense' : d.type] || deviceIcons['unknown'];
         if (!iconPath) return;
         const r = nodeRadius(d);
         const iconScale = r / 16; // icons are 24x24, scale to fit in radius
@@ -26210,7 +26210,7 @@ function renderNetworkMap(nodes, links, deviceColors, deviceIcons) {
         .attr('font-size', '10px')
         .text(d => {
             if (d.is_gateway) return 'Gateway';
-            if (d.is_ragnar) return 'Ragnar';
+            if (d.is_optaris_defense) return 'OptarisDefense';
             return d.label || d.ip;
         });
 

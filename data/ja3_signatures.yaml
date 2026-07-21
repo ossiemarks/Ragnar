@@ -1,4 +1,4 @@
-# Ragnar JA3 signature database
+# OptarisDefense JA3 signature database
 #
 # Format:
 #   - ja3: <md5 hex>
@@ -45,11 +45,11 @@
 - ja3: 1aa7bf8b97e540ca5edd75f7b8384bfb
   label: "ESPHome / mbedTLS (ESP32 firmware)"
   confidence: medium
-  source: ragnar-builtin
+  source: optaris-defense-builtin
   category: iot
 
 - ja3: 9e10692d62b2128ab966bcae67f4f54b
   label: "Tuya IoT cloud client"
   confidence: medium
-  source: ragnar-builtin
+  source: optaris-defense-builtin
   category: iot

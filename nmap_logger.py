@@ -10,7 +10,7 @@ import threading
 
 class NmapLogger:
     """
-    Centralized logger for all nmap operations in Ragnar.
+    Centralized logger for all nmap operations in OptarisDefense.
     Ensures all nmap commands and their results are logged to data/logs/nmap.log
     """
     
@@ -121,5 +121,5 @@ class NmapLogger:
                 self.logger.error(f"EXCEPTION{context_str}: {str(e)}")
             raise
 
-# Global instance for use throughout Ragnar
+# Global instance for use throughout OptarisDefense
 nmap_logger = NmapLogger()

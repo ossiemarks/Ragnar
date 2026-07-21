@@ -61,7 +61,7 @@ class RDPBruteforce:
             else:
                 logger.warning(f"Existing credentials for {ip} no longer valid, will re-bruteforce")
         
-        self.shared_data.ragnarorch_status = "RDPBruteforce"
+        self.shared_data.optaris_defenseorch_status = "RDPBruteforce"
         success, results = self.bruteforce_rdp(ip, port)
         return 'success' if success else 'failed'
     

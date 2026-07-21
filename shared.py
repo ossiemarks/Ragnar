@@ -1,6 +1,6 @@
 #shared.py
 # Description:
-# This file, shared.py, is a core component responsible for managing shared resources and data for different modules in the Ragnar project.
+# This file, shared.py, is a core component responsible for managing shared resources and data for different modules in the OptarisDefense project.
 # It handles the initialization and configuration of paths, logging, fonts, and images. Additionally, it sets up the environment, 
 # creates necessary directories and files, and manages the loading and saving of configuration settings.
 # 
@@ -199,7 +199,7 @@ class SharedData:
     """Shared data between the different modules."""
     def __init__(self):
         # Detect Pager mode (set by pager_payload.sh before Python launch)
-        self._pager_mode = os.environ.get('RAGNAR_PAGER_MODE') == '1'
+        self._pager_mode = os.environ.get('OPTARIS_DEFENSE_PAGER_MODE') == '1'
 
         self.initialize_paths() # Initialize the paths used by the application
 
@@ -484,7 +484,7 @@ class SharedData:
     def _check_auth_configured(self):
         """Check if authentication is configured by looking for the auth database."""
         import sqlite3
-        auth_db_path = os.path.join(self.datadir, 'ragnar_auth.db')
+        auth_db_path = os.path.join(self.datadir, 'optaris_defense_auth.db')
         if not os.path.exists(auth_db_path):
             return False
         try:
@@ -603,7 +603,7 @@ class SharedData:
         """ You can mofify the json file shared_config.json or on the web page to change the default values of the configuration settings."""
         default_profile = DISPLAY_PROFILES.get(DEFAULT_EPD_TYPE, {"ref_width": 122, "ref_height": 250, "default_flip": False})
         return {
-            "__title_Ragnar__": "Settings",
+            "__title_OptarisDefense__": "Settings",
             "manual_mode": False,
             "websrv": True,
             "web_bind_interface": "",
@@ -684,8 +684,8 @@ class SharedData:
             "__title_wifi__": "Wi-Fi Management",
             "wifi_known_networks": [],
             "wifi_default_interface": "auto",
-            "wifi_ap_ssid": "Ragnar",
-            "wifi_ap_password": "ragnarconnect",
+            "wifi_ap_ssid": "OptarisDefense",
+            "wifi_ap_password": "optaris_defenseconnect",
             "wifi_connection_timeout": 60,
             "wifi_max_attempts": 3,
             "wifi_scan_interval": 300,
@@ -734,7 +734,7 @@ class SharedData:
             "net_integrity_batch_size": 3,           # capture-scanners run per cycle (round-robin)
             "net_integrity_interface": "",           # capture iface pin; '' = auto (wired link-up first)
             # Browser terminal (interactive shell over the web UI). OFF by
-            # default — it exposes a shell on the Pi (as the 'ragnar' user),
+            # default — it exposes a shell on the Pi (as the 'optaris_defense' user),
             # gated by login. Enable in Settings only if you want it.
             "terminal_enabled": False,
 
@@ -828,7 +828,7 @@ class SharedData:
 
             "__title_pwnagotchi__": "Pwnagotchi Integration",
             "pwnagotchi_installed": False,
-            "pwnagotchi_mode": "ragnar",
+            "pwnagotchi_mode": "optaris_defense",
             "pwnagotchi_manual_mode": False,
             "pwnagotchi_last_switch": "",
             "pwnagotchi_last_status": "Not installed",
@@ -1132,7 +1132,7 @@ class SharedData:
             self.web_screen_reversed = 0
 
             # NOTE: Test image code below was used to verify EPD hardware. 
-            # Commented out to allow normal Ragnar display to show.
+            # Commented out to allow normal OptarisDefense display to show.
             # Uncomment if you need to test the display again.
             # from PIL import ImageDraw
             # test_image = Image.new('1', (self.width, self.height), 255)
@@ -1150,7 +1150,7 @@ class SharedData:
         self.orchestrator_should_exit = False
         self.webapp_should_exit = False
         self.web_portal_active = True  # Tracks whether the web portal is currently running
-        self.ragnar_instance = None
+        self.optaris_defense_instance = None
         self.gateway_info = {}  # Populated by NetworkScanner.get_gateway_info()
         self.wifichanged = False
         self.bluetooth_active = False
@@ -1161,10 +1161,10 @@ class SharedData:
         self.wifi_signal_quality = None  # Normalized 0-100 quality percentage
         self.pan_connected = False
         self.usb_active = False
-        self.ragnarsays = "Hacking away..."
-        self.ragnarorch_status = "IDLE"
-        self.ragnarstatustext = "IDLE"
-        self.ragnarstatustext2 = "Awakening..."
+        self.optaris_defensesays = "Hacking away..."
+        self.optaris_defenseorch_status = "IDLE"
+        self.optaris_defensestatustext = "IDLE"
+        self.optaris_defensestatustext2 = "Awakening..."
         self.scale_factor_x = self.width / self.config['ref_width']
         self.scale_factor_y = self.height / self.config['ref_height']
         self.text_frame_top = int(88 * self.scale_factor_y)
@@ -1657,8 +1657,8 @@ class SharedData:
             img_scale = self._get_image_scale()
 
             # Load static images from the root of staticpicdir
-            self.ragnarstatusimage = None
-            self.ragnar1 = self.load_image(os.path.join(self.staticpicdir, 'ragnar1.bmp'), scale=img_scale)
+            self.optaris_defensestatusimage = None
+            self.optaris_defense1 = self.load_image(os.path.join(self.staticpicdir, 'optaris_defense1.bmp'), scale=img_scale)
             self.port = self.load_image(os.path.join(self.staticpicdir, 'port.bmp'), scale=img_scale)
             self.frise = self.load_image(os.path.join(self.staticpicdir, 'frise.bmp'))
             self.target = self.load_image(os.path.join(self.staticpicdir, 'target.bmp'), scale=img_scale)
@@ -1724,12 +1724,12 @@ class SharedData:
                     logger.info(f"Loaded {len(images)} images for status {status}.")
 
 
-            """Calculate the position of the Ragnar image on the screen to center it"""
-            if self.ragnar1 is not None:
-                self.x_center1 = (self.width - self.ragnar1.width) // 2
-                self.y_bottom1 = self.height - self.ragnar1.height
+            """Calculate the position of the OptarisDefense image on the screen to center it"""
+            if self.optaris_defense1 is not None:
+                self.x_center1 = (self.width - self.optaris_defense1.width) // 2
+                self.y_bottom1 = self.height - self.optaris_defense1.height
             else:
-                logger.warning("ragnar1.bmp image not found, using default positioning")
+                logger.warning("optaris_defense1.bmp image not found, using default positioning")
                 self.x_center1 = self.width // 2  # Center horizontally
                 self.y_bottom1 = self.height - 20  # Default bottom position
 
@@ -1737,17 +1737,17 @@ class SharedData:
             logger.error(f"Error loading images: {e}")
             raise
 
-    def update_ragnarstatus(self):
-        """ Using getattr to obtain the reference of the attribute with the name stored in self.ragnarorch_status"""
+    def update_optaris_defensestatus(self):
+        """ Using getattr to obtain the reference of the attribute with the name stored in self.optaris_defenseorch_status"""
         try:
-            self.ragnarstatusimage = getattr(self, self.ragnarorch_status)
-            if self.ragnarstatusimage is None:
+            self.optaris_defensestatusimage = getattr(self, self.optaris_defenseorch_status)
+            if self.optaris_defensestatusimage is None:
                 raise AttributeError
         except AttributeError:
-            logger.warning(f"The image for status {self.ragnarorch_status} is not available, using IDLE image by default.")
-            self.ragnarstatusimage = self.attack
+            logger.warning(f"The image for status {self.optaris_defenseorch_status} is not available, using IDLE image by default.")
+            self.optaris_defensestatusimage = self.attack
         
-        self.ragnarstatustext = self.ragnarorch_status  # Mettre à jour le texte du statut
+        self.optaris_defensestatustext = self.optaris_defenseorch_status  # Mettre à jour le texte du statut
 
 
     def load_image(self, image_path, scale=None):
@@ -1771,7 +1771,7 @@ class SharedData:
     def update_image_randomizer(self):
         """Update the image randomizer and the imagegen variable."""
         try:
-            status = self.ragnarstatustext
+            status = self.optaris_defensestatustext
             if status in self.image_series and self.image_series[status]:
                 random_index = random.randint(0, len(self.image_series[status]) - 1)
                 self.imagegen = self.image_series[status][random_index]
@@ -1793,7 +1793,7 @@ class SharedData:
 
     def wrap_text(self, text, font, max_width):
         """Wrap text to fit within a specified width when rendered.
-        On Pager, this is monkey-patched by PagerRagnar.setup_pager_shared_data()
+        On Pager, this is monkey-patched by PagerOptarisDefense.setup_pager_shared_data()
         to use character-based wrapping instead of PIL fonts."""
         if font is None or ImageFont is None:
             # Fallback: character-based wrapping (no PIL)

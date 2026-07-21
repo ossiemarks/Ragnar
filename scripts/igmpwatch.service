@@ -1,5 +1,5 @@
 [Unit]
-# Ragnar igmpwatch — dedicated passive IGMP-snooping security monitor.
+# OptarisDefense igmpwatch — dedicated passive IGMP-snooping security monitor.
 # OPT-IN. Runs the igmpwatch package live on a SPAN/tap interface. PASSIVE ONLY:
 # granted CAP_NET_RAW/CAP_NET_ADMIN to sniff (BPF ip proto 2) and nothing else —
 # it never transmits IGMP or joins a group.
@@ -8,13 +8,13 @@
 #   sudo cp scripts/igmpwatch.service /etc/systemd/system/
 #   sudo systemctl enable --now igmpwatch
 #   journalctl -u igmpwatch -f
-Description=Ragnar igmpwatch passive IGMP security monitor
+Description=OptarisDefense igmpwatch passive IGMP security monitor
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/ragnar/Ragnar
+WorkingDirectory=/home/optaris-defense/OptarisDefense
 ExecStartPre=/bin/mkdir -p /var/lib/igmpwatch
 ExecStart=/usr/bin/python3 -m igmpwatch -c /etc/igmpwatch/igmpwatch.yaml
 Restart=on-failure

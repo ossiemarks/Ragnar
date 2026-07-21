@@ -63,7 +63,7 @@ def test_rssi_and_noise_are_clamped():
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd /Users/osmanmarks/code/Ragnar && python -m pytest tests/csi_shim/test_adr018.py -v`
+Run: `cd /Users/osmanmarks/code/OptarisDefense && python -m pytest tests/csi_shim/test_adr018.py -v`
 Expected: FAIL — `ModuleNotFoundError: No module named 'python.csi_shim'`
 
 - [ ] **Step 3: Write minimal implementation**
@@ -106,7 +106,7 @@ def encode_frame(node_id, n_antennas, n_subcarriers, freq_mhz, seq, rssi, noise,
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd /Users/osmanmarks/code/Ragnar && python -m pytest tests/csi_shim/test_adr018.py -v`
+Run: `cd /Users/osmanmarks/code/OptarisDefense && python -m pytest tests/csi_shim/test_adr018.py -v`
 Expected: PASS (2 passed)
 
 - [ ] **Step 5: Commit**
@@ -160,7 +160,7 @@ def test_calibrate_divisor_maps_p99_to_target():
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd /Users/osmanmarks/code/Ragnar && python -m pytest tests/csi_shim/test_scaling.py -v`
+Run: `cd /Users/osmanmarks/code/OptarisDefense && python -m pytest tests/csi_shim/test_scaling.py -v`
 Expected: FAIL — `ModuleNotFoundError: No module named 'python.csi_shim.scaling'`
 
 - [ ] **Step 3: Write minimal implementation**
@@ -218,7 +218,7 @@ def test_scale_clamps_extremes():
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd /Users/osmanmarks/code/Ragnar && python -m pytest tests/csi_shim/test_scaling.py -v`
+Run: `cd /Users/osmanmarks/code/OptarisDefense && python -m pytest tests/csi_shim/test_scaling.py -v`
 Expected: PASS (4 passed)
 
 - [ ] **Step 5: Commit**
@@ -265,7 +265,7 @@ def test_unknown_chip_returns_empty():
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd /Users/osmanmarks/code/Ragnar && python -m pytest tests/csi_shim/test_maps.py -v`
+Run: `cd /Users/osmanmarks/code/OptarisDefense && python -m pytest tests/csi_shim/test_maps.py -v`
 Expected: FAIL — `ModuleNotFoundError`
 
 - [ ] **Step 3: Write minimal implementation**
@@ -303,7 +303,7 @@ def for_chip(name):
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd /Users/osmanmarks/code/Ragnar && python -m pytest tests/csi_shim/test_maps.py -v`
+Run: `cd /Users/osmanmarks/code/OptarisDefense && python -m pytest tests/csi_shim/test_maps.py -v`
 Expected: PASS (3 passed)
 
 - [ ] **Step 5: Commit**
@@ -348,7 +348,7 @@ def test_sink_sends_encoded_frame_over_udp():
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd /Users/osmanmarks/code/Ragnar && python -m pytest tests/csi_shim/test_sink.py -v`
+Run: `cd /Users/osmanmarks/code/OptarisDefense && python -m pytest tests/csi_shim/test_sink.py -v`
 Expected: FAIL — `ModuleNotFoundError`
 
 - [ ] **Step 3: Write minimal implementation**
@@ -378,7 +378,7 @@ class Adr018Sink:
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd /Users/osmanmarks/code/Ragnar && python -m pytest tests/csi_shim/test_sink.py -v`
+Run: `cd /Users/osmanmarks/code/OptarisDefense && python -m pytest tests/csi_shim/test_sink.py -v`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -432,7 +432,7 @@ def test_decode_rejects_short_or_wrong_magic():
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd /Users/osmanmarks/code/Ragnar && python -m pytest tests/csi_shim/test_nexmon_reader.py -v`
+Run: `cd /Users/osmanmarks/code/OptarisDefense && python -m pytest tests/csi_shim/test_nexmon_reader.py -v`
 Expected: FAIL — `ModuleNotFoundError`
 
 - [ ] **Step 3: Write minimal implementation**
@@ -494,7 +494,7 @@ def run(bind_iface="wlan0", div=DEFAULT_DIV, sink=None):  # pragma: no cover (I/
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd /Users/osmanmarks/code/Ragnar && python -m pytest tests/csi_shim/test_nexmon_reader.py -v`
+Run: `cd /Users/osmanmarks/code/OptarisDefense && python -m pytest tests/csi_shim/test_nexmon_reader.py -v`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -618,7 +618,7 @@ def test_decode_real_sample_yields_iq_pairs():
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd /Users/osmanmarks/code/Ragnar && python -m pytest tests/csi_shim/test_mt76_reader.py -v`
+Run: `cd /Users/osmanmarks/code/OptarisDefense && python -m pytest tests/csi_shim/test_mt76_reader.py -v`
 Expected: FAIL — `ModuleNotFoundError`
 
 - [ ] **Step 3: Implement decoder to match the captured sample (JSON path shown)**
@@ -688,7 +688,7 @@ def run(port=5500, div=DEFAULT_DIV, allow_ip=None, sink=None):  # pragma: no cov
 
 Set `maps.MT7915_VHT80` to the true DC/guard indices for the observed `n_sub` (e.g. for 256-bin: `range(0,6) | {127,128,129} | range(251,256)`; adjust if the sample width differs). Then:
 
-Run: `cd /Users/osmanmarks/code/Ragnar && python -m pytest tests/csi_shim/test_mt76_reader.py tests/csi_shim/test_maps.py -v`
+Run: `cd /Users/osmanmarks/code/OptarisDefense && python -m pytest tests/csi_shim/test_mt76_reader.py tests/csi_shim/test_maps.py -v`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -802,7 +802,7 @@ def test_decode_real_feit_measurement():
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd /Users/osmanmarks/code/Ragnar && python -m pytest tests/csi_shim/test_feitcsi_reader.py -v`
+Run: `cd /Users/osmanmarks/code/OptarisDefense && python -m pytest tests/csi_shim/test_feitcsi_reader.py -v`
 Expected: FAIL — `ModuleNotFoundError`
 
 - [ ] **Step 3: Implement decoder to match the FeitCSI binary layout**
@@ -868,7 +868,7 @@ def run(source_path="/tmp/feitcsi.dat", div=DEFAULT_DIV, sink=None):  # pragma: 
 
 Adjust `_HDR` and `maps.AX210_HE` to the real FeitCSI layout/width observed in the dump; re-run:
 
-Run: `cd /Users/osmanmarks/code/Ragnar && python -m pytest tests/csi_shim/test_feitcsi_reader.py -v`
+Run: `cd /Users/osmanmarks/code/OptarisDefense && python -m pytest tests/csi_shim/test_feitcsi_reader.py -v`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -884,9 +884,9 @@ git commit -m "feat(csi_shim): FeitCSI reader decoded against captured sample (n
 
 **Files:**
 - Create: `python/csi_shim/__main__.py`
-- Create: `config/systemd/ragnar-csi-nexmon.service`
-- Create: `config/systemd/ragnar-csi-mt76.service`
-- Create: `config/systemd/ragnar-csi-intel.service`
+- Create: `config/systemd/optaris-defense-csi-nexmon.service`
+- Create: `config/systemd/optaris-defense-csi-mt76.service`
+- Create: `config/systemd/optaris-defense-csi-intel.service`
 - Create: `scripts/install_csi_shim.sh`
 - Test: `tests/csi_shim/test_cli.py`
 
@@ -903,14 +903,14 @@ import subprocess, sys
 
 def test_cli_rejects_unknown_source():
     p = subprocess.run([sys.executable, "-m", "python.csi_shim", "bogus"],
-                       capture_output=True, text=True, cwd="/Users/osmanmarks/code/Ragnar")
+                       capture_output=True, text=True, cwd="/Users/osmanmarks/code/OptarisDefense")
     assert p.returncode == 2
     assert "nexmon" in (p.stderr + p.stdout)
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd /Users/osmanmarks/code/Ragnar && python -m pytest tests/csi_shim/test_cli.py -v`
+Run: `cd /Users/osmanmarks/code/OptarisDefense && python -m pytest tests/csi_shim/test_cli.py -v`
 Expected: FAIL — no `__main__`, non-2 exit.
 
 - [ ] **Step 3: Implement CLI + units + installer**
@@ -942,13 +942,13 @@ if __name__ == "__main__":
 ```
 
 ```ini
-# config/systemd/ragnar-csi-mt76.service
+# config/systemd/optaris-defense-csi-mt76.service
 [Unit]
-Description=Ragnar CSI shim (mt76 -> ADR-018 :5005 node 176)
-After=network-online.target ragnar-sensing.service
+Description=OptarisDefense CSI shim (mt76 -> ADR-018 :5005 node 176)
+After=network-online.target optaris-defense-sensing.service
 [Service]
 ExecStart=/usr/bin/python3 -m python.csi_shim mt76
-WorkingDirectory=/home/pi/Ragnar
+WorkingDirectory=/home/pi/OptarisDefense
 Restart=on-failure
 RestartSec=3
 [Install]
@@ -956,14 +956,14 @@ WantedBy=multi-user.target
 ```
 
 ```ini
-# config/systemd/ragnar-csi-nexmon.service
+# config/systemd/optaris-defense-csi-nexmon.service
 [Unit]
-Description=Ragnar CSI shim (nexmon -> ADR-018 :5005 node 200)
-After=network-online.target ragnar-sensing.service
+Description=OptarisDefense CSI shim (nexmon -> ADR-018 :5005 node 200)
+After=network-online.target optaris-defense-sensing.service
 [Service]
 ExecStartPre=/home/pi/nexmon_csi_start_setup.sh
 ExecStart=/usr/bin/python3 -m python.csi_shim nexmon
-WorkingDirectory=/home/pi/Ragnar
+WorkingDirectory=/home/pi/OptarisDefense
 Restart=on-failure
 RestartSec=3
 [Install]
@@ -971,13 +971,13 @@ WantedBy=multi-user.target
 ```
 
 ```ini
-# config/systemd/ragnar-csi-intel.service
+# config/systemd/optaris-defense-csi-intel.service
 [Unit]
-Description=Ragnar CSI shim (feitcsi -> ADR-018 :5005 node 210)
-After=network-online.target ragnar-sensing.service
+Description=OptarisDefense CSI shim (feitcsi -> ADR-018 :5005 node 210)
+After=network-online.target optaris-defense-sensing.service
 [Service]
 ExecStart=/usr/bin/python3 -m python.csi_shim feitcsi
-WorkingDirectory=/home/pi/Ragnar
+WorkingDirectory=/home/pi/OptarisDefense
 Restart=on-failure
 RestartSec=3
 [Install]
@@ -990,22 +990,22 @@ WantedBy=multi-user.target
 # Install csi_shim systemd units on the Pi. Idempotent.
 set -euo pipefail
 SRC="$(cd "$(dirname "$0")/.." && pwd)/config/systemd"
-for u in ragnar-csi-nexmon ragnar-csi-mt76 ragnar-csi-intel; do
+for u in optaris-defense-csi-nexmon optaris-defense-csi-mt76 optaris-defense-csi-intel; do
   sudo install -m0644 "$SRC/$u.service" "/etc/systemd/system/$u.service"
 done
 sudo systemctl daemon-reload
-echo "Installed. Enable per source, e.g.: sudo systemctl enable --now ragnar-csi-mt76"
+echo "Installed. Enable per source, e.g.: sudo systemctl enable --now optaris-defense-csi-mt76"
 ```
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd /Users/osmanmarks/code/Ragnar && python -m pytest tests/csi_shim/test_cli.py -v && chmod +x scripts/install_csi_shim.sh`
+Run: `cd /Users/osmanmarks/code/OptarisDefense && python -m pytest tests/csi_shim/test_cli.py -v && chmod +x scripts/install_csi_shim.sh`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add python/csi_shim/__main__.py config/systemd/ragnar-csi-*.service scripts/install_csi_shim.sh tests/csi_shim/test_cli.py
+git add python/csi_shim/__main__.py config/systemd/optaris-defense-csi-*.service scripts/install_csi_shim.sh tests/csi_shim/test_cli.py
 git commit -m "feat(csi_shim): CLI dispatch + systemd units + installer"
 ```
 
@@ -1025,8 +1025,8 @@ git commit -m "feat(csi_shim): CLI dispatch + systemd units + installer"
 - [ ] **Step 1: Deploy package + install units on the Pi**
 
 ```bash
-rsync -az -e "ssh -i ~/.ssh/id_ed25519" python/csi_shim/ pi@optaris-edge.local:/home/pi/Ragnar/python/csi_shim/
-ssh -i ~/.ssh/id_ed25519 pi@optaris-edge.local "cd /home/pi/Ragnar && bash scripts/install_csi_shim.sh"
+rsync -az -e "ssh -i ~/.ssh/id_ed25519" python/csi_shim/ pi@optaris-edge.local:/home/pi/OptarisDefense/python/csi_shim/
+ssh -i ~/.ssh/id_ed25519 pi@optaris-edge.local "cd /home/pi/OptarisDefense && bash scripts/install_csi_shim.sh"
 ```
 Expected: "Installed."
 
@@ -1034,7 +1034,7 @@ Expected: "Installed."
 
 ```bash
 ssh -i ~/.ssh/id_ed25519 pi@optaris-edge.local \
-  "sudo systemctl enable --now ragnar-csi-nexmon ragnar-csi-mt76 ragnar-csi-intel; sleep 5; \
+  "sudo systemctl enable --now optaris-defense-csi-nexmon optaris-defense-csi-mt76 optaris-defense-csi-intel; sleep 5; \
    sudo timeout 6 tcpdump -ni any udp port 5005 -c 20 2>/dev/null | grep -c UDP"
 ```
 Expected: a non-zero packet count.

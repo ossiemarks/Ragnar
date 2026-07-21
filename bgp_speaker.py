@@ -1,4 +1,4 @@
-"""Receive-only BGP speaker for Ragnar — control-plane ground truth.
+"""Receive-only BGP speaker for OptarisDefense — control-plane ground truth.
 
 Unlike the passive BGP Path Watch (which sniffs BGP off the wire with tcpdump),
 this module *establishes* a real BGP session with a configured router as a

@@ -3,7 +3,7 @@
 `certwatch.py` watches TLS handshakes crossing a tap / SPAN / bridge and triages
 every X.509 certificate it can **observe** for expiry and validity problems.
 **Detection only** — certwatch never opens a socket, never probes, never sends a
-byte. Same passive-first posture as the rest of the Ragnar Watch suite.
+byte. Same passive-first posture as the rest of the OptarisDefense Watch suite.
 
 It reuses `tls_watch.py`'s audited handshake byte-parsers (ClientHello SNI,
 ServerHello version, the Certificate message, record/segment reassembly) — one
@@ -125,7 +125,7 @@ assert findings actually fire end-to-end (not just that a record was shaped).
 ```bash
 sudo useradd -r -s /usr/sbin/nologin certwatch
 sudo cp scripts/certwatch.service /etc/systemd/system/certwatch.service
-sudoedit /etc/ragnar/certwatch.env         # set CERTWATCH_IFACE=mon0 etc.
+sudoedit /etc/optaris_defense/certwatch.env         # set CERTWATCH_IFACE=mon0 etc.
 sudo systemctl daemon-reload && sudo systemctl enable --now certwatch
 journalctl -u certwatch -f
 ```

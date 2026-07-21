@@ -1,15 +1,15 @@
 #!/bin/bash
-# Ragnar on-screen kiosk uninstaller.
+# OptarisDefense on-screen kiosk uninstaller.
 # Removes the systemd unit (service mode) and/or the XDG autostart entry
 # (autostart mode) for every regular user. Also drops the wrapper and tty1
 # autologin drop-in. Apt packages are left in place unless --purge is given.
 
 set -euo pipefail
 
-SERVICE_FILE="/etc/systemd/system/ragnar-kiosk.service"
-WRAPPER_DST="/usr/local/bin/ragnar-kiosk-run"
+SERVICE_FILE="/etc/systemd/system/optaris-defense-kiosk.service"
+WRAPPER_DST="/usr/local/bin/optaris-defense-kiosk-run"
 AUTOLOGIN_DROPIN="/etc/systemd/system/getty@tty1.service.d/autologin.conf"
-AUTOSTART_REL=".config/autostart/ragnar-kiosk.desktop"
+AUTOSTART_REL=".config/autostart/optaris-defense-kiosk.desktop"
 PURGE=0
 
 for arg in "$@"; do
@@ -19,8 +19,8 @@ for arg in "$@"; do
 done
 
 # Systemd unit (service mode)
-if systemctl list-unit-files 2>/dev/null | grep -q '^ragnar-kiosk\.service'; then
-    systemctl disable --now ragnar-kiosk.service 2>/dev/null || true
+if systemctl list-unit-files 2>/dev/null | grep -q '^optaris-defense-kiosk\.service'; then
+    systemctl disable --now optaris-defense-kiosk.service 2>/dev/null || true
 fi
 rm -f "$SERVICE_FILE"
 rm -f "$WRAPPER_DST"
@@ -31,7 +31,7 @@ if [[ -d "$(dirname "$AUTOLOGIN_DROPIN")" ]]; then
 fi
 
 # Try to kill any running kiosk chromium (autostart mode users).
-pkill -f 'ragnar-kiosk-chromium' 2>/dev/null || true
+pkill -f 'optaris-defense-kiosk-chromium' 2>/dev/null || true
 
 # Autostart entries — scan every regular user's home for the .desktop file.
 getent passwd | awk -F: '$3 >= 1000 && $3 < 65534 {print $6}' | while read -r home; do

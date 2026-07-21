@@ -40,7 +40,7 @@ class StealFilesSMB:
         Establish an SMB connection.
         """
         try:
-            conn = SMBConnection(username, password, "Ragnar", "Target", use_ntlm_v2=True, is_direct_tcp=True)
+            conn = SMBConnection(username, password, "OptarisDefense", "Target", use_ntlm_v2=True, is_direct_tcp=True)
             conn.connect(ip, 445)
             logger.info(f"Connected to {ip} via SMB with username {username}")
             self.smb_connected = True
@@ -113,7 +113,7 @@ class StealFilesSMB:
         """
         try:
             if 'success' in row.get(self.b_parent_action, ''):  # Verify if the parent action is successful
-                self.shared_data.ragnarorch_status = "StealFilesSMB"
+                self.shared_data.optaris_defenseorch_status = "StealFilesSMB"
                 logger.info(f"Stealing files from {ip}:{port}...")
                 # Wait a bit because it's too fast to see the status change
                 time.sleep(5)

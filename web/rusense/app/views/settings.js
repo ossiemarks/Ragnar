@@ -1,13 +1,13 @@
 // Settings — RuSense camera-free surveillance alerts (Pushover) plus a full
 // mirror of the Observatory 3D-view controls. The alert toggles read/write
-// Ragnar's own config (/api/config) + the shared Pushover key status; the
+// OptarisDefense's own config (/api/config) + the shared Pushover key status; the
 // server-side monitor in webapp_modern.py does the edge detection and sending.
 //
 // The Observatory section edits the SAME localStorage the Observatory itself
 // reads on boot (keys 'ruview-observatory-settings' + 'ruview-settings-version',
 // see observatory/js/main.js) AND mirrors the whole blob to the server config
 // (key 'rusense_observatory_settings') so the values persist for everyone — like
-// Ragnar's main settings — instead of being trapped in one browser. localStorage
+// OptarisDefense's main settings — instead of being trapped in one browser. localStorage
 // is the local cache; the server is the shared source of truth, seeded on load.
 // The 3D scene only exists inside the Observatory iframe, so changes here are
 // saved instantly and take effect the next time the Observatory sub-tab is opened
@@ -33,7 +33,7 @@ async function req(method, url, body) {
   }
 }
 
-// Debounced push of node-corner positions to Ragnar's backend config, so the
+// Debounced push of node-corner positions to OptarisDefense's backend config, so the
 // server-side geofence (which confines the Pushover alerts) reasons over the
 // SAME node map the Observatory uses. The positions live in localStorage for
 // the 3D view; this mirrors them to the server where the alert loop can read.
@@ -100,7 +100,7 @@ function saveObsSettings(s) {
     localStorage.setItem(OBS_KEY, JSON.stringify(s));
   } catch { /* storage full / disabled — silently ignore */ }
   // Mirror to the server config (debounced) so these settings persist for
-  // everyone, like Ragnar's main settings — not just in this browser.
+  // everyone, like OptarisDefense's main settings — not just in this browser.
   pushObsSettingsToServer(s);
 }
 
@@ -269,7 +269,7 @@ export default {
       : `<div class="rounded-lg bg-warn/15 text-warn px-3 py-2 text-sm">
            ⚠ Pushover ${configured ? 'is configured but disabled' : 'keys are not set'}.
            Set your User Key and API Token under <strong>Config → Pushover Notifications</strong> in the main
-           Ragnar dashboard first — RuSense alerts use the same account.
+           OptarisDefense dashboard first — RuSense alerts use the same account.
          </div>`;
 
     root.appendChild(html`

@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > Only run against networks you own or have **explicit written permission** to test.
 
-AirSnitch is a Ragnar module that verifies whether a Wi-Fi network properly enforces **client isolation** — the security feature that prevents devices on the same network from communicating directly with each other.
+AirSnitch is a OptarisDefense module that verifies whether a Wi-Fi network properly enforces **client isolation** — the security feature that prevents devices on the same network from communicating directly with each other.
 
 Based on the research tool by [Mathy Vanhoef](https://github.com/vanhoefm/airsnitch).
 
@@ -87,7 +87,7 @@ Settings are stored in `config/actions.json`:
 ## Results & Output
 
 ### Web UI
-After a test run, the AirSnitch panel in the Ragnar dashboard (`http://<ragnar-ip>:8000`) shows:
+After a test run, the AirSnitch panel in the OptarisDefense dashboard (`http://<optaris-defense-ip>:8000`) shows:
 
 - Overall **PASS ✓** (green) or **FAIL ✗** (red) verdict
 - Per-test pass/fail status with color coding
@@ -97,7 +97,7 @@ After a test run, the AirSnitch panel in the Ragnar dashboard (`http://<ragnar-i
 ### Saved JSON
 All results are saved to:
 ```
-/tmp/ragnar_logs/airsnitch/airsnitch_<timestamp>.json
+/tmp/optaris_defense_logs/airsnitch/airsnitch_<timestamp>.json
 ```
 
 Example result structure:
@@ -122,8 +122,8 @@ Example result structure:
 ```
 
 ### Log Files
-- Install log: `/tmp/ragnar_logs/airsnitch/install.log`
-- Ragnar system log: messages prefixed with `AirSnitch:`
+- Install log: `/tmp/optaris_defense_logs/airsnitch/install.log`
+- OptarisDefense system log: messages prefixed with `AirSnitch:`
 
 ---
 
@@ -131,26 +131,26 @@ Example result structure:
 
 AirSnitch installs automatically when first triggered. To install manually via the web UI:
 
-1. Open `http://<ragnar-ip>:8000`
+1. Open `http://<optaris-defense-ip>:8000`
 2. Navigate to the **AirSnitch** panel
 3. Click **Install from GitHub** if the tool is not yet installed
 4. Watch the live installation log stream in the UI
 
-The tool is cloned to `tools/airsnitch/` inside the Ragnar directory.
+The tool is cloned to `tools/airsnitch/` inside the OptarisDefense directory.
 
 ---
 
 ## Running a Test
 
 ### Via Web UI
-1. Open `http://<ragnar-ip>:8000`
+1. Open `http://<optaris-defense-ip>:8000`
 2. Navigate to the **AirSnitch** panel
 3. Configure interfaces, tests, and server IP
 4. Click **Run AirSnitch**
 5. Results appear automatically when the test completes
 
-### Via Ragnar Orchestrator
-AirSnitch runs as a standard Ragnar action and can be triggered programmatically via the API:
+### Via OptarisDefense Orchestrator
+AirSnitch runs as a standard OptarisDefense action and can be triggered programmatically via the API:
 
 ```bash
 POST /api/airsnitch/run
@@ -198,4 +198,4 @@ The underlying test tool is **AirSnitch**, developed by **Mathy Vanhoef** and co
 - **Author**: [Mathy Vanhoef](https://github.com/vanhoefm) — researcher at KU Leuven, known for discovering KRACK, FragAttacks, and other Wi-Fi protocol vulnerabilities
 - **Research context**: The attacks implemented in AirSnitch were documented and disclosed responsibly as part of ongoing Wi-Fi security research
 
-The Ragnar integration wraps the AirSnitch CLI, automates installation, and surfaces results through the Ragnar web dashboard. All credit for the underlying attack implementations belongs to the original authors.
+The OptarisDefense integration wraps the AirSnitch CLI, automates installation, and surfaces results through the OptarisDefense web dashboard. All credit for the underlying attack implementations belongs to the original authors.

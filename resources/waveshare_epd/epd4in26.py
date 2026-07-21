@@ -38,7 +38,7 @@ logger = logging.getLogger(__name__)
 
 class EPD:
     def __init__(self):
-        self.is_initialized = False  # Track if the display has been initialized (Ragnar compatibility)
+        self.is_initialized = False  # Track if the display has been initialized (OptarisDefense compatibility)
         self.reset_pin = epdconfig.RST_PIN
         self.dc_pin = epdconfig.DC_PIN
         self.busy_pin = epdconfig.BUSY_PIN
@@ -209,7 +209,7 @@ class EPD:
         self.TurnOnDisplay_Part()
 
     def displayPartial(self, image):
-        """Alias for display_Partial (Ragnar EPDHelper compatibility)."""
+        """Alias for display_Partial (OptarisDefense EPDHelper compatibility)."""
         self.display_Partial(image)
 
     def Clear(self, color=0xFF):

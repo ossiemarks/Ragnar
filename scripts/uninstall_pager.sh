@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# uninstall_pager.sh - Remove Ragnar from a WiFi Pineapple Pager
+# uninstall_pager.sh - Remove OptarisDefense from a WiFi Pineapple Pager
 #
 # Usage:
 #   ./uninstall_pager.sh [pager-ip]
@@ -24,7 +24,7 @@ else
     PAGER_IP="$1"
 fi
 PAGER_USER="root"
-PAGER_PAYLOAD_DIR="/root/payloads/user/reconnaissance/pager_ragnar"
+PAGER_PAYLOAD_DIR="/root/payloads/user/reconnaissance/pager_optaris_defense"
 
 log() {
     local level=$1; shift
@@ -39,7 +39,7 @@ log() {
 
 echo -e "${CYAN}"
 echo "  ╔═══════════════════════════════════════════════════════╗"
-echo "  ║     Ragnar - WiFi Pineapple Pager Uninstaller        ║"
+echo "  ║     OptarisDefense - WiFi Pineapple Pager Uninstaller        ║"
 echo "  ╚═══════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
@@ -68,10 +68,10 @@ log "SUCCESS" "Connected to Pager"
 
 # Confirm
 echo ""
-echo -e "${YELLOW}This will remove Ragnar from the Pager:${NC}"
-echo "  - Stop all Ragnar/Python3 processes"
+echo -e "${YELLOW}This will remove OptarisDefense from the Pager:${NC}"
+echo "  - Stop all OptarisDefense/Python3 processes"
 echo "  - Delete ${PAGER_PAYLOAD_DIR}"
-echo "  - Remove /root/Ragnar symlink"
+echo "  - Remove /root/OptarisDefense symlink"
 echo "  - Remove /root/lib/libpagerctl.so"
 echo "  - Optionally remove python-nmap"
 echo ""
@@ -82,7 +82,7 @@ if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
 fi
 
 # Stop processes
-log "INFO" "Stopping Ragnar processes..."
+log "INFO" "Stopping OptarisDefense processes..."
 ssh $SSH_OPTS "${PAGER_USER}@${PAGER_IP}" "killall -9 python3 2>/dev/null; echo done"
 log "SUCCESS" "Processes stopped"
 
@@ -92,8 +92,8 @@ ssh $SSH_OPTS "${PAGER_USER}@${PAGER_IP}" "rm -rf ${PAGER_PAYLOAD_DIR} && echo r
 log "SUCCESS" "Removed ${PAGER_PAYLOAD_DIR}"
 
 # Remove symlink
-log "INFO" "Removing /root/Ragnar symlink..."
-ssh $SSH_OPTS "${PAGER_USER}@${PAGER_IP}" "rm -f /root/Ragnar && echo removed"
+log "INFO" "Removing /root/OptarisDefense symlink..."
+ssh $SSH_OPTS "${PAGER_USER}@${PAGER_IP}" "rm -f /root/OptarisDefense && echo removed"
 log "SUCCESS" "Symlink removed"
 
 # Remove system libpagerctl copy
@@ -112,7 +112,7 @@ fi
 
 echo ""
 echo -e "${GREEN}  ╔═══════════════════════════════════════════════════════╗"
-echo -e "  ║     Ragnar successfully removed from Pager!           ║"
+echo -e "  ║     OptarisDefense successfully removed from Pager!           ║"
 echo -e "  ╚═══════════════════════════════════════════════════════╝${NC}"
 echo ""
 echo "  To reinstall later:"

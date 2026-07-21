@@ -1,9 +1,9 @@
-# PowerShell script to fix permissions for Ragnar repository
-# This script sets appropriate permissions for the Ragnar project files and directories
+# PowerShell script to fix permissions for OptarisDefense repository
+# This script sets appropriate permissions for the OptarisDefense project files and directories
 
-Write-Host "Fixing permissions for Ragnar repository..." -ForegroundColor Green
+Write-Host "Fixing permissions for OptarisDefense repository..." -ForegroundColor Green
 
-# Get the current directory (should be Ragnar repo root)
+# Get the current directory (should be OptarisDefense repo root)
 $repoPath = Get-Location
 
 # Directories that need write permissions

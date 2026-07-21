@@ -58,7 +58,7 @@ export default {
   icon: icons.nodes,
 
   async mount(root) {
-    // Custom node names come from Ragnar config (Settings), not the sensing
+    // Custom node names come from optaris_defense config (Settings), not the sensing
     // roster; load them once so the table shows names instead of just "#id".
     let nodeNames = {};
     fetchJSON('/api/config').then((c) => { nodeNames = (c && c.rusense_node_names) || {}; });
@@ -184,7 +184,7 @@ export default {
       let badge, bcls, msg;
       if (offline || (stalledIds.length && stalledIds.length === ids.length)) {
         badge = 'Not reaching server'; bcls = 'badge-bad';
-        msg = `The server reports <span class="font-mono">offline</span> and the mesh is frozen (sequences aren't advancing, last-sync is minutes old). Two causes look identical here — <strong>run “Download logs”</strong>, which now auto-classifies the packets: <br>1) <strong>Nodes are streaming but in edge mode</strong> (~60 B feature packets, <span class="font-mono">edge_tier≥1</span>): the server needs raw CSI (148–404 B) and ignores edge packets, so it shows offline even though data flows. Fix = reprovision <span class="font-mono">edge_tier=0</span> (flasher “Write WiFi config” after a hard refresh). <br>2) <strong>No packets at all</strong>: the nodes joined an AP that can't reach the Pi — a strong RSSI on the wrong AP/subnet still delivers nothing. Get all nodes onto the <strong>same AP/network as the Ragnar box</strong> (unique SSID or turn off other radios; no guest / client-isolation).`;
+        msg = `The server reports <span class="font-mono">offline</span> and the mesh is frozen (sequences aren't advancing, last-sync is minutes old). Two causes look identical here — <strong>run “Download logs”</strong>, which now auto-classifies the packets: <br>1) <strong>Nodes are streaming but in edge mode</strong> (~60 B feature packets, <span class="font-mono">edge_tier≥1</span>): the server needs raw CSI (148–404 B) and ignores edge packets, so it shows offline even though data flows. Fix = reprovision <span class="font-mono">edge_tier=0</span> (flasher “Write WiFi config” after a hard refresh). <br>2) <strong>No packets at all</strong>: the nodes joined an AP that can't reach the Pi — a strong RSSI on the wrong AP/subnet still delivers nothing. Get all nodes onto the <strong>same AP/network as the OptarisDefense box</strong> (unique SSID or turn off other radios; no guest / client-isolation).`;
       } else if (stalledIds.length) {
         badge = 'Node(s) stalled'; bcls = 'badge-bad';
         msg = `Node(s) ${stalledIds.map((i) => '#' + i).join(', ')} stopped updating (mesh frozen, minutes stale) while others are live — that node likely dropped to a different AP or lost the Pi. Check its WiFi association and placement.`;

@@ -1,6 +1,6 @@
 # 🛡️ Authority Verification Across the Stack
 
-The **Network** tab in the Ragnar web interface is a built-in engine for
+The **Network** tab in the OptarisDefense web interface is a built-in engine for
 **verifying authority across the stack** — at every layer, someone claims to be
 the legitimate authority (the root bridge, the default gateway, the DNS
 resolver, the DHCP server, the routing neighbour, the name responder, the SMB
@@ -77,7 +77,7 @@ It is split into three sub-tabs: **Diagnostics**, **Switch & L2/L3**, and
 ## One-click install for missing tools
 
 Most of these tools shell out to standard Linux utilities (`ping`, `mtr`,
-`lldpd`, `arp-scan`, …). If one isn't present, Ragnar doesn't just show a dead
+`lldpd`, `arp-scan`, …). If one isn't present, OptarisDefense doesn't just show a dead
 error — it shows an **Install** button. Clicking it runs a whitelisted
 `apt-get install` for the exact package that provides the missing binary, then
 re-runs the tool automatically. The button disappears once the tool is
@@ -167,7 +167,7 @@ The display auto-cycles six pages every **5 seconds**:
 
 The wired pages focus on the **physical** wired NIC (`eth*` / `en*`), ignoring
 VPN, tunnel, bridge and container interfaces; the WIFI/SIGNAL/SPECTRUM pages use
-the wireless interface. Toggle it off to restore the normal Ragnar display. The
+the wireless interface. Toggle it off to restore the normal OptarisDefense display. The
 setting is persisted (`network_diagnostic_mode` in the config) and shared across
 sessions.
 
@@ -177,7 +177,7 @@ On the 2.7" e-Paper HAT the four hardware keys become a **standalone field
 tester** while this mode is active — so you can run live tests on the switch
 with no laptop. Each key has a **short press** and a **long press** (hold
 ~0.6 s); a test's result stays on the panel until **KEY1** dismisses it. Outside
-this mode the keys keep their normal Ragnar / wardriving behaviour (they act on
+this mode the keys keep their normal OptarisDefense / wardriving behaviour (they act on
 press) — the netdiag layer only takes over the keys when the toggle is on.
 
 | Key | Short press | Long press (hold ~0.6 s) |
@@ -207,7 +207,7 @@ footer shows `>` + its name). While the mode is on:
 
 | Input | Action |
 |-------|--------|
-| **KEY1** | **Switch to Ragnar** — toggle the mode off, back to the normal screens |
+| **KEY1** | **Switch to OptarisDefense** — toggle the mode off, back to the normal screens |
 | **Joystick ← / →** | Previous / next **card** |
 | **Joystick ↑ / ↓** | Cycle the highlighted **function** inside the card |
 | **Joystick press** | **OK / select** — run the highlighted function (or dismiss a shown result) |
@@ -229,7 +229,7 @@ screen**: the HAT's joystick is physically mounted 90° clockwise of the panel's
 text, so the listener remaps each push into the on-screen frame and re-aligns
 automatically when the display is rotated.
 
-Outside net-diag mode the joystick pages through the normal Ragnar screens and a
+Outside net-diag mode the joystick pages through the normal OptarisDefense screens and a
 **joystick press starts/stops page autoscroll** (auto-cycle every 5 s); **KEY1**
 toggles this diagnostic mode, **KEY2** rotates the screen, and **KEY3** is next
 page (tap) or restart the service (hold).
@@ -438,7 +438,7 @@ card's "Trust current").
 
 **Capture interface.** The capture-based scanners (and the DHCP Guardian check)
 listen on a **link-up wired port first** — the same auto used by the Switch &
-L2/L3 cards. That matters for the sensor deployment: Ragnar plugged into a
+L2/L3 cards. That matters for the sensor deployment: OptarisDefense plugged into a
 switch port to watch it (mirror/SPAN or an isolated VLAN with no gateway) while
 managed over WiFi. The default route sits on `wlan0`, but STP/DTP/CDP/VTP/FHRP
 frames only exist on the cable — following the default route there would leave
@@ -542,7 +542,7 @@ It also shows **which IPv6 default gateway the host has actually accepted** righ
 (and whether it came from an RA). The **Harden** action sets the two safe sysctls —
 `accept_redirects=0` and `accept_ra_rtr_pref=0` — for `all`/`default` and every IPv6
 interface, applies them live, and persists them to
-`/etc/sysctl.d/99-ragnar-raguard.conf` so they survive a reboot. **`accept_ra` is
+`/etc/sysctl.d/99-optaris-defense-raguard.conf` so they survive a reboot. **`accept_ra` is
 deliberately left untouched** — turning it off would drop IPv6 connectivity on a
 legitimate SLAAC network; that trade-off is surfaced as advice (pair with a switch
 RA-Guard) rather than forced.
@@ -746,7 +746,7 @@ segment.
 
 ### Switch Discovery (LLDP / CDPv1/v2 / EDP / FDP)
 Discovers the **neighbouring switch** by listening to its link-layer discovery
-announcements. Ragnar runs `lldpd` configured with `-c -e -f -s`, so in addition
+announcements. OptarisDefense runs `lldpd` configured with `-c -e -f -s`, so in addition
 to standard **LLDP** it decodes:
 
 | Flag | Protocol | Vendor |
@@ -767,7 +767,7 @@ a minute for the first neighbour to appear. Results export to CSV.
 
 #### PoE detection
 A PoE-capable switch advertises its power state in the LLDP/LLDP-MED
-**Power-via-MDI TLV**, which `lldpd` decodes. Ragnar parses this into a **PoE**
+**Power-via-MDI TLV**, which `lldpd` decodes. OptarisDefense parses this into a **PoE**
 column showing:
 
 - **Device type** — PSE (the switch is sourcing power) or PD
@@ -995,7 +995,7 @@ so a completed handshake is never masked by an aborted one.
 
 **JA4S** (the server fingerprint) is licensed under the **FoxIO License 1.1**, not
 the BSD/MIT that covers the rest, so it lives in a separate, clearly identified
-file (`ja4s.py`) and is **off by default** — Ragnar never computes it unless the
+file (`ja4s.py`) and is **off by default** — OptarisDefense never computes it unless the
 operator sets both `tls_watch.ENABLE_JA4S` and `tls_watch.ACKNOWLEDGE_JA4S_LICENSE`.
 
 There is also a small **CLI**:
@@ -1333,9 +1333,9 @@ third-party deps). The findings engine is pure Python and self-tests without roo
 fabricated BER messages (`ldap_watch.py --selftest`, and `tests/test_ldapwatch.py`).
 
 For **continuous** monitoring there is an opt-in **least-privilege systemd unit**
-(`scripts/ragnar-ldapwatch.service`) that runs `ldap_watch.py --daemon` with **only
+(`scripts/optaris-defense-ldapwatch.service`) that runs `ldap_watch.py --daemon` with **only
 `CAP_NET_RAW`** and streams **JSON-lines** findings (one object per line) to
-`/var/log/ragnar/ldapwatch.jsonl` for the web UI + Pushover.
+`/var/log/optaris_defense/ldapwatch.jsonl` for the web UI + Pushover.
 
 Hardening it drives: require **LDAPS/StartTLS** and reject simple binds on cleartext,
 **disable anonymous binds**, enforce **LDAP signing + channel binding (EPA)** on DCs,
@@ -1775,7 +1775,7 @@ methods** (same card, pick one):
 
 - **Link flap** (`method: flap`, default) — links the port **down/up** each
   cycle, so the **LINK** LED goes dark/lit. Genuinely drops the link for a
-  moment each cycle, so it briefly interrupts traffic on that port; if Ragnar is
+  moment each cycle, so it briefly interrupts traffic on that port; if OptarisDefense is
   reachable *through* that port the UI freezes until the sequence finishes, so
   the tool refuses the interface carrying the default route unless you confirm.
   Always restores the link when done.
@@ -1878,7 +1878,7 @@ cabling/auto-neg fault), and whether an interface actually pulled a DHCP lease.
   (address/method info uses `ip`, always present)
 
 ### Network Identity
-A best-effort summary of the network Ragnar is *attached to*, merged from
+A best-effort summary of the network OptarisDefense is *attached to*, merged from
 several sources (with provenance reported, since no single source is
 authoritative):
 
@@ -1915,7 +1915,7 @@ way to answer "which physical link goes to which ISP, and is each one actually
 reaching the internet?" — invaluable when one of several uplinks is flaky or
 resistant.
 
-For each interface with a usable IPv4, Ragnar runs a lookup **bound to that
+For each interface with a usable IPv4, OptarisDefense runs a lookup **bound to that
 interface** (`curl --interface <iface>`, which forces egress out that link via
 `SO_BINDTODEVICE` regardless of the routing table) and reports:
 
@@ -1952,7 +1952,7 @@ the diagnostic you're after.
 
 ### VPN Egress Check
 A focused **"is my traffic leaving through a VPN?"** verdict for one path,
-combining every signal Ragnar has. It follows the **default route** by default,
+combining every signal OptarisDefense has. It follows the **default route** by default,
 or a specific `interface` if you pass one (e.g. to test the LAN path while WiFi
 carries the default route). Returns **vpn / likely / no / unknown**:
 
@@ -1964,7 +1964,7 @@ carries the default route). Returns **vpn / likely / no / unknown**:
   VPN-provider range** (an ASN-derived list synced locally from
   [X4BNet/lists_vpn](https://github.com/X4BNet/lists_vpn) and checked offline).
   This is the signal that catches a VPN running **on the router**, where
-  Ragnar's own NIC looks like an ordinary LAN port.
+  OptarisDefense's own NIC looks like an ordinary LAN port.
 - **Tor exit** — the egress is confirmed a Tor exit node via the Tor Project's
   own checker (again catching Tor/VPN upstream on the router).
 - **Provider ASN name** — the egress ISP/ASN name matches a commercial-VPN

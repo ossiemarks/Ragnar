@@ -1,13 +1,13 @@
 #!/bin/sh
-# Title: Ragnar
+# Title: OptarisDefense
 # Description: Network recon and security scanner
-# Author: PierreGode / Ragnar Project
+# Author: PierreGode / OptarisDefense Project
 # Version: 1.2
 # Category: Reconnaissance
 # Library: libpagerctl.so (pagerctl)
 
 # Payload directory (standard Pager installation path)
-PAYLOAD_DIR="/root/payloads/user/reconnaissance/pager_ragnar"
+PAYLOAD_DIR="/root/payloads/user/reconnaissance/pager_optaris_defense"
 DATA_DIR="$PAYLOAD_DIR/data"
 LOG_FILE="$DATA_DIR/payload.log"
 
@@ -41,7 +41,7 @@ cd "$PAYLOAD_DIR" || {
 }
 
 # Truncate log on fresh start
-echo "=== Ragnar payload started $(date) ===" > "$LOG_FILE"
+echo "=== OptarisDefense payload started $(date) ===" > "$LOG_FILE"
 
 #
 # Find and setup pagerctl dependencies (libpagerctl.so + pagerctl.py)
@@ -86,7 +86,7 @@ export PATH="/mmc/usr/bin:$PAYLOAD_DIR/bin:$PATH"
 export PYTHONPATH="$PAYLOAD_DIR/lib:$PAYLOAD_DIR:$PYTHONPATH"
 export LD_LIBRARY_PATH="/mmc/usr/lib:$PAYLOAD_DIR/lib:$PAYLOAD_DIR:$LD_LIBRARY_PATH"
 export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
-export RAGNAR_PAGER_MODE=1
+export OPTARIS_DEFENSE_PAGER_MODE=1
 
 #
 # Check for Python3 and python3-ctypes - required system dependencies
@@ -104,7 +104,7 @@ fi
 if [ "$NEED_PYTHON" = true ] || [ "$NEED_CTYPES" = true ]; then
     LOG ""
     if [ "$NEED_PYTHON" = true ]; then
-        LOG "red" "Python3 required to run Ragnar."
+        LOG "red" "Python3 required to run OptarisDefense."
     else
         LOG "red" "Python3-ctypes required."
     fi
@@ -303,7 +303,7 @@ preflight_python
 
 # Show splash screen
 LOG ""
-LOG "green" "Ragnar - Network Recon"
+LOG "green" "OptarisDefense - Network Recon"
 LOG ""
 LOG "cyan" "Scan / Brute / Exfil / Vuln / Web UI"
 LOG ""
@@ -325,7 +325,7 @@ done
 
 # Take over the LCD from the pineapple service.
 # Must kill pineapple (UI) + pineapd (PineAP) + deregister from procd.
-LOG "Starting Ragnar..."
+LOG "Starting OptarisDefense..."
 take_over_display
 sleep 0.3
 
@@ -347,7 +347,7 @@ while true; do
         if [ -f "$NEXT_SCRIPT" ]; then
             _log "Handing off to $NEXT_SCRIPT"
             sh "$NEXT_SCRIPT"
-            # Only loop back to Ragnar if launched app exits 42
+            # Only loop back to OptarisDefense if launched app exits 42
             [ $? -eq 42 ] && continue
         fi
     fi

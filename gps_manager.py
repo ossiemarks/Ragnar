@@ -1,5 +1,5 @@
 # gps_manager.py
-# GPS module support for Ragnar wardriving.
+# GPS module support for OptarisDefense wardriving.
 # Supports gpsd (preferred) and direct NMEA serial for USB/native serial GPS receivers.
 
 import os
@@ -407,7 +407,7 @@ class GPSManager:
         """Inject a position from an external source (e.g. a USB-connected
         Piglet/HuginnESP companion that has its own GPS receiver).
 
-        Lets Ragnar operate as if it had GPS even when no local receiver is
+        Lets OptarisDefense operate as if it had GPS even when no local receiver is
         attached, so BT/cell scans, the gps_track table, and the status UI
         all see a position. A local receiver always wins: if NMEA from the
         directly-attached GPS arrived within the last 5 s we ignore the

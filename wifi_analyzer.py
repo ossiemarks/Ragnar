@@ -2,7 +2,7 @@
 """
 wifi_analyzer.py — Passive tri-band Wi-Fi spectrum analyzer & troubleshooter.
 
-A software "Ekahau Sidekick"-style RF troubleshooter for Ragnar. Everything here
+A software "Ekahau Sidekick"-style RF troubleshooter for OptarisDefense. Everything here
 is *strictly passive*: we only ever run ``iw dev <iface> scan passive`` which
 listens for beacons and never transmits a probe request to any AP, and we read
 the radio's channel table with ``iw phy``. No frame is ever injected.
@@ -1085,7 +1085,7 @@ def do_scan(interface="wlan0", band="all", passive=True):
         if "busy" in low:
             hint += " — the radio is mid-scan or connecting; retry in a moment."
         elif "not permitted" in low or "operation not permitted" in low:
-            hint += " — passive scan needs root (the Ragnar service runs as root)."
+            hint += " — passive scan needs root (the OptarisDefense service runs as root)."
         elif "down" in low or "not ready" in low:
             hint += " — bring the interface up: sudo ip link set %s up" % interface
         return {"error": hint, "rc": rc,
@@ -1331,7 +1331,7 @@ def heatmap_set_predict_ap(ap):
     return heatmap_set_predict_aps([] if ap is None else [ap])
 
 
-# --- Predictive-coverage geometry (mirrored client-side in ragnar_modern.js) ---
+# --- Predictive-coverage geometry (mirrored client-side in optaris_defense_modern.js) ---
 
 def _ccw(ax, ay, bx, by, cx, cy):
     return (cy - ay) * (bx - ax) > (by - ay) * (cx - ax)
@@ -1450,7 +1450,7 @@ def _http_download_mbps(url, max_secs=6, max_bytes=50 * 1024 * 1024):
     import urllib.request
     try:
         req = urllib.request.Request(url, headers={
-            "User-Agent": "Mozilla/5.0 (Ragnar WiFi Analyzer)",
+            "User-Agent": "Mozilla/5.0 (OptarisDefense WiFi Analyzer)",
             "Accept": "*/*"})
         t0 = time.time()
         got = 0
